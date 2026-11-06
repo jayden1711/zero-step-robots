@@ -91,7 +91,3 @@ reply, parsed artefact, score, model id, CLI/server version, sampling settings, 
     listed in `README.md`; the contribution, if any, is the controlled comparison across arms and tasks, not the
     idea of writing weights by hand.
 
-## About the people
-
-19. **"Conflict of interest."** Addressed by disclosure: the author was an NVIDIA intern until Nov 13, 2026 and founded
-    Quatern. Local-model runs used an NVIDIA RTX 5080. This is stated in `README.md` and must be repeated in any post.

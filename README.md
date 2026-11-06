@@ -35,5 +35,3 @@ and run from the repo root with `PYTHONPATH=.` (or `pip install -e .`-style equi
 - Related, not yet checked against the sources, so cited by name only: RoboStriker (arXiv 2601.22517) [verify];
   URMA / MetaMorph [verify]; Text2Robot [verify].
 
-## Disclosure
-The author was an NVIDIA intern until Nov 13, 2026 and founded Quatern. Local-model runs used an NVIDIA RTX 5080 GPU.
