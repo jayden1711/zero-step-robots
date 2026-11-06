@@ -66,8 +66,8 @@ def run_episode(env, policy, seed: int) -> dict:
             "distance": float(env.unwrapped.data.qpos[0]) - x0, "fault": fault}
 
 
-def evaluate(task: str, policy, n_episodes: int = DEFAULT_EPISODES, seed0: int = EVAL_SEED0) -> dict:
-    env = make_env(task)
+def evaluate(task: str, policy, n_episodes: int = DEFAULT_EPISODES, seed0: int = EVAL_SEED0, variant: str = None) -> dict:
+    env = make_env(task, variant)
     eps = [run_episode(env, policy, seed0 + i) for i in range(n_episodes)]
     env.close()
     rets = np.array([e["return"] for e in eps])
@@ -75,6 +75,7 @@ def evaluate(task: str, policy, n_episodes: int = DEFAULT_EPISODES, seed0: int =
     t = TASKS[task]
     return {
         "task": task,
+        "variant": variant or "stock",
         "env_id": t.env_id,
         "gymnasium": gymnasium.__version__,
         "n_episodes": n_episodes,
@@ -110,6 +111,7 @@ def main(argv=None):
     g.add_argument("--weights", help="JSON weight file")
     g.add_argument("--controller", help="Python file defining act(obs)")
     ap.add_argument("--episodes", type=int, default=DEFAULT_EPISODES)
+    ap.add_argument("--variant", help="modified-physics variant from zsr/variants.py (default: stock)")
     ap.add_argument("--out", help="write the full result JSON here")
     a = ap.parse_args(argv)
     t0 = time.time()
@@ -121,7 +123,7 @@ def main(argv=None):
     except Exception as e:
         res = {"task": a.task, "load_error": f"{type(e).__name__}: {e}"}
     else:
-        res = evaluate(a.task, pol, a.episodes)
+        res = evaluate(a.task, pol, a.episodes, variant=a.variant)
     res.update({"source": str(src), "source_sha256": sha256(src), "wall_s": time.time() - t0})
     if a.out:
         Path(a.out).parent.mkdir(parents=True, exist_ok=True)

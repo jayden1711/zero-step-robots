@@ -25,9 +25,13 @@ TASKS = {
 }
 
 
-def make_env(task: str):
+def make_env(task: str, variant: str = None):
     t = TASKS[task]
-    env = gym.make(t.env_id, max_episode_steps=t.max_steps)
+    kw = {}
+    if variant:
+        from .variants import variant_xml_path
+        kw["xml_file"] = variant_xml_path(task, variant)
+    env = gym.make(t.env_id, max_episode_steps=t.max_steps, **kw)
     assert env.observation_space.shape == (t.obs_dim,)
     assert env.action_space.shape == (t.act_dim,)
     return env
