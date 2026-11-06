@@ -6,7 +6,7 @@ Updated: 2026-11-06
 ## Pilot run state (day-1106 branch, NOT pushed)
 - Runner code: `scripts/run_pilot.py`, `scripts/run_local.sh`, `scripts/score_pending.sh`. Results go to `/home/jayden/projects/zero-step-robots/results/` (git-ignored; baselines live there too).
 - **Claude arm: launching it from this session was denied by the permission system, so it was not worked around.** Isolation probe (`claude -p`, empty cwd, no tools) did run; saved as `results/pilot/claude_isolation_probe_*.json`. Run the 40 attempts yourself:
-  `cd <repo>/.claude/worktrees/day-1106 && .venv-python scripts/run_pilot.py claude --results /home/jayden/projects/zero-step-robots/results --n 10 --model claude-sonnet-5-5`
+  `cd <repo>/.claude/worktrees/day-1106 && <python> scripts/run_pilot.py claude --results /home/jayden/projects/zero-step-robots/results --n 10 --model claude-sonnet-5-5`
   (use `/home/jayden/projects/zero-step-robots/.claude/worktrees/first-stop-point/.venv/bin/python` as the python). Resumable: finished attempts are skipped.
 - **Qwen3-Coder-30B arm:** `PY=<that python> scripts/run_local.sh qwen3-coder-30b /home/jayden/projects/zero-step-robots/results` was queued via gpu-run (waits up to 12 h). The GPU lock was still held by robot-framing-test's llama-server (its pilot had finished; the server was idle). Not touched. If the queued job is gone, re-run the command.
 - **gpt-oss-20b arm:** `~/models/gpt-oss-20b-MXFP4.gguf` not downloaded and no SHA-256 recorded yet. Then: `scripts/run_local.sh gpt-oss-20b <results>`.
