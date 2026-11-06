@@ -1,7 +1,31 @@
 # HANDOFF: zero-step-robots
-Status: round 2 prepared on branch `round2` (local, NOT pushed): local-model controller arms done and scored, variants, LQR, notable analysis, circuit compiler first compile, CRITIQUES.md; Claude arms (Sonnet controller, Opus both modes) waiting for the organizer
-Next: organizer runs the commands under "Organizer: run these", then reads results/pilot_report.md and results/notable/analysis.md; no LLM spec attempts for the compiler until the owner says go
+Status: pre-post pass done on branch `prepost` (local, NOT pushed): CRITIQUES.md updated for round 2, hopper tables report forward distance, clips rendered; waiting for the fresh reviewer
+Next: reviewer session reads CRITIQUES.md, results/pilot_report.md, results/clips/README.md; owner decides publishing (nothing pushed); fix the /tmp/CLAUDE.md exposure before any new Claude attempts
 Updated: 2026-11-06
+
+## Pre-post pass (branch `prepost`, from `round2`; committed locally, NOT pushed)
+- No new training, no new LLM attempts. Changes: `CRITIQUES.md` rewritten (20 items, no numbers), `scripts/pilot_report.py`
+  (hopper tables: forward distance, speed, count of attempts >= 1 m, return/distance per attempt, do-nothing baseline kept in
+  every hopper table), `scripts/make_clips.py` + `make clips`, README Makefile line.
+- Local outputs: `results/clips/` (3 mp4 + README + selection.json), `results/notable/analysis.md` (addendum),
+  `results/pilot_report.md` regenerated, `results/_scratch/hop_table.txt`.
+- **Finding to state in any post:** hopper return near 1000 is standing still (+1/step alive bonus). No LLM hopper attempt
+  in any model/arm/mode reaches 1 m of mean forward distance; PPO does. The earlier Sonnet ~950-1000 attempts also stand
+  still (the analysis already said so; an addendum now covers all models).
+- **Finding: isolation exposure.** The Opus probe showed an unrelated project's `/tmp/CLAUDE.md` (a Jetson study; no
+  mention of this repo or any result) was loaded as project instructions, because the temp cwd is under `/tmp`. It affected
+  the Sonnet controller arm and all Opus arms (file mtime 15:59, after the first Sonnet weights run). I did not touch the
+  file (not mine). Future runs: use a cwd with no instruction file in any ancestor (e.g. a dir under the results tree
+  outside repo ancestors) and re-probe. CRITIQUES item 12 states this.
+- The `/tmp/CLAUDE.md` file also contains a disclosure line (other project); the owner's removal decision may need applying there.
+
+## Decisions taken (pre-post pass)
+- Clip selection rule kept as specified (best and median by return). The best-by-return clip is a standing attempt; I did not
+  swap it for a "moving" one (none exists among LLM attempts). Added a third, clearly labelled clip: stock PPO seed 0 for contrast.
+- Hopper "travels forward" threshold: mean forward distance >= 1 m per episode; fixed in `pilot_report.py`, added after the
+  standing finding (disclosed in CRITIQUES item 18).
+- ffmpeg: used the imageio-ffmpeg binary from the uv cache (`FFMPEG=` env), `-threads 1`, via sim-run. Not installed anything.
+- Did not wait for the round-2 log (organizer said it was complete).
 
 ## Round 2 state (branch `round2`, committed locally, NOT pushed)
 - Done by this session (all attempts logged under results/attempts/, scored; numbers only in git-ignored results/):

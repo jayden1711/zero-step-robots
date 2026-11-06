@@ -4,7 +4,7 @@ R  ?= $(CURDIR)/results
 export PYTHONPATH := $(CURDIR)
 SIM = ~/projects/bin/sim-run
 
-.PHONY: test baselines lqr score variants report circuit notable local-controller local-weights claude-round2
+.PHONY: clips test baselines lqr score variants report circuit notable local-controller local-weights claude-round2
 test:            ; $(PY) -m pytest tests -q
 baselines:       ; $(SIM) $(PY) scripts/run_baselines.py --out $(R)/baselines
 lqr:             ; $(SIM) $(PY) scripts/make_lqr.py $(R)/baselines/lqr
@@ -17,3 +17,4 @@ notable:         ; $(SIM) $(PY) scripts/analyze_weights.py $(R) claude_hopper_na
 local-controller: ; PY=$(PY) scripts/run_local.sh $(M) $(R) controller 420
 local-weights:    ; PY=$(PY) scripts/run_local.sh $(M) $(R) weights 420
 claude-round2:   ; PY=$(PY) scripts/run_claude_round2.sh $(R)
+clips:          ; FFMPEG=$(FFMPEG) $(SIM) $(PY) scripts/make_clips.py $(R)   # FFMPEG = an ffmpeg binary with libx264; needs MUJOCO_GL=egl-capable libs

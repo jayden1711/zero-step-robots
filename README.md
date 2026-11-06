@@ -23,7 +23,7 @@ Early stage; see [PLAN.md](PLAN.md). Objections and how each is handled: [CRITIQ
 - `scripts/`: `run_pilot.py` (LLM attempts, weights or controller mode), `run_local.sh` (local models via gpu-run),
   `score_pending.sh`, `score_variants.py`, `make_lqr.py`, `analyze_weights.py`, `pilot_report.py`, `run_circuit.sh`.
 - `circuitc/`: circuit-spec compiler (spec to exact weights), see `docs/circuit-spec.md`.
-- `Makefile`: one target per result (`make test|baselines|lqr|score|variants|report|circuit|notable`).
+- `Makefile`: one target per result (`make test|baselines|lqr|score|variants|report|circuit|notable|clips`).
 - `tests/`: `pytest tests`.
 
 Results are written to the git-ignored `results/`. Setup: `python3 -m venv .venv && .venv/bin/pip install -r requirements.txt`,
