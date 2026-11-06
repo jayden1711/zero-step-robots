@@ -1,7 +1,7 @@
-"""Pilot runner: one model, all (task, arm) cells, N attempts each, weights mode.
+"""Pilot runner: one model, all (task, arm) cells, N attempts each, weights or controller mode.
 
-    python scripts/run_pilot.py claude  --results R [--n 10] [--model claude-sonnet-5-5]
-    python scripts/run_pilot.py local   --results R --name qwen3-coder-30b --port 8089 [--n 10]
+    python scripts/run_pilot.py claude  --results R [--n 10] [--model claude-sonnet-5-5] [--mode weights|controller]
+    python scripts/run_pilot.py local   --results R --name qwen3-coder-30b --port 8089 [--n 10] [--mode weights|controller]
     python scripts/run_pilot.py probe   --results R          # isolation probe for claude -p
 
 `claude` calls `claude -p` once per attempt in a fresh empty temp dir outside any repo, with all tools disabled,
@@ -69,17 +69,21 @@ def call_local(prompt: str, name: str, port: int, seed: int, timeout: int = 3600
 
 def run_cells(args):
     res = Path(args.results)
+    t_start = time.time()
     for task, arm in CELLS:
         for i in range(args.n):
-            aid = f"{args.tag}_{task}_{arm}_weights_{i:02d}"
+            aid = f"{args.tag}_{task}_{arm}_{args.mode}_{i:02d}"
             d = res / "attempts" / aid
             if (d / "reply.md").exists():
                 continue
+            if args.max_seconds and time.time() - t_start > args.max_seconds:
+                print("time budget reached; rerun to resume", flush=True)
+                return
             if d.exists():
                 raise SystemExit(f"{d} exists without reply.md; inspect it (attempts are never deleted)")
             interface = ("claude -p (subscription CLI), fresh empty cwd, no tools, no MCP" if args.cmd == "claude"
                          else "local llama.cpp server via gpu-run, /v1/chat/completions on 127.0.0.1")
-            new_attempt(aid, task, "weights", args.model_label, interface, res, arm)
+            new_attempt(aid, task, args.mode, args.model_label, interface, res, arm)
             prompt = (d / "prompt.md").read_text()
             run = {"started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
             try:
@@ -127,11 +131,15 @@ def main():
     ap.add_argument("--results", required=True)
     ap.add_argument("--n", type=int, default=10)
     ap.add_argument("--model", default="claude-sonnet-5-5")
+    ap.add_argument("--mode", choices=("weights", "controller"), default="weights")
+    ap.add_argument("--tag", help="attempt id prefix; default: 'claude' for claude-sonnet-5-5 (pilot naming), else the model id")
     ap.add_argument("--name", help="local model key: gpt-oss-20b | qwen3-coder-30b")
     ap.add_argument("--port", type=int, default=8089)
+    ap.add_argument("--max-seconds", type=float, default=0, help="stop starting new attempts after this long (resumable chunks)")
     args = ap.parse_args()
     if args.cmd == "claude":
-        args.tag, args.model_label = "claude", args.model
+        args.tag = args.tag or ("claude" if args.model == "claude-sonnet-5-5" else args.model)
+        args.model_label = args.model
     elif args.cmd == "local":
         args.tag, args.model_label = args.name, args.name
     if args.cmd == "probe":
