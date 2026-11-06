@@ -21,5 +21,5 @@ Can an LLM write a robot's brain by hand? Plan: PLAN.md. State: HANDOFF.md.
   `gpu-run`; CPU PPO is fine for cartpole/hopper.
 - **Part B** depends on humanoid-on-a-chip's distilled walker. Don't start Part B until that exists and the
   owner says go. Don't copy code from the private robot-arena-sim.
-- **Public repo, Apache-2.0.** Code only. Confirm the "Sparks of Weight-Space Programming" citation (authors,
-  link) before any public write-up. Nothing goes public without the owner's go-ahead.
+- **Public repo, Apache-2.0.** Code only. Cite Takehi, Teoh, Zhang, Khattab (MIT CSAIL), "Sparks of Weight-Space Programming" (Nov 2, 2026;
+  https://rikiyat.github.io/blog/weight-space-programming/) wherever the project is described. Nothing goes public without the owner's go-ahead.

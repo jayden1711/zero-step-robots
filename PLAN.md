@@ -3,8 +3,9 @@
 Question: can an LLM write a working robot controller's weights directly, with zero training steps?
 Physics scores every attempt.
 
-Builds on MIT CSAIL's "Sparks of Weight-Space Programming" (Nov 2, 2026) and extends it to legged robots.
-(Add the full citation and link before anything is published.)
+Builds on Takehi, Teoh, Zhang, Khattab (MIT CSAIL), "Sparks of Weight-Space Programming: LLMs can natively read &
+write neural network weights," Nov 2, 2026. https://rikiyat.github.io/blog/weight-space-programming/
+This project extends it to legged robots.
 
 ## Part A: write from scratch
 The LLM writes **all weights** of small control networks from scratch, in increasing difficulty:
