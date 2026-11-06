@@ -64,7 +64,23 @@ Two prompt arms, each versioned; every attempt records its arm, prompt version a
 - Files: `prompts/*_v2.md` (strict), `prompts/*_v1.md` (named). `python -m zsr.attempt new ... --arm strict|named`
   (default strict). Never edit a released prompt file; a change is a new version.
 
-## Open: LLMs and attempt counts
-This PLAN does not yet name which LLMs to run or how many attempts per (model, task, mode, arm). The owner's
-2026-11-06 instruction was to use "the LLMs and attempt counts PLAN.md specifies"; none are specified, so no
-LLM attempt has been created. The owner needs to fill this in (see HANDOFF.md).
+## Pilot (owner decisions, 2026-11-06)
+Models: subscription CLIs and local models only, no API keys.
+- **Claude via `claude -p`**, one reply per attempt, matching the MIT setup. Each call runs with cwd = a fresh empty
+  temp dir outside any repo, all tools disabled (`--tools ""`), no MCP servers (`--strict-mcp-config`), no session
+  persistence, a fresh context per attempt (no --continue/--resume), auto-memory off. It cannot see the repo or run
+  code. Before the pilot, one probe call asks it to list its tools and any files/instructions it can see; the reply is
+  saved in `results/pilot/` as evidence of isolation. CLI version and model id are recorded per attempt.
+- **GPT via Codex CLI, Gemini via Gemini CLI: SKIPPED.** Codex on the owner's Mac is logged in with an API key, not a
+  subscription; Gemini CLI is not installed.
+- **Local open baselines:** gpt-oss-20b and Qwen3-Coder-30B (GGUFs in `~/models`), served with llama.cpp through
+  `gpu-run`, one at a time, queued behind other GPU jobs. gpt-oss reuses robot-framing-test's download once its
+  SHA-256 is recorded in `~/models/SHA256SUMS.wiif`.
+- **Size:** 10 attempts per model x task (cartpole, hopper) x arm (strict, named), weights mode. Same prompt text for
+  every model. Python-controller mode is not part of the pilot.
+- **Logged per attempt** in `results/attempts/<id>/`: rendered prompt + sha256 (`prompt.md`, `meta.json`), raw reply
+  (`reply.md`, plus `run.json` with the raw CLI/server output), parse result and score (`score.json`),
+  model/version, timing, sampling settings. Local models use the vendor-recommended sampling settings, a fixed seed
+  per attempt index; the `claude -p` CLI exposes no sampling settings (defaults).
+- Runner: `scripts/run_pilot.py` (and `scripts/run_local.sh` for the local models). The pilot ends with
+  `results/pilot_report.md` (local); then stop.

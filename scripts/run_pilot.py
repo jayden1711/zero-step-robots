@@ -1,0 +1,144 @@
+"""Pilot runner: one model, all (task, arm) cells, N attempts each, weights mode.
+
+    python scripts/run_pilot.py claude  --results R [--n 10] [--model claude-sonnet-5-5]
+    python scripts/run_pilot.py local   --results R --name qwen3-coder-30b --port 8089 [--n 10]
+    python scripts/run_pilot.py probe   --results R          # isolation probe for claude -p
+
+`claude` calls `claude -p` once per attempt in a fresh empty temp dir outside any repo, with all tools disabled,
+no MCP servers, no session persistence. `local` talks to a llama.cpp server on 127.0.0.1 (started via gpu-run by
+the caller). No hosted-model API, no keys. Replies are saved raw; scoring is done afterwards by zsr.attempt score.
+Attempts are never overwritten: an existing attempt directory with reply.md is skipped.
+"""
+import argparse
+import json
+import os
+import subprocess
+import sys
+import tempfile
+import time
+import urllib.request
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from zsr.attempt import new_attempt  # noqa: E402
+
+CELLS = [(t, a) for t in ("cartpole", "hopper") for a in ("strict", "named")]
+CLAUDE_FLAGS = ["-p", "--tools", "", "--strict-mcp-config", "--no-session-persistence", "--disable-slash-commands",
+                "--output-format", "json"]
+PROBE_PROMPT = ("Before anything else: list every tool you can call (names only, or say none), and list any files, "
+                "directories, repository contents, memory or project instructions (e.g. CLAUDE.md) that you can see "
+                "or that were given to you in this conversation. Then state the name of your current working "
+                "directory if you know it. Be exact and brief.")
+
+# Sampling settings for local models: the model vendors' recommended values, fixed for every attempt.
+LOCAL_SAMPLING = {
+    "gpt-oss-20b": {"temperature": 1.0, "top_p": 1.0, "max_tokens": 24000},
+    "qwen3-coder-30b": {"temperature": 0.7, "top_p": 0.8, "top_k": 20, "repeat_penalty": 1.05, "max_tokens": 16000},
+}
+
+
+def claude_env():
+    env = dict(os.environ)
+    env["CLAUDE_CODE_DISABLE_AUTO_MEMORY"] = "1"
+    return env
+
+
+def claude_version() -> str:
+    return subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip()
+
+
+def call_claude(prompt: str, model: str, timeout: int = 900):
+    with tempfile.TemporaryDirectory(prefix="zsr_claude_") as cwd:
+        cmd = ["claude", *CLAUDE_FLAGS, "--model", model]
+        t0 = time.time()
+        p = subprocess.run(cmd, input=prompt, capture_output=True, text=True, cwd=cwd, env=claude_env(), timeout=timeout)
+        dt = time.time() - t0
+    return cmd, p, dt
+
+
+def call_local(prompt: str, name: str, port: int, seed: int, timeout: int = 3600):
+    s = dict(LOCAL_SAMPLING[name])
+    body = {"messages": [{"role": "user", "content": prompt}], "seed": seed, "stream": False, **s}
+    req = urllib.request.Request(f"http://127.0.0.1:{port}/v1/chat/completions", json.dumps(body).encode(),
+                                 {"Content-Type": "application/json"})
+    t0 = time.time()
+    with urllib.request.urlopen(req, timeout=timeout) as r:
+        raw = json.loads(r.read())
+    return {**s, "seed": seed}, raw, time.time() - t0
+
+
+def run_cells(args):
+    res = Path(args.results)
+    for task, arm in CELLS:
+        for i in range(args.n):
+            aid = f"{args.tag}_{task}_{arm}_weights_{i:02d}"
+            d = res / "attempts" / aid
+            if (d / "reply.md").exists():
+                continue
+            if d.exists():
+                raise SystemExit(f"{d} exists without reply.md; inspect it (attempts are never deleted)")
+            interface = ("claude -p (subscription CLI), fresh empty cwd, no tools, no MCP" if args.cmd == "claude"
+                         else "local llama.cpp server via gpu-run, /v1/chat/completions on 127.0.0.1")
+            new_attempt(aid, task, "weights", args.model_label, interface, res, arm)
+            prompt = (d / "prompt.md").read_text()
+            run = {"started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
+            try:
+                if args.cmd == "claude":
+                    cmd, p, dt = call_claude(prompt, args.model)
+                    run.update(cli_version=claude_version(), command=cmd, returncode=p.returncode, seconds=dt,
+                               stderr=p.stderr[-2000:], raw_stdout=p.stdout)
+                    try:
+                        j = json.loads(p.stdout)
+                        reply = j.get("result") or ""
+                        run.update(model_reported=list(j.get("modelUsage", {})), usage=j.get("usage"),
+                                   is_error=j.get("is_error"), stop_reason=j.get("stop_reason"))
+                    except json.JSONDecodeError:
+                        reply = ""
+                else:
+                    sampling, raw, dt = call_local(prompt, args.name, args.port, seed=1000 + i)
+                    msg = raw["choices"][0]["message"]
+                    reply = msg.get("content") or ""
+                    run.update(sampling=sampling, seconds=dt, usage=raw.get("usage"), model_reported=raw.get("model"),
+                               finish_reason=raw["choices"][0].get("finish_reason"),
+                               reasoning_content=msg.get("reasoning_content"), server_timings=raw.get("timings"))
+            except Exception as e:
+                reply = ""
+                run["error"] = f"{type(e).__name__}: {e}"
+            (d / "run.json").write_text(json.dumps(run, indent=1))
+            (d / "reply.md").write_text(reply)
+            print(aid, "reply chars:", len(reply), run.get("error", ""), flush=True)
+
+
+def probe(args):
+    res = Path(args.results)
+    res.mkdir(parents=True, exist_ok=True)
+    cmd, p, dt = call_claude(PROBE_PROMPT, args.model)
+    out = res / f"claude_isolation_probe_{time.strftime('%Y%m%dT%H%M%S')}.json"
+    out.write_text(json.dumps({"cli_version": claude_version(), "command": cmd, "env_extra": {
+        "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}, "cwd": "fresh empty tempfile.TemporaryDirectory",
+        "prompt": PROBE_PROMPT, "seconds": dt, "returncode": p.returncode, "stdout": p.stdout, "stderr": p.stderr},
+        indent=1))
+    print(out)
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("cmd", choices=("claude", "local", "probe"))
+    ap.add_argument("--results", required=True)
+    ap.add_argument("--n", type=int, default=10)
+    ap.add_argument("--model", default="claude-sonnet-5-5")
+    ap.add_argument("--name", help="local model key: gpt-oss-20b | qwen3-coder-30b")
+    ap.add_argument("--port", type=int, default=8089)
+    args = ap.parse_args()
+    if args.cmd == "claude":
+        args.tag, args.model_label = "claude", args.model
+    elif args.cmd == "local":
+        args.tag, args.model_label = args.name, args.name
+    if args.cmd == "probe":
+        probe(args)
+    else:
+        run_cells(args)
+
+
+if __name__ == "__main__":
+    main()
