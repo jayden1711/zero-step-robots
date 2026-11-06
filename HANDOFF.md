@@ -1,9 +1,9 @@
 # HANDOFF: zero-step-robots
-Status: first stop point reached (envs, harness, baselines, prompt template v1 built and tested); no LLM attempts made
-Next: owner reviews PLAN.md "First-stop-point design" and the baseline scores in results/baselines/, then says go (or not) for LLM attempts
+Status: prompt arms built (strict v2 main, named v1 second); baselines done; NO LLM attempts made, blocked on PLAN.md not naming LLMs/counts
+Next: owner adds the LLM list + attempts per (model, task, mode, arm) to PLAN.md "Open: LLMs and attempt counts" (see Blocked); then attempts can start
 Updated: 2026-11-06
 
-## What exists (branch `worktree-first-stop-point`, commit 62fd835 plus this handoff; NOT pushed)
+## What exists
 - `zsr/` package: tasks (cartpole = InvertedPendulum-v5, hopper = Hopper-v5, 1000 steps), weight format
   (16-tanh MLP JSON), harness, PPO, attempt/prompt/reply-parsing tooling. `tests/` (11 pass): `pytest tests`.
 - Prompt template v1 in `prompts/`; `python -m zsr.attempt prompt <task> <weights|controller>` prints a prompt,
@@ -34,3 +34,31 @@ Updated: 2026-11-06
 - Ran at most 2 sim processes of my own at a time because other projects had sims running.
 - No attempt directories were created under results/attempts/ (tests used a temp dir).
 - Installed Python packages into a project venv from PyPI (pip worked, no blocks).
+
+## Day 1106 (branch `day-1106`, committed locally, NOT pushed)
+- Added prompt v2 (STRICT: raw numbers, reward in terms of `obs[i]`, no names) as `prompts/*_v2.md`; v1 is now the
+  NAMED arm, unchanged. `zsr/attempt.py` takes `--arm strict|named` (default strict); meta.json records arm, prompt
+  version and hashes. Tests (12) cover: no sensor names in strict prompts, distinct hashes, arm recorded.
+- PLAN.md records both arms. No attempt directories were created.
+- Venv for this branch: reuse `../first-stop-point/.venv` (run with `PYTHONPATH=.`) or recreate from requirements.txt.
+
+## Blocked: what is needed to start LLM attempts
+1. **PLAN.md names no LLMs and no attempt counts**, so I could not follow "the LLMs and attempt counts PLAN.md
+   specifies". Please write: which models, via which interface, and N attempts per (model, task, mode, arm).
+2. Hand-pasted subscription models: nothing needed from me but the list; I will generate prompt files with
+   `python -m zsr.attempt new <id> <task> <mode> --model M --interface 'subscription UI (pasted by hand)' --arm ...`
+   and you paste each `prompt.md`, save `reply.md`, then `... score <id>`.
+3. Local model: only `~/models/Qwen3-Coder-30B-A3B-Instruct-Q4_K_M.gguf` is present. It is served via gpu-run
+   (~10.2 GB resident), but the GPU lock is currently held by robot-framing-test for hours, so no GPU work was done.
+   Whether Qwen3-Coder counts as one of the planned LLMs is your call. No download needed for it.
+4. No API keys or paid spend are involved in any of the above.
+
+## Decisions taken (day 1106)
+- STRICT prompt keeps the generic sentence "every position and velocity is perturbed by a small uniform random
+  amount" (initial-state noise, part of the episode rules); no sensor is named.
+- STRICT hopper reward states that the forward term v is the change of an *unobserved* x coordinate over the step
+  and that obs[5] is a related but non-identical instantaneous reading. Conservative: accurate to the environment,
+  without telling the model which physical quantity obs[5] is.
+- STRICT also drops the Gymnasium/MuJoCo env names and robot description (they would leak the semantics).
+- Branch renamed from the tool default to `day-1106`.
+- Did not pick an LLM or attempt count myself, did not run the local model, did not create any attempt dirs.

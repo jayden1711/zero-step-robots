@@ -74,9 +74,21 @@ def test_prompts_filled_and_stable():
     assert f"{n_params('hopper')} numbers in total" in attempt.build_prompt("hopper", "weights")
 
 
+def test_strict_arm_has_no_sensor_names_and_named_arm_does():
+    banned = ("angle", "height", "torso", "cart", "pole", "thigh", "foot", "Gymnasium", "MuJoCo")
+    for task in TASKS:
+        for mode in attempt.MODES:
+            strict = attempt.build_prompt(task, mode, "strict")
+            assert "{{" not in strict
+            low = strict.lower()
+            assert not [w for w in banned if w.lower() in low], (task, mode)
+            assert attempt.prompt_hash(task, mode, "strict") != attempt.prompt_hash(task, mode, "named")
+    assert "cart position" in attempt.build_prompt("cartpole", "weights", "named")
+
+
 def test_prompt_has_no_numbers_from_solutions():
     # Fairness guard: the prompt must not contain any constant from the reference controllers.
-    p = attempt.build_prompt("cartpole", "weights") + attempt.build_prompt("hopper", "weights")
+    p = "".join(attempt.build_prompt(t, "weights", a) for t in TASKS for a in attempt.ARMS)
     for token in ("12.0", "2.37", "1.4", "K ="):
         assert token not in p
 
@@ -85,6 +97,10 @@ def test_attempt_lifecycle_weights_and_failures(tmp_path):
     d = attempt.new_attempt("t1", "cartpole", "weights", "none", "test", tmp_path)
     meta = json.loads((d / "meta.json").read_text())
     assert meta["prompt_sha256"] == attempt.prompt_hash("cartpole", "weights")
+    assert meta["arm"] == "strict" and meta["prompt_version"] == "v2"
+    dn = attempt.new_attempt("t1n", "cartpole", "weights", "none", "test", tmp_path, "named")
+    mn = json.loads((dn / "meta.json").read_text())
+    assert mn["arm"] == "named" and mn["prompt_version"] == "v1"
     with pytest.raises(FileExistsError):
         attempt.new_attempt("t1", "cartpole", "weights", "none", "test", tmp_path)
     w = json.dumps(zero_policy("cartpole").to_json())

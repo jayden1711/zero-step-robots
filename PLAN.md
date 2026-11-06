@@ -50,7 +50,21 @@ Then stop and report, before any LLM attempts.
   faults (a crashing controller keeps the reward earned before the crash, and the fault is logged).
 - **Arms:** zero weights, random weights (10 seeds, std 1/sqrt(fan_in)), reference Python controllers (harness
   test only), PPO (3 seeds per task, SB3 defaults, CPU), then LLM-written weights and LLM-written Python.
-- **Prompt (v1):** task spec + reward + episode rules + output format only; no hints, constants or examples.
+- **Prompt (v1, arm NAMED):** task spec + reward + episode rules + output format only; no hints, constants or examples.
   The observation components are named as in the Gymnasium docs (needed to state the reward). Each attempt
   records the sha256 of the rendered prompt and of its component files. Replies are parsed from the last fenced
   block; unparsable or invalid replies are scored as failures and kept.
+
+## Prompt arms (owner decision, 2026-11-06)
+Two prompt arms, each versioned; every attempt records its arm, prompt version and prompt hash in `meta.json`.
+- **STRICT = prompt v2 (main comparison).** Raw numbers only, the same information PPO gets: observation and action
+  dimensions and bounds, step time, initial-state noise, and the reward/termination rules written in terms of
+  observation indices (`obs[1]`). No sensor names, no robot or environment description.
+- **NAMED = prompt v1 (second arm).** Same, plus the Gymnasium observation names and a description of the robot.
+- Files: `prompts/*_v2.md` (strict), `prompts/*_v1.md` (named). `python -m zsr.attempt new ... --arm strict|named`
+  (default strict). Never edit a released prompt file; a change is a new version.
+
+## Open: LLMs and attempt counts
+This PLAN does not yet name which LLMs to run or how many attempts per (model, task, mode, arm). The owner's
+2026-11-06 instruction was to use "the LLMs and attempt counts PLAN.md specifies"; none are specified, so no
+LLM attempt has been created. The owner needs to fill this in (see HANDOFF.md).

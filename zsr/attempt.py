@@ -1,7 +1,7 @@
 """Prompt building, attempt directories and reply parsing/scoring.
 
-    python -m zsr.attempt prompt  <task> <weights|controller>            # print the prompt
-    python -m zsr.attempt new     <id> <task> <weights|controller> --model M --interface I
+    python -m zsr.attempt prompt  <task> <weights|controller> [--arm strict|named]   # print the prompt
+    python -m zsr.attempt new     <id> <task> <weights|controller> --model M --interface I [--arm strict|named]
     python -m zsr.attempt score   <id>                                   # parse reply.md, score it, log everything
 
 An attempt lives in results/attempts/<id>/ (git-ignored): prompt.md, meta.json, reply.md, parsed.*, score.json.
@@ -21,7 +21,7 @@ from .tasks import HIDDEN, TASKS
 
 ROOT = Path(__file__).resolve().parent.parent
 PROMPTS = ROOT / "prompts"
-VERSION = "v1"
+ARMS = {"strict": "v2", "named": "v1"}
 MODES = ("weights", "controller")
 
 
@@ -29,41 +29,44 @@ def _read(name: str) -> str:
     return (PROMPTS / name).read_text()
 
 
-def component_files(task: str, mode: str) -> list:
-    return [f"template_{VERSION}.md", f"task_{task}_{VERSION}.md", f"format_{mode}_{VERSION}.md"]
+def component_files(task: str, mode: str, arm: str) -> list:
+    v = ARMS[arm]
+    return [f"template_{v}.md", f"task_{task}_{v}.md", f"format_{mode}_{v}.md"]
 
 
-def build_prompt(task: str, mode: str) -> str:
+def build_prompt(task: str, mode: str, arm: str = "strict") -> str:
     t, sh = TASKS[task], shapes(task)
-    fmt = _read(f"format_{mode}_{VERSION}.md")
+    v = ARMS[arm]
+    fmt = _read(f"format_{mode}_{v}.md")
     subs = {"{{HIDDEN}}": HIDDEN, "{{OBS_DIM}}": t.obs_dim, "{{ACT_DIM}}": t.act_dim, "{{N_PARAMS}}": n_params(task),
             "{{W1_SHAPE}}": list(sh["W1"]), "{{B1_SHAPE}}": list(sh["b1"]), "{{W2_SHAPE}}": list(sh["W2"]),
             "{{B2_SHAPE}}": list(sh["b2"])}
-    for k, v in subs.items():
-        fmt = fmt.replace(k, str(v))
-    text = _read(f"template_{VERSION}.md").replace("{{TASK_SPEC}}", _read(f"task_{task}_{VERSION}.md").strip())
+    for k, val in subs.items():
+        fmt = fmt.replace(k, str(val))
+    text = _read(f"template_{v}.md").replace("{{TASK_SPEC}}", _read(f"task_{task}_{v}.md").strip())
     text = text.replace("{{OUTPUT_FORMAT}}", fmt.strip())
     assert "{{" not in text, "unfilled placeholder"
     return text.strip() + "\n"
 
 
-def prompt_hash(task: str, mode: str) -> str:
-    return hashlib.sha256(build_prompt(task, mode).encode()).hexdigest()
+def prompt_hash(task: str, mode: str, arm: str = "strict") -> str:
+    return hashlib.sha256(build_prompt(task, mode, arm).encode()).hexdigest()
 
 
-def template_hashes(task: str, mode: str) -> dict:
-    return {f: hashlib.sha256((PROMPTS / f).read_bytes()).hexdigest() for f in component_files(task, mode)}
+def template_hashes(task: str, mode: str, arm: str) -> dict:
+    return {f: hashlib.sha256((PROMPTS / f).read_bytes()).hexdigest() for f in component_files(task, mode, arm)}
 
 
-def new_attempt(attempt_id: str, task: str, mode: str, model: str, interface: str, results: Path) -> Path:
+def new_attempt(attempt_id: str, task: str, mode: str, model: str, interface: str, results: Path,
+                arm: str = "strict") -> Path:
     d = results / "attempts" / attempt_id
     if d.exists():
         raise FileExistsError(f"{d} already exists; attempts are never overwritten")
     d.mkdir(parents=True)
-    (d / "prompt.md").write_text(build_prompt(task, mode))
+    (d / "prompt.md").write_text(build_prompt(task, mode, arm))
     meta = {"id": attempt_id, "task": task, "mode": mode, "model": model, "interface": interface,
-            "prompt_version": VERSION, "prompt_sha256": prompt_hash(task, mode),
-            "template_sha256": template_hashes(task, mode),
+            "arm": arm, "prompt_version": ARMS[arm], "prompt_sha256": prompt_hash(task, mode, arm),
+            "template_sha256": template_hashes(task, mode, arm),
             "created": datetime.now(timezone.utc).isoformat()}
     (d / "meta.json").write_text(json.dumps(meta, indent=1))
     return d
@@ -108,12 +111,14 @@ def main(argv=None):
     p = sub.add_parser("prompt")
     p.add_argument("task", choices=TASKS)
     p.add_argument("mode", choices=MODES)
+    p.add_argument("--arm", choices=ARMS, default="strict")
     n = sub.add_parser("new")
     n.add_argument("id")
     n.add_argument("task", choices=TASKS)
     n.add_argument("mode", choices=MODES)
     n.add_argument("--model", required=True)
     n.add_argument("--interface", required=True, help="e.g. 'subscription UI (pasted by hand)' or 'local gpu-run'")
+    n.add_argument("--arm", choices=ARMS, default="strict", help="strict = prompt v2 (raw numbers), named = v1")
     n.add_argument("--results", default="results")
     s = sub.add_parser("score")
     s.add_argument("id")
@@ -121,9 +126,9 @@ def main(argv=None):
     s.add_argument("--episodes", type=int, default=100)
     a = ap.parse_args(argv)
     if a.cmd == "prompt":
-        sys.stdout.write(build_prompt(a.task, a.mode))
+        sys.stdout.write(build_prompt(a.task, a.mode, a.arm))
     elif a.cmd == "new":
-        print(new_attempt(a.id, a.task, a.mode, a.model, a.interface, Path(a.results)))
+        print(new_attempt(a.id, a.task, a.mode, a.model, a.interface, Path(a.results), a.arm))
     else:
         d = Path(a.results) / "attempts" / a.id
         if json.loads((d / "meta.json").read_text())["mode"] == "controller":
