@@ -38,3 +38,19 @@ limps, walks backwards, or tolerates a sensor fault.
    format for a Python controller.
 
 Then stop and report, before any LLM attempts.
+
+## First-stop-point design (for owner approval)
+- **Tasks:** cartpole = Gymnasium `InvertedPendulum-v5` (continuous force, so weights can output it directly),
+  hopper = `Hopper-v5`. 1000-step episodes. Versions pinned in `requirements.txt` / THIRD_PARTY.md.
+- **Policy format:** one hidden layer, 16 tanh units, raw observations, clipped linear output (97 numbers for
+  cartpole, 243 for hopper). PPO uses the same actor shape, so its weights export losslessly and go through the
+  identical harness.
+- **Scoring:** 100 episodes, reset seeds 10000..10099 (training seeds stay below 10000), deterministic policy.
+  Reports mean/SEM/median/min/max return, mean length, fraction of full-length episodes, forward distance, and
+  faults (a crashing controller keeps the reward earned before the crash, and the fault is logged).
+- **Arms:** zero weights, random weights (10 seeds, std 1/sqrt(fan_in)), reference Python controllers (harness
+  test only), PPO (3 seeds per task, SB3 defaults, CPU), then LLM-written weights and LLM-written Python.
+- **Prompt (v1):** task spec + reward + episode rules + output format only; no hints, constants or examples.
+  The observation components are named as in the Gymnasium docs (needed to state the reward). Each attempt
+  records the sha256 of the rendered prompt and of its component files. Replies are parsed from the last fenced
+  block; unparsable or invalid replies are scored as failures and kept.
