@@ -1,7 +1,17 @@
 # HANDOFF: zero-step-robots
-Status: prompt arms built (strict v2 main, named v1 second); baselines done; NO LLM attempts made, blocked on PLAN.md not naming LLMs/counts
-Next: owner adds the LLM list + attempts per (model, task, mode, arm) to PLAN.md "Open: LLMs and attempt counts" (see Blocked); then attempts can start
+Status: pilot set up (PLAN.md "Pilot"); Claude isolation probe done; NO pilot attempts exist yet (Claude batch refused by permissions, Qwen queued behind another project's idle GPU server, gpt-oss GGUF missing)
+Next: owner runs the Claude command below; Qwen runs when the GPU lock frees (or stop robot-framing-test's idle server); gpt-oss after its download + SHA-256; then score_pending.sh and write results/pilot_report.md
 Updated: 2026-11-06
+
+## Pilot run state (day-1106 branch, NOT pushed)
+- Runner code: `scripts/run_pilot.py`, `scripts/run_local.sh`, `scripts/score_pending.sh`. Results go to `/home/jayden/projects/zero-step-robots/results/` (git-ignored; baselines live there too).
+- **Claude arm: launching it from this session was denied by the permission system, so it was not worked around.** Isolation probe (`claude -p`, empty cwd, no tools) did run; saved as `results/pilot/claude_isolation_probe_*.json`. Run the 40 attempts yourself:
+  `cd <repo>/.claude/worktrees/day-1106 && .venv-python scripts/run_pilot.py claude --results /home/jayden/projects/zero-step-robots/results --n 10 --model claude-sonnet-5-5`
+  (use `/home/jayden/projects/zero-step-robots/.claude/worktrees/first-stop-point/.venv/bin/python` as the python). Resumable: finished attempts are skipped.
+- **Qwen3-Coder-30B arm:** `PY=<that python> scripts/run_local.sh qwen3-coder-30b /home/jayden/projects/zero-step-robots/results` was queued via gpu-run (waits up to 12 h). The GPU lock was still held by robot-framing-test's llama-server (its pilot had finished; the server was idle). Not touched. If the queued job is gone, re-run the command.
+- **gpt-oss-20b arm:** `~/models/gpt-oss-20b-MXFP4.gguf` not downloaded and no SHA-256 recorded yet. Then: `scripts/run_local.sh gpt-oss-20b <results>`.
+- Scoring (after replies exist): `PY=<python> scripts/score_pending.sh /home/jayden/projects/zero-step-robots/results` (sequential, through sim-run).
+- Codex CLI / Gemini CLI arms skipped (owner decision, see PLAN.md).
 
 ## What exists
 - `zsr/` package: tasks (cartpole = InvertedPendulum-v5, hopper = Hopper-v5, 1000 steps), weight format
@@ -62,3 +72,10 @@ Updated: 2026-11-06
 - STRICT also drops the Gymnasium/MuJoCo env names and robot description (they would leak the semantics).
 - Branch renamed from the tool default to `day-1106`.
 - Did not pick an LLM or attempt count myself, did not run the local model, did not create any attempt dirs.
+
+## Decisions taken (day-1106)
+- Pilot uses weights mode only (Python-controller mode not in the owner's pilot spec).
+- Claude model pinned to `claude-sonnet-5-5` explicitly (not the session default); auto-memory disabled via env for the probe and runs. The probe reply still showed the account email and a system prompt that names tools; no repo, memory or instructions leaked.
+- Local sampling: vendor-recommended settings, seed 1000+attempt index; gpt-oss at reasoning effort medium (same as robot-framing-test).
+- Did not stop or contact robot-framing-test's idle server holding the GPU lock.
+- Did not retry the denied Claude launch with other wrappers.
