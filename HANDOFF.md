@@ -1,6 +1,6 @@
 # HANDOFF: zero-step-robots
-Status: pilot partly run: Qwen3-Coder-30B arm done and scored (40 attempts); Claude arm refused by permissions (command below); gpt-oss arm queued behind robot-framing-test's GPU server
-Next: owner runs the Claude command below; check gpt-oss arm finished (else re-run its command), then score_pending.sh + pilot_report.py; read results/pilot_report.md and stop
+Status: pilot done for the two local models (Qwen3-Coder-30B, gpt-oss-20b: 80 attempts, scored, in results/pilot_report.md); Claude arm NOT run (launch refused by permissions, command below)
+Next: owner runs the Claude command below, then score_pending.sh + pilot_report.py; read results/pilot_report.md and decide next step
 Updated: 2026-11-06
 
 ## Pilot run state (day-1106 branch, NOT pushed)
@@ -9,7 +9,7 @@ Updated: 2026-11-06
   `cd <repo>/.claude/worktrees/day-1106 && <python> scripts/run_pilot.py claude --results /home/jayden/projects/zero-step-robots/results --n 10 --model claude-sonnet-5-5`
   (use `/home/jayden/projects/zero-step-robots/.claude/worktrees/first-stop-point/.venv/bin/python` as the python). Resumable: finished attempts are skipped.
 - **Qwen3-Coder-30B arm: DONE and scored** (40 attempts, all logged in results/attempts/; interim `results/pilot_report.md` built by `scripts/pilot_report.py <results>`; rerun it after the other arms). Command used: `PY=<that python> scripts/run_local.sh qwen3-coder-30b /home/jayden/projects/zero-step-robots/results` was queued via gpu-run (waits up to 12 h). The GPU lock was still held by robot-framing-test's llama-server (its pilot had finished; the server was idle). Not touched. If the queued job is gone, re-run the command.
-- **gpt-oss-20b arm:** GGUF now present with SHA-256 in `~/models/SHA256SUMS.wiif`. Queued via gpu-run behind robot-framing-test's gptoss server (not touched); may not have started. Command: `scripts/run_local.sh gpt-oss-20b <results>`.
+- **gpt-oss-20b arm: DONE and scored** (40 attempts, served via gpu-run after robot-framing-test released the GPU; reasoning effort medium).
 - Scoring (after replies exist): `PY=<python> scripts/score_pending.sh /home/jayden/projects/zero-step-robots/results` (sequential, through sim-run).
 - Codex CLI / Gemini CLI arms skipped (owner decision, see PLAN.md).
 
