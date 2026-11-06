@@ -1,11 +1,10 @@
 # HANDOFF: zero-step-robots
-Status: pilot done for the two local models (Qwen3-Coder-30B, gpt-oss-20b: 80 attempts, scored, in results/pilot_report.md); Claude arm NOT run (launch refused by permissions, command below)
-Next: owner runs the Claude command below, then score_pending.sh + pilot_report.py; read results/pilot_report.md and decide next step
+Status: pilot done for all three models (Claude via claude -p, Qwen3-Coder-30B, gpt-oss-20b; 120 attempts, scored; report in git-ignored results/pilot_report.md)
+Next: owner reads results/pilot_report.md and decides the next step (no further attempts before approval)
 Updated: 2026-11-06
 
 ## Pilot run state (day-1106 branch, NOT pushed)
 - Runner code: `scripts/run_pilot.py`, `scripts/run_local.sh`, `scripts/score_pending.sh`. Results go to `/home/jayden/projects/zero-step-robots/results/` (git-ignored; baselines live there too).
-- **Claude arm: launching it from this session was denied by the permission system, so it was not worked around.** Isolation probe (`claude -p`, empty cwd, no tools) did run; saved as `results/pilot/claude_isolation_probe_*.json`. Run the 40 attempts yourself:
   `cd <repo>/.claude/worktrees/day-1106 && <python> scripts/run_pilot.py claude --results /home/jayden/projects/zero-step-robots/results --n 10 --model claude-sonnet-5-5`
   (use `/home/jayden/projects/zero-step-robots/.claude/worktrees/first-stop-point/.venv/bin/python` as the python). Resumable: finished attempts are skipped.
 - **Qwen3-Coder-30B arm: DONE and scored** (40 attempts, all logged in results/attempts/; interim `results/pilot_report.md` built by `scripts/pilot_report.py <results>`; rerun it after the other arms). Command used: `PY=<that python> scripts/run_local.sh qwen3-coder-30b /home/jayden/projects/zero-step-robots/results` was queued via gpu-run (waits up to 12 h). The GPU lock was still held by robot-framing-test's llama-server (its pilot had finished; the server was idle). Not touched. If the queued job is gone, re-run the command.
