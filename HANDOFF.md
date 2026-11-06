@@ -1,7 +1,58 @@
 # HANDOFF: zero-step-robots
-Status: pilot done for all three models (Claude via claude -p, Qwen3-Coder-30B, gpt-oss-20b; 120 attempts, scored; report in git-ignored results/pilot_report.md)
-Next: owner reads results/pilot_report.md and decides the next step (no further attempts before approval)
+Status: round 2 prepared on branch `round2` (local, NOT pushed): local-model controller arms done and scored, variants, LQR, notable analysis, circuit compiler first compile, CRITIQUES.md; Claude arms (Sonnet controller, Opus both modes) waiting for the organizer
+Next: organizer runs the commands under "Organizer: run these", then reads results/pilot_report.md and results/notable/analysis.md; no LLM spec attempts for the compiler until the owner says go
 Updated: 2026-11-06
+
+## Round 2 state (branch `round2`, committed locally, NOT pushed)
+- Done by this session (all attempts logged under results/attempts/, scored; numbers only in git-ignored results/):
+  Qwen3-Coder-30B and gpt-oss-20b Python-controller arms (40 attempts each, via gpu-run in 420 s chunks, scored through sim-run).
+- Code added: `scripts/run_pilot.py` (`--mode weights|controller`, `--model`, `--max-seconds`; resumable), `scripts/run_local.sh`
+  (mode + time budget), `zsr/variants.py` + `--variant` in the harness, `scripts/score_variants.py`, `scripts/make_lqr.py`,
+  `scripts/analyze_weights.py`, `scripts/pilot_report.py` (now mode-aware, variant tables, do-nothing hopper baseline
+  in every hopper table), `circuitc/` + `scripts/run_circuit.sh` + `docs/circuit-spec.md`, `Makefile`, `CRITIQUES.md`.
+- Reports (local): `results/pilot_report.md`, `results/notable/analysis.md` (+ `analysis_data.json`), `results/circuit/`, `results/variants/`.
+- Tests: `PYTHONPATH=. .venv/bin/python -m pytest tests` (27 pass).
+
+## Organizer: run these
+The session could not run `claude -p` (permission system refuses batches). From the `round2` worktree, in a shell where
+`claude` is logged in (120 calls: Sonnet 5.5 controller arm, Opus 5.5 weights + controller arms, plus an Opus isolation probe).
+Resumable: finished attempts are skipped, so just rerun after an interruption.
+
+    cd /home/jayden/projects/zero-step-robots/.claude/worktrees/round2
+    PY=/home/jayden/projects/zero-step-robots/.claude/worktrees/first-stop-point/.venv/bin/python \
+      scripts/run_claude_round2.sh /home/jayden/projects/zero-step-robots/results
+
+That script runs, in order:
+1. `run_pilot.py probe --model claude-opus-5-5` (isolation probe)
+2. `run_pilot.py claude --n 10 --model claude-sonnet-5-5 --mode controller`
+3. `run_pilot.py claude --n 10 --model claude-opus-5-5 --mode weights`
+4. `run_pilot.py claude --n 10 --model claude-opus-5-5 --mode controller`
+5. `score_pending.sh` (sim-run), `score_variants.py` (sim-run, looped until it prints `complete`), `pilot_report.py`.
+Attempt ids: `claude_<task>_<arm>_controller_NN` (Sonnet), `claude-opus-5-5_<task>_<arm>_{weights,controller}_NN` (Opus).
+Afterwards: `make notable` is not needed again; read `results/pilot_report.md`.
+
+## Decisions taken (round 2)
+- Branch: the task text named `day-1106` first and `round2` in the owner's decisions; the earlier session had already
+  started `round2`, so I continued there. The `day-1106` worktree is empty (at main) and can be removed.
+- (c) Three, not two, Sonnet hopper weight attempts scored in the ~950-1000 range (named_01, strict_04, strict_08); all
+  three are copied to results/notable/ and analysed. They are selected on score; the analysis says so.
+- Variants (fixed before any attempt was scored on them): cartpole pole_long (length x2), pole_heavy (density x3),
+  gravity_low (x0.5), gravity_high (x2); hopper torso_heavy (density x2), torso_light (density x0.5). Same reward,
+  termination and seeds. Every arm, every attempt, is scored on every variant.
+- LQR: Q = I, R = 1, no tuning, discrete Riccati solved by iteration in numpy (no scipy; installed nothing). One
+  controller per variant plus the stock one, which is scored on all variants.
+- Local arms ran in 420 s chunks in the foreground (no background jobs), GPU only through gpu-run, one model at a time.
+- Compiler: JSON spec with two primitives (`linear` with declared range/tolerance, `reflex`) plus bias; oscillators
+  and anything else are compile errors. The two fixtures in `circuitc/examples/` were written by me as compiler tests;
+  they are not LLM outputs and are labelled that way in the report. No LLM wrote a spec.
+- Related work in README: only items relevant to this repo are cited; PicoGPT, vla.cpp, Hirundo, CrowdStrike and
+  Booz Allen are not cited (not relevant here). RoboStriker, URMA/MetaMorph and Text2Robot are cited by name and
+  marked [verify] (no web check). THIRD_PARTY.md rows for llama.cpp and the models are marked [verify] where upstream
+  sources/licences were not checked.
+- `scripts/pilot_report.py` previously keyed cells without the mode and would have mixed weights and controller
+  attempts; fixed.
+- Not done: nothing pushed; no changes outside the repo and results/.
+
 
 ## Pilot run state (day-1106 branch, NOT pushed)
 - Runner code: `scripts/run_pilot.py`, `scripts/run_local.sh`, `scripts/score_pending.sh`. Results go to `/home/jayden/projects/zero-step-robots/results/` (git-ignored; baselines live there too).

@@ -97,14 +97,8 @@ def baseline_rows(task, variant):
     for g, names in sorted(groups.items()):
         vals, dist = [], []
         for n in names:
-            src = n.replace(task + "_", "", 1)
-            if src.startswith("ppo"):
-                src = n.replace(task + "_", "", 1)
-            if variant is None:
-                s = base[n]
-            else:
-                key = src if not src.startswith("lqr") else src
-                s = var.get(key, {}).get(variant)
+            src = n if n.startswith(task + "_ppo") else n.replace(task + "_", "", 1)
+            s = base[n] if variant is None else var.get(src, {}).get(variant)
             if s is not None:
                 vals.append(s.get("mean_return"))
                 dist.append(s.get("mean_distance"))
@@ -118,6 +112,11 @@ def baseline_rows(task, variant):
         if s:
             rows.append(f"| baseline: LQR matched to this variant | - | - | 1 | 0 | {int(s['mean_return'] >= FULL)} | "
                         f"{f1(s['mean_return'])} | - | - | - | - | {f1(s['mean_distance'])} | {s['mean_return']:.0f} |")
+    c = R / "circuit" / f"{task}_{'pd' if task == 'cartpole' else 'pd_hold'}" / "score.json"
+    s = json.load(open(c)) if variant is None and c.exists() else var.get(f"circuit_{c.parent.name}", {}).get(variant)
+    if s:
+        rows.append(f"| compiler fixture (author-written spec, NOT an LLM) | - | - | 1 | 0 | {int(s['mean_return'] >= FULL)} | "
+                    f"{f1(s['mean_return'])} | - | - | - | - | {f1(s['mean_distance'])} | {s['mean_return']:.0f} |")
     return rows
 
 

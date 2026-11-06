@@ -84,3 +84,18 @@ Models: subscription CLIs and local models only, no API keys.
   per attempt index; the `claude -p` CLI exposes no sampling settings (defaults).
 - Runner: `scripts/run_pilot.py` (and `scripts/run_local.sh` for the local models). The pilot ends with
   `results/pilot_report.md` (local); then stop.
+
+## Round 2 (owner decisions, 2026-11-06)
+- **Python-controller arm for every model on both tasks** (the key comparison): same isolation, same 10 attempts per
+  model x task x arm (STRICT and NAMED), same scoring harness. Controllers run only through `sim-run` with the rlimits.
+- **Claude Opus 5.5 (`claude-opus-5-5`) alongside Sonnet 5.5 (`claude-sonnet-5-5`)**, 10 attempts per task and arm,
+  weights and controller modes. The Claude runs are done by the organizer (`scripts/run_claude_round2.sh`); local
+  models run through `gpu-run`.
+- **Modified-physics variants** (`zsr/variants.py`) of both tasks; every arm is scored on them.
+- **Baselines added:** cartpole LQR (`scripts/make_lqr.py`); the do-nothing (zero-weights) policy is in every hopper table.
+- **Notable attempts:** the high-scoring hopper weight attempts get a structural and robustness analysis
+  (`scripts/analyze_weights.py`); local only.
+- **Circuit-compiler track** (`docs/circuit-compiler-track.md`, `docs/circuit-spec.md`, `circuitc/`): first working
+  compile on both tasks; no LLM spec attempts yet.
+- **Criticism-proofing:** `CRITIQUES.md` lists the objections and the evidence or limitation for each. Every number in a
+  future post must trace to a file under `results/` and a `make` target.

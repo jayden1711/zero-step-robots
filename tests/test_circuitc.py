@@ -72,3 +72,14 @@ def test_examples_compile_and_load_in_the_harness(name, task, tmp_path):
     pol = MLPPolicy(task, p)  # shapes and finiteness validated by the same loader every arm uses
     obs = RNG.normal(scale=0.05, size=spec["obs_dim"])
     assert np.allclose(pol.act(obs), evaluate_spec(spec, obs), atol=0.01 * np.abs(evaluate_spec(spec, obs)).max() + 1e-9)
+
+
+def test_variants_change_physics_and_leave_stock_alone():
+    from zsr.tasks import make_env
+    from zsr.variants import VARIANTS
+    stock_c, stock_h = make_env("cartpole").unwrapped.model, make_env("hopper").unwrapped.model
+    assert make_env("cartpole", "gravity_high").unwrapped.model.opt.gravity[2] == 2 * stock_c.opt.gravity[2]
+    assert make_env("cartpole", "pole_heavy").unwrapped.model.body_mass[2] > 2.9 * stock_c.body_mass[2]
+    assert make_env("cartpole", "pole_long").unwrapped.model.body_mass[2] > 1.5 * stock_c.body_mass[2]
+    assert make_env("hopper", "torso_heavy").unwrapped.model.body_mass[1] > 1.9 * stock_h.body_mass[1]
+    assert set(VARIANTS) == {"cartpole", "hopper"}
