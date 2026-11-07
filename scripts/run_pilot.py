@@ -157,8 +157,8 @@ def run_cells(args):
             extra = {"attempt_index": i}
             if args.cmd == "claude":
                 extra["isolation"] = (f"fresh empty dir under {ISOLATION_ROOT}; pre-flight: no CLAUDE.md / CLAUDE.local.md / "
-                                      ".claude in cwd or any ancestor; batch pre-flight = isolation probe reported no instruction "
-                                      "file and no email")
+                                      ".claude in cwd or any ancestor; batch pre-flight = isolation probe's last line was "
+                                      "INSTRUCTION_FILES: none (the account email in the session context is expected; redacted on write)")
                 extra["claude_flags"] = ["claude", *CLAUDE_FLAGS, "--model", args.model]
                 extra["claude_env_extra"] = {"CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}
             new_attempt(aid, task, args.mode, args.model_label, interface, res, arm, extra)

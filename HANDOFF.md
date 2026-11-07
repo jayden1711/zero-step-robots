@@ -1,7 +1,7 @@
 # HANDOFF: zero-step-robots
-Status: branch `rerun` (local, NOT pushed): isolation fix + preflight, hopper `goal` arm, contaminated attempts labelled, report/CRITIQUES updated, runner ready; 160 `claude -p` calls NOT yet run (session cannot run batches)
-Next: organizer runs `scripts/run_claude_rerun.sh` (see "Organizer: run these"), then reads results/pilot_report.md; then owner decides publishing
-Updated: 2026-11-06
+Status: branch `rerun` (local, NOT pushed): isolated rerun of the 120 contaminated Claude attempts and the 40-attempt hopper `goal` arm are done and scored; report regenerated; reviewer recheck added to CRITIQUES.md
+Next: owner reads CRITIQUES.md 'Reviewer recheck (rerun)'; open items: merge/reconcile with `prepost`, regenerate clips and the notable addendum from clean attempts (stale notes on them), handle git history before any push, decide on a distance-scored arm
+Updated: 2026-11-06 (reviewer recheck)
 
 ## Rerun pass (branch `rerun`, from `prepost`; committed locally, NOT pushed)
 - Done: `scripts/run_pilot.py` runs every `claude -p` in a fresh empty dir under `/var/tmp` (all other flags unchanged) with a
@@ -25,7 +25,7 @@ Updated: 2026-11-06
   (+ env) are recorded per attempt in `meta.json` (`claude_flags`) and `run.json` (`command`). Tests: 44 pass.
   The two earlier probe files predate this flag; the batch re-probes with it (each batch = 1 extra call, 5 batches + 2 explicit
   probes in the runner script, so about 7 probe calls on top of the 160).
-- Not done: the 120 reruns and 40 goal attempts (permission system refuses `claude -p` batches), their scoring and report.
+- Update (reviewer recheck): the 120 reruns and 40 goal attempts ran (ids ending `_iso2`), were scored, and are in `results/pilot_report.md`. `scripts/make_clips.py` now skips contaminated attempts; the existing clips are stale.
 - Load was 13-14 throughout (below the 20 limit); no sims or GPU used.
 
 ## Organizer: run these (supersedes the round-2 command below)

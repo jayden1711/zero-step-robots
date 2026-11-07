@@ -70,7 +70,9 @@ Two prompt arms, each versioned; every attempt records its arm, prompt version a
 - **Isolation (fixed 2026-11-06).** Every `claude -p` call runs in a fresh empty dir under `/var/tmp`; a pre-flight
   refuses to run if any ancestor of the cwd has `CLAUDE.md`, `CLAUDE.local.md` or `.claude`; calls pass
   `--setting-sources project,local` (no user-level settings or CLAUDE.md), and each batch starts with an isolation
-  probe that must report no instruction file and contain no email. Attempts that ran with an unrelated `/tmp/CLAUDE.md` loaded are labelled
+  probe whose last line must be `INSTRUCTION_FILES: none`. (The account email in the session context is expected and is
+  redacted before anything is written.) The first-round Sonnet weights arm predates `--setting-sources` and was not rerun
+  (see CRITIQUES.md item 12). Attempts that ran with an unrelated `/tmp/CLAUDE.md` loaded are labelled
   `contaminated` in their meta, kept, excluded from main tables, and rerun with ids ending `_iso2`.
 
 ## Pilot (owner decisions, 2026-11-06)

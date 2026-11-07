@@ -3,6 +3,7 @@
   (a) the best-scoring Claude hopper weights attempt, (b) the median-scoring attempt of the same model/task/mode/arm.
 Same camera, same episode seed (first evaluation seed, not chosen), same length (1000 steps, 250 frames).
 Every frame carries a caption: rank among all scored hopper attempts, model, mode, arm, seed, score, "SIMULATION".
+Attempts labelled `contaminated` in their meta.json (unrelated project file in context) are never selected or ranked.
 Selection rule (fixed here, before looking at any clip): best = max stock mean return over Claude hopper weights
 attempts; median = the attempt in that cell whose mean return is closest to the cell median (ties: lower index).
 usage: sim-run python scripts/make_clips.py RESULTS_DIR   (env FFMPEG = path to an ffmpeg binary with libx264)
@@ -39,6 +40,8 @@ def load_attempts():
     for f in sorted(glob.glob(str(R / "attempts/*/score.json"))):
         s = json.load(open(f))
         m = json.load(open(Path(f).parent / "meta.json"))
+        if m.get("contaminated"):
+            continue
         out[m["id"]] = {"meta": m, "score": s}
     return out
 
