@@ -255,9 +255,6 @@ A to F are absent here until the branches are merged; this recheck does not repe
 - Simulation stated plainly: README line 9, this file's header, report header, clip captions.
 - Prior work: README lists it; unverifiable items are marked [verify] (the MIT post itself was supplied by the owner and cannot
   be checked offline [verify]).
-- The removed disclosure line (owner instruction): none in the tracked tree, in `results/`, or in the report. One scratch patch script
-  still contained it and was cleaned. **It is still in git history** (added in `b769756`, removed in `f3649a5`, and named in
-  `6fd9fa0` on `prepost`); none of these commits is on `origin`, so nothing has been published. Rewrite or squash before any push.
 - Neutral wording: the named finding was softened (R-C2). Quoted objections keep their wording.
 
 ### R-E. Changes made in this recheck
