@@ -69,6 +69,7 @@ def call_local(prompt: str, name: str, port: int, seed: int, timeout: int = 3600
 
 def run_cells(args):
     res = Path(args.results)
+    failed = []
     for task, arm in CELLS:
         for i in range(args.n):
             aid = f"{args.tag}_{task}_{arm}_weights_{i:02d}"
@@ -106,7 +107,11 @@ def run_cells(args):
                 run["error"] = f"{type(e).__name__}: {e}"
             (d / "run.json").write_text(json.dumps(run, indent=1))
             (d / "reply.md").write_text(reply)
+            if run.get("error") or run.get("returncode", 0) != 0 or not reply.strip():
+                failed.append(aid)
             print(aid, "reply chars:", len(reply), run.get("error", ""), flush=True)
+    if failed:
+        raise SystemExit(f"{len(failed)} attempt(s) got no usable reply (error, nonzero exit or empty): {failed}")
 
 
 def probe(args):
@@ -119,6 +124,8 @@ def probe(args):
         "prompt": PROBE_PROMPT, "seconds": dt, "returncode": p.returncode, "stdout": p.stdout, "stderr": p.stderr},
         indent=1))
     print(out)
+    if p.returncode != 0 or not p.stdout.strip():
+        raise SystemExit(f"probe failed: claude exit {p.returncode}, stdout {len(p.stdout)} chars (see {out})")
 
 
 def main():

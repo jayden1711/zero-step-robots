@@ -18,8 +18,12 @@ inner() {
   nice -n 10 "$BIN" -m "$GGUF" --host 127.0.0.1 --port $PORT --jinja --no-webui -ngl 99 $EXTRA \
     -c 32768 --parallel 1 --threads 6 --threads-batch 6 > "$RES/pilot/server_$NAME.log" 2>&1 &
   SRV=$!; trap 'kill $SRV 2>/dev/null; wait $SRV 2>/dev/null' EXIT
-  for _ in $(seq 1 600); do curl -sf http://127.0.0.1:$PORT/health >/dev/null && break; kill -0 $SRV || exit 5; sleep 2; done
+  up=0
+  for _ in $(seq 1 600); do curl -sf http://127.0.0.1:$PORT/health >/dev/null && { up=1; break; }; kill -0 $SRV || exit 5; sleep 2; done
+  [ "$up" -eq 1 ] || { echo "llama-server not healthy after 1200 s" >&2; exit 6; }
   $PY "$HERE/scripts/run_pilot.py" local --results "$RES" --name "$NAME" --port $PORT --n 10
+  rc=$?
+  exit $rc
 }
 export -f inner 2>/dev/null || true
 export NAME RES PORT HERE PY BIN GGUF NEED EXTRA
