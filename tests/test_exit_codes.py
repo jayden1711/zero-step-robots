@@ -47,7 +47,8 @@ def test_run_pilot_exits_nonzero_when_model_call_fails(tmp_path, monkeypatch):
         raise ConnectionRefusedError("server down")
     monkeypatch.setattr(run_pilot, "call_local", boom)
     args = argparse.Namespace(results=str(tmp_path), n=1, tag="fake", cmd="local", model_label="fake",
-                              name="gpt-oss-20b", port=1)
+                              name="gpt-oss-20b", port=1, arms="strict,named", mode="weights",
+                              suffix="", max_seconds=0)
     with pytest.raises(SystemExit) as e:
         run_pilot.run_cells(args)
     assert e.value.code not in (0, None)

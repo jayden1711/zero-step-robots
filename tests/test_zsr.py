@@ -88,7 +88,8 @@ def test_strict_arm_has_no_sensor_names_and_named_arm_does():
 
 def test_prompt_has_no_numbers_from_solutions():
     # Fairness guard: the prompt must not contain any constant from the reference controllers.
-    p = "".join(attempt.build_prompt(t, "weights", a) for t in TASKS for a in attempt.ARMS)
+    p = "".join(attempt.build_prompt(t, "weights", a) for t in TASKS for a in attempt.ARMS
+            if attempt.arm_valid(t, a))
     for token in ("12.0", "2.37", "1.4", "K ="):
         assert token not in p
 

@@ -61,8 +61,19 @@ Two prompt arms, each versioned; every attempt records its arm, prompt version a
   dimensions and bounds, step time, initial-state noise, and the reward/termination rules written in terms of
   observation indices (`obs[1]`). No sensor names, no robot or environment description.
 - **NAMED = prompt v1 (second arm).** Same, plus the Gymnasium observation names and a description of the robot.
-- Files: `prompts/*_v2.md` (strict), `prompts/*_v1.md` (named). `python -m zsr.attempt new ... --arm strict|named`
+- **GOAL (hopper only, owner decision 2026-11-06).** The STRICT prompt plus one sentence (`prompts/goal_hopper_v2.md`)
+  stating that the goal is to move forward as far as possible (forward distance); nothing else changed. Sonnet and
+  Opus, weights and controller, 10 attempts each. Success for every hopper arm = mean forward distance >= 1 m over the
+  100 scoring episodes; return and forward distance are always reported together.
+- Files: `prompts/*_v2.md` (strict), `prompts/*_v1.md` (named). `python -m zsr.attempt new ... --arm strict|named|goal`
   (default strict). Never edit a released prompt file; a change is a new version.
+- **Isolation (fixed 2026-11-06).** Every `claude -p` call runs in a fresh empty dir under `/var/tmp`; a pre-flight
+  refuses to run if any ancestor of the cwd has `CLAUDE.md`, `CLAUDE.local.md` or `.claude`; calls pass
+  `--setting-sources project,local` (no user-level settings or CLAUDE.md), and each batch starts with an isolation
+  probe whose last line must be `INSTRUCTION_FILES: none`. (The account email in the session context is expected and is
+  redacted before anything is written.) The first-round Sonnet weights arm predates `--setting-sources` and was not rerun
+  (see CRITIQUES.md item 12). Attempts that ran with an unrelated `/tmp/CLAUDE.md` loaded are labelled
+  `contaminated` in their meta, kept, excluded from main tables, and rerun with ids ending `_iso2`.
 
 ## Pilot (owner decisions, 2026-11-06)
 Models: subscription CLIs and local models only, no API keys.
@@ -84,3 +95,18 @@ Models: subscription CLIs and local models only, no API keys.
   per attempt index; the `claude -p` CLI exposes no sampling settings (defaults).
 - Runner: `scripts/run_pilot.py` (and `scripts/run_local.sh` for the local models). The pilot ends with
   `results/pilot_report.md` (local); then stop.
+
+## Round 2 (owner decisions, 2026-11-06)
+- **Python-controller arm for every model on both tasks** (the key comparison): same isolation, same 10 attempts per
+  model x task x arm (STRICT and NAMED), same scoring harness. Controllers run only through `sim-run` with the rlimits.
+- **Claude Opus 5.5 (`claude-opus-5-5`) alongside Sonnet 5.5 (`claude-sonnet-5-5`)**, 10 attempts per task and arm,
+  weights and controller modes. The Claude runs are done by the organizer (`scripts/run_claude_round2.sh`); local
+  models run through `gpu-run`.
+- **Modified-physics variants** (`zsr/variants.py`) of both tasks; every arm is scored on them.
+- **Baselines added:** cartpole LQR (`scripts/make_lqr.py`); the do-nothing (zero-weights) policy is in every hopper table.
+- **Notable attempts:** the high-scoring hopper weight attempts get a structural and robustness analysis
+  (`scripts/analyze_weights.py`); local only.
+- **Circuit-compiler track** (`docs/circuit-compiler-track.md`, `docs/circuit-spec.md`, `circuitc/`): first working
+  compile on both tasks; no LLM spec attempts yet.
+- **Criticism-proofing:** `CRITIQUES.md` lists the objections and the evidence or limitation for each. Every number in a
+  future post must trace to a file under `results/` and a `make` target.
