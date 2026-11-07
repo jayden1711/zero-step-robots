@@ -100,9 +100,11 @@ standing as locomotion in any post, and describe the `goal` result only as measu
     appeared (the Sonnet controller arm and all Opus arms; the first Sonnet weights arm ran before the file existed, by
     file and attempt timestamps).** Not claimed to be harmless beyond what its contents show. **Fix (branch `rerun`):**
     `scripts/run_pilot.py` now runs every `claude -p` call in a fresh empty directory under `/var/tmp`, with a pre-flight
-    that refuses to run if the cwd or any ancestor holds `CLAUDE.md`, `CLAUDE.local.md` or `.claude`, or if
-    `~/.claude/CLAUDE.md` exists. New probes for Sonnet and Opus (`results/claude_isolation_probe_<model>_*.json`)
-    show no instruction file. The 120 contaminated attempts are kept untouched, labelled `contaminated: /tmp/CLAUDE.md` in
+    that refuses to run if the cwd or any ancestor holds `CLAUDE.md`, `CLAUDE.local.md` or `.claude`; every call also
+    passes `--setting-sources project,local`, so a user-level `~/.claude/CLAUDE.md` is not loaded. Each batch first runs the
+    isolation probe and is refused if the probe reports any instruction file or its output contains an email address.
+    The exact flags are recorded per attempt (`meta.json`, `run.json`). Probe files are in
+    `results/claude_isolation_probe_<model>_*.json`. The 120 contaminated attempts are kept untouched, labelled `contaminated: /tmp/CLAUDE.md` in
     their `meta.json`, excluded from every main table and listed in their own report section; they were rerun with the
     same prompts and attempt indices as ids ending `_iso2`. Also, the account email address and a system
     prompt naming tools were visible to the model. No repo contents, results or memory were. Local models only receive the

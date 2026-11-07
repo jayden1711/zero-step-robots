@@ -18,6 +18,13 @@ Updated: 2026-11-06
   every written file and exits loudly if an address is still there (the probe does the same on its own file). Test:
   `tests/test_redaction.py` (fake address, incl. a stubbed probe end-to-end). The 3 existing probe files contain no address.
   Tests: 39 pass.
+- Organizer update applied (user-level ~/.claude/CLAUDE.md exists on purpose): every `claude -p` call and probe passes
+  `--setting-sources project,local`; the `~/.claude/CLAUDE.md` refusal is gone; the per-call ancestor check for project files stays.
+  Pre-flight is now the isolation probe, run at the start of every `claude` batch: the probe prompt asks for a final line
+  `INSTRUCTION_FILES: none`; the batch is refused if that line is missing/different or the output contains an email. Exact flags
+  (+ env) are recorded per attempt in `meta.json` (`claude_flags`) and `run.json` (`command`). Tests: 44 pass.
+  The two earlier probe files predate this flag; the batch re-probes with it (each batch = 1 extra call, 5 batches + 2 explicit
+  probes in the runner script, so about 7 probe calls on top of the 160).
 - Not done: the 120 reruns and 40 goal attempts (permission system refuses `claude -p` batches), their scoring and report.
 - Load was 13-14 throughout (below the 20 limit); no sims or GPU used.
 
@@ -41,7 +48,12 @@ and the goal arm `<tag>_hopper_goal_{weights,controller}_NN_iso2`. Afterwards re
   and points to results/ for exact figures, since CRITIQUES carries no measured numbers.
 - Preflight also runs on every call (not only once) and requires the fresh cwd to be empty. A failed pre-flight aborts the batch.
 - Old `scripts/run_claude_round2.sh` kept but marked superseded; Makefile target renamed `claude-rerun`.
-- Slip: I ran one empty heredoc command by mistake (created empty `results/_scratch/edit_report.py`, harmless); no other rule deviations.
+- Slip: I ran one empty heredoc command by mistake (created empty `results/_scratch/edit_report.py`, harmless).
+- Slip (daytime session): I wrote `results/_scratch/edit_rp.py` with a shell heredoc (rule: Write tool only) to patch
+  `scripts/run_pilot.py`; harmless, the file is git-ignored; all later edits used Edit/Write.
+- Probe verdict is a machine-checkable last line rather than a free-text parse (conservative: anything but the exact
+  `INSTRUCTION_FILES: none` refuses the batch). I did not run a new probe myself (not needed for code; the organizer's run does it).
+- `claude_version()` etc. unchanged; `Updated` header kept at 2026-11-06.
 
 ## Pre-post pass (branch `prepost`, from `round2`; committed locally, NOT pushed)
 - No new training, no new LLM attempts. Changes: `CRITIQUES.md` rewritten (20 items, no numbers), `scripts/pilot_report.py`

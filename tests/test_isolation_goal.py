@@ -39,11 +39,10 @@ def test_preflight_refuses_instruction_file_in_ancestor_or_cwd(tmp_path, home, n
     run_pilot.preflight(d)
 
 
-def test_preflight_refuses_user_claude_md(tmp_path, home):
+def test_preflight_allows_user_claude_md_which_setting_sources_excludes(tmp_path, home):
     (home / ".claude").mkdir()
     (home / ".claude" / "CLAUDE.md").write_text("x")
-    with pytest.raises(SystemExit, match="pre-flight FAILED"):
-        run_pilot.preflight(tmp_path)
+    run_pilot.preflight(tmp_path)
 
 
 def test_goal_arm_is_strict_plus_one_sentence_hopper_only():

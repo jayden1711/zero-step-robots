@@ -3,8 +3,9 @@
 # calls, 2 isolation probes), then scoring, variants and the report. Resumable: finished attempts are skipped, so
 # rerun the same command after any interruption. Run from the repo root.
 # usage: PY=<python> scripts/run_claude_rerun.sh RESULTS_DIR
-# Every call runs in a fresh empty dir under /var/tmp; run_pilot.py refuses to start if any ancestor has CLAUDE.md,
-# CLAUDE.local.md or .claude, or if ~/.claude/CLAUDE.md exists.
+# Every call runs in a fresh empty dir under /var/tmp with --setting-sources project,local; run_pilot.py refuses to run
+# if any ancestor has CLAUDE.md, CLAUDE.local.md or .claude, and every batch starts with the isolation probe (refused
+# if it reports an instruction file or its output has an email).
 set -uo pipefail
 RES=$1; PY=${PY:-python3}; export PYTHONPATH=$PWD
 S=claude-sonnet-5-5; O=claude-opus-5-5

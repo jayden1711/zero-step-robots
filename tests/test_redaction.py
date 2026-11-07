@@ -48,3 +48,37 @@ def test_probe_output_is_redacted(tmp_path, monkeypatch):
     assert len(files) == 1
     txt = files[0].read_text()
     assert FAKE not in txt and "[redacted-email]" in txt
+
+
+def _out(reply):
+    return json.dumps({"result": reply})
+
+
+def test_probe_verdict_ok():
+    assert run_pilot.probe_verdict(_out("No tools.\nINSTRUCTION_FILES: none"))[0]
+
+
+def test_probe_verdict_refuses_instruction_file():
+    ok, why = run_pilot.probe_verdict(_out("I see CLAUDE.md\nINSTRUCTION_FILES: CLAUDE.md"))
+    assert not ok and "instruction" in why
+
+
+def test_probe_verdict_refuses_missing_verdict_and_email():
+    assert not run_pilot.probe_verdict(_out("no tools, nothing"))[0]
+    assert not run_pilot.probe_verdict("not json")[0]
+    ok, why = run_pilot.probe_verdict(_out(f"{FAKE}\nINSTRUCTION_FILES: none"))
+    assert not ok and "email" in why
+
+
+def test_claude_flags_exclude_user_settings():
+    f = run_pilot.CLAUDE_FLAGS
+    assert f[f.index("--setting-sources") + 1] == "project,local"
+
+
+def test_run_cells_refuses_batch_when_probe_fails(tmp_path, monkeypatch):
+    monkeypatch.setattr(run_pilot, "probe", lambda a: (False, "probe reports an instruction file"))
+    args = types.SimpleNamespace(cmd="claude", results=str(tmp_path), model="m", arms="strict", n=1, mode="weights",
+                                 tag="t", suffix="", max_seconds=0, model_label="m")
+    with pytest.raises(SystemExit):
+        run_pilot.run_cells(args)
+    assert not (tmp_path / "attempts").exists()

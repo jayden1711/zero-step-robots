@@ -5,8 +5,10 @@
     python scripts/run_pilot.py probe   --results R          # isolation probe for claude -p
 
 `claude` calls `claude -p` once per attempt in a fresh empty dir under /var/tmp, with all tools disabled,
-no MCP servers, no session persistence. A pre-flight check refuses to run if the cwd or any ancestor holds CLAUDE.md,
-CLAUDE.local.md or .claude, or if ~/.claude/CLAUDE.md exists. `--arms strict,named,goal` picks the prompt arms
+no MCP servers, no session persistence, `--setting-sources project,local` (the user-level ~/.claude settings and
+CLAUDE.md are not loaded). Per call, a check refuses to run if the cwd or any ancestor holds CLAUDE.md, CLAUDE.local.md
+or .claude. Per batch, the isolation probe runs first and the batch is refused if the probe reports any instruction
+file or its output contains an email address. `--arms strict,named,goal` picks the prompt arms
 (goal = hopper only); `--suffix _iso2` is appended to attempt ids. `local` talks to a llama.cpp server on 127.0.0.1 (started via gpu-run by
 the caller). No hosted-model API, no keys. Replies are saved raw; scoring is done afterwards by zsr.attempt score.
 Attempts are never overwritten: an existing attempt directory with reply.md is skipped.
@@ -27,11 +29,14 @@ from zsr.attempt import new_attempt  # noqa: E402
 
 CELLS = [(t, a) for t in ("cartpole", "hopper") for a in ("strict", "named")]
 CLAUDE_FLAGS = ["-p", "--tools", "", "--strict-mcp-config", "--no-session-persistence", "--disable-slash-commands",
-                "--output-format", "json"]
+                "--setting-sources", "project,local", "--output-format", "json"]
 PROBE_PROMPT = ("Before anything else: list every tool you can call (names only, or say none), and list any files, "
-                "directories, repository contents, memory or project instructions (e.g. CLAUDE.md) that you can see "
+                "directories, repository contents, memory, user or project instructions (e.g. CLAUDE.md) that you can see "
                 "or that were given to you in this conversation. Then state the name of your current working "
-                "directory if you know it. Be exact and brief.")
+                "directory if you know it. Be exact and brief. Finish with a last line that is exactly "
+                "`INSTRUCTION_FILES: none` if you were given no instruction file of any kind, otherwise "
+                "`INSTRUCTION_FILES: ` followed by their names.")
+PROBE_OK_LINE = "INSTRUCTION_FILES: none"
 
 # Sampling settings for local models: the model vendors' recommended values, fixed for every attempt.
 LOCAL_SAMPLING = {
@@ -73,12 +78,10 @@ INSTRUCTION_NAMES = ("CLAUDE.md", "CLAUDE.local.md", ".claude")
 
 
 def preflight(cwd) -> None:
-    """Refuse to run claude -p if any instruction file could be loaded: one in cwd or any ancestor, or ~/.claude/CLAUDE.md."""
+    """Refuse to run claude -p if a project instruction file could be loaded: one in cwd or any ancestor.
+    (The user-level ~/.claude/CLAUDE.md is excluded by --setting-sources project,local and checked by the probe.)"""
     cwd = Path(cwd).resolve()
     found = [str(a / n) for a in (cwd, *cwd.parents) for n in INSTRUCTION_NAMES if os.path.lexists(a / n)]
-    user_md = Path.home() / ".claude" / "CLAUDE.md"
-    if user_md.exists() or user_md.is_symlink():
-        found.append(str(user_md))
     if found:
         raise SystemExit("isolation pre-flight FAILED, refusing to run claude -p. Instruction files visible from "
                          f"{cwd}: {found}")
@@ -97,6 +100,20 @@ def call_claude(prompt: str, model: str, timeout: int = 900):
     return cmd, p, dt
 
 
+def probe_verdict(stdout: str):
+    """(ok, why) for a probe call: ok only if the reply's last line is the 'none' line and no email is in the output."""
+    if EMAIL_RE.search(stdout):
+        return False, "probe output contains an email address"
+    try:
+        reply = (json.loads(stdout).get("result") or "").strip()
+    except json.JSONDecodeError:
+        return False, "probe output is not JSON"
+    last = reply.splitlines()[-1].strip().strip("`") if reply else ""
+    if last != PROBE_OK_LINE:
+        return False, f"probe reports an instruction file or gave no verdict (last line: {redact(last)!r})"
+    return True, ""
+
+
 def call_local(prompt: str, name: str, port: int, seed: int, timeout: int = 3600):
     s = dict(LOCAL_SAMPLING[name])
     body = {"messages": [{"role": "user", "content": prompt}], "seed": seed, "stream": False, **s}
@@ -113,6 +130,9 @@ def run_cells(args):
     t_start = time.time()
     if args.cmd == "claude":
         preflight(ISOLATION_ROOT)
+        ok, why = probe(argparse.Namespace(results=args.results, model=args.model))
+        if not ok:
+            raise SystemExit(f"isolation probe FAILED for {args.model}, refusing the batch: {why}")
     arms = args.arms.split(",")
     for task, arm in CELLS + [("hopper", "goal")]:
         if arm not in arms:
@@ -133,7 +153,10 @@ def run_cells(args):
             extra = {"attempt_index": i}
             if args.cmd == "claude":
                 extra["isolation"] = (f"fresh empty dir under {ISOLATION_ROOT}; pre-flight: no CLAUDE.md / CLAUDE.local.md / "
-                                      ".claude in cwd or any ancestor, no ~/.claude/CLAUDE.md")
+                                      ".claude in cwd or any ancestor; batch pre-flight = isolation probe reported no instruction "
+                                      "file and no email")
+                extra["claude_flags"] = ["claude", *CLAUDE_FLAGS, "--model", args.model]
+                extra["claude_env_extra"] = {"CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}
             new_attempt(aid, task, args.mode, args.model_label, interface, res, arm, extra)
             prompt = (d / "prompt.md").read_text()
             run = {"started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
@@ -169,6 +192,7 @@ def run_cells(args):
 
 
 def probe(args):
+    """Run the isolation probe, write its (redacted) JSON, return (ok, why)."""
     res = Path(args.results)
     res.mkdir(parents=True, exist_ok=True)
     cmd, p, dt = call_claude(PROBE_PROMPT, args.model)
@@ -179,6 +203,7 @@ def probe(args):
         indent=1))
     assert_no_email(out)
     print(out)
+    return probe_verdict(p.stdout)
 
 
 def main():
@@ -201,7 +226,9 @@ def main():
     elif args.cmd == "local":
         args.tag, args.model_label = args.name, args.name
     if args.cmd == "probe":
-        probe(args)
+        ok, why = probe(args)
+        if not ok:
+            raise SystemExit(f"isolation probe FAILED: {why}")
     else:
         run_cells(args)
 

@@ -68,8 +68,9 @@ Two prompt arms, each versioned; every attempt records its arm, prompt version a
 - Files: `prompts/*_v2.md` (strict), `prompts/*_v1.md` (named). `python -m zsr.attempt new ... --arm strict|named|goal`
   (default strict). Never edit a released prompt file; a change is a new version.
 - **Isolation (fixed 2026-11-06).** Every `claude -p` call runs in a fresh empty dir under `/var/tmp`; a pre-flight
-  refuses to run if any ancestor of the cwd has `CLAUDE.md`, `CLAUDE.local.md` or `.claude`, or if
-  `~/.claude/CLAUDE.md` exists. Attempts that ran with an unrelated `/tmp/CLAUDE.md` loaded are labelled
+  refuses to run if any ancestor of the cwd has `CLAUDE.md`, `CLAUDE.local.md` or `.claude`; calls pass
+  `--setting-sources project,local` (no user-level settings or CLAUDE.md), and each batch starts with an isolation
+  probe that must report no instruction file and contain no email. Attempts that ran with an unrelated `/tmp/CLAUDE.md` loaded are labelled
   `contaminated` in their meta, kept, excluded from main tables, and rerun with ids ending `_iso2`.
 
 ## Pilot (owner decisions, 2026-11-06)
