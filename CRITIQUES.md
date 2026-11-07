@@ -6,7 +6,7 @@ Each item is one of: **Addressed** (where), **Extra experiment** (what, and whet
 
 Scope of the evidence: models claude-sonnet-5-5 and claude-opus-5-5 (subscription CLI), Qwen3-Coder-30B (4-bit GGUF) and
 gpt-oss-20b (local, via llama.cpp); tasks cartpole (`InvertedPendulum-v5`) and hopper (`Hopper-v5`); two prompt arms
-(STRICT, NAMED); two output modes (weights, Python controller); ten attempts per model x task x arm x mode cell; baselines
+(STRICT, NAMED, plus a hopper-only GOAL arm for Sonnet and Opus); two output modes (weights, Python controller); ten attempts per model x task x arm x mode cell; baselines
 zero, random, hand-written reference controller, LQR (cartpole), PPO; modified-physics variants; a circuit-compiler first compile.
 
 Reproduction: every table is produced by a `make` target (see `Makefile`); attempt directories hold the raw prompt,
@@ -33,6 +33,18 @@ Main report: `results/pilot_report.md`. Clips: `results/clips/` (`make clips`).
    it. **Limitation:** a standing score is not evidence of locomotion, and the post must say so beside every hopper
    number. A forward-speed-only metric, or a harder task (get from A to B), would separate these cases better and was not
    used, so as not to change the reward after seeing the results; this is stated as a limitation, not run.
+
+**Named finding: "the LLM exploited the healthy reward."** When the prompt gives the reward and nothing about the goal,
+LLM-written hopper policies that score highest by return are the ones that stand still: return at the value of surviving
+1000 steps (+1 per step, so about 1000) and forward distance about zero. The model reads "reward = 1 while healthy + a
+velocity term" and optimises the term that is cheap to get, which is what the scoring literally asks for. This holds for
+weights and for Python controllers, so it is not an artefact of the weight format. The comparison that tests whether it
+is a prompt-framing effect is the hopper `goal` arm: the STRICT prompt plus one sentence stating that the goal is to move
+forward as far as possible (forward distance), nothing else changed, same models, modes, attempt indices and isolation.
+Success for every hopper arm, old and new, is a mean forward distance of at least 1 m over the 100 scoring episodes;
+the report shows return and distance side by side with the success count, and a "Finding" section comparing STRICT
+with `goal` per model and mode (`results/pilot_report.md`; exact figures live there, not in git). Do not describe
+standing as locomotion in any post, and describe the `goal` result only as measured there.
 3. **"It memorised published solutions."** Addressed in part. Modified-physics variants (`zsr/variants.py`, chosen
    before any attempt was scored on them): pole length, pole mass and gravity for cartpole; torso mass for hopper.
    Every arm (baselines, every LLM attempt, compiled circuits) is scored on every variant by the same harness
@@ -86,8 +98,13 @@ Main report: `results/pilot_report.md`. Clips: `results/clips/` (`make clips`).
     cwd, and was loaded as project instructions. It concerns a different project (a Jetson timing study), mentions neither
     this repo, hopper, cartpole, weights nor any result, but it was in the context of the attempts that ran after that file
     appeared (the Sonnet controller arm and all Opus arms; the first Sonnet weights arm ran before the file existed, by
-    file and attempt timestamps).** Not claimed to be harmless beyond what its contents show. Fix for any future run: use a
-    cwd whose ancestors contain no instruction files, and re-run the probe. Also, the account email address and a system
+    file and attempt timestamps).** Not claimed to be harmless beyond what its contents show. **Fix (branch `rerun`):**
+    `scripts/run_pilot.py` now runs every `claude -p` call in a fresh empty directory under `/var/tmp`, with a pre-flight
+    that refuses to run if the cwd or any ancestor holds `CLAUDE.md`, `CLAUDE.local.md` or `.claude`, or if
+    `~/.claude/CLAUDE.md` exists. New probes for Sonnet and Opus (`results/claude_isolation_probe_<model>_*.json`)
+    show no instruction file. The 120 contaminated attempts are kept untouched, labelled `contaminated: /tmp/CLAUDE.md` in
+    their `meta.json`, excluded from every main table and listed in their own report section; they were rerun with the
+    same prompts and attempt indices as ids ending `_iso2`. Also, the account email address and a system
     prompt naming tools were visible to the model. No repo contents, results or memory were. Local models only receive the
     prompt through a local server API. Prompts do not contain results. **Limitation** as above.
 13. **"Hosted-model runs aren't reproducible."** Limitation. The CLI exposes no sampling settings or seed; results vary
@@ -108,8 +125,8 @@ Main report: `results/pilot_report.md`. Clips: `results/clips/` (`make clips`).
 18. **"Variants and thresholds were tuned after seeing results."** Addressed. Variant parameters, the 1 m "travels"
     threshold, the scoring seeds, and the clip selection rule are fixed in code that predates the corresponding results,
     and git history shows when. The 1 m threshold was added to the report after the standing finding, so it is
-    post-hoc in time; it is a coarse floor, not tuned (every LLM attempt is far below it and PPO far above), and the
-    per-attempt distances are listed so readers can apply their own.
+    post-hoc in time; it is a coarse floor, not tuned, and the per-attempt distances are listed so readers can apply
+    their own. The `goal` arm and the isolated rerun were specified (2026-11-06) before any of their attempts existed.
 
 ## About the method track
 

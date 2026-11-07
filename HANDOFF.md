@@ -1,7 +1,42 @@
 # HANDOFF: zero-step-robots
-Status: pre-post pass done on branch `prepost` (local, NOT pushed): CRITIQUES.md updated for round 2, hopper tables report forward distance, clips rendered; waiting for the fresh reviewer
-Next: reviewer session reads CRITIQUES.md, results/pilot_report.md, results/clips/README.md; owner decides publishing (nothing pushed); fix the /tmp/CLAUDE.md exposure before any new Claude attempts
+Status: branch `rerun` (local, NOT pushed): isolation fix + preflight, hopper `goal` arm, contaminated attempts labelled, report/CRITIQUES updated, runner ready; 160 `claude -p` calls NOT yet run (session cannot run batches)
+Next: organizer runs `scripts/run_claude_rerun.sh` (see "Organizer: run these"), then reads results/pilot_report.md; then owner decides publishing
 Updated: 2026-11-06
+
+## Rerun pass (branch `rerun`, from `prepost`; committed locally, NOT pushed)
+- Done: `scripts/run_pilot.py` runs every `claude -p` in a fresh empty dir under `/var/tmp` (all other flags unchanged) with a
+  pre-flight (refuses if cwd or any ancestor has CLAUDE.md / CLAUDE.local.md / .claude, or `~/.claude/CLAUDE.md` exists);
+  `--suffix` and `--arms` options; hopper `goal` arm (`prompts/goal_hopper_v2.md`, `zsr/attempt.py`); `scripts/mark_contaminated.py`
+  (ran: 120 attempts labelled in their meta, nothing deleted); `scripts/pilot_report.py` (contaminated excluded and listed
+  separately, hopper tables with mean/median distance and `success` = mean forward distance >= 1 m, a "Finding: the LLM
+  exploited the healthy reward" section with strict-vs-goal comparison); CRITIQUES.md (named finding, item 12 fix), PLAN.md.
+  Tests: 34 pass (`PYTHONPATH=. .venv/bin/python -m pytest tests`).
+- New isolation probes done (one per model, allowed in this session): `results/claude_isolation_probe_claude-sonnet-5-5_*.json`
+  and `..._claude-opus-5-5_*.json`; both replies list no tools, no files, no memory, no CLAUDE.md; cwd under /var/tmp.
+- Not done: the 120 reruns and 40 goal attempts (permission system refuses `claude -p` batches), their scoring and report.
+- Load was 13-14 throughout (below the 20 limit); no sims or GPU used.
+
+## Organizer: run these (supersedes the round-2 command below)
+From the `rerun` worktree, in a shell where `claude` is logged in. Resumable: finished attempts are skipped; just rerun after
+an interruption. 160 `claude -p` calls (+ 2 more probes), then scoring (sim-run, waits while load >= 20), variants, report.
+
+    cd /home/jayden/projects/wt/zero-step-robots-rerun
+    PY=/home/jayden/projects/wt/zero-step-robots-rerun/.venv/bin/python \
+      scripts/run_claude_rerun.sh /home/jayden/projects/zero-step-robots/results
+
+New ids end `_iso2`: `claude_<task>_<arm>_controller_NN_iso2` (Sonnet), `claude-opus-5-5_<task>_<arm>_{weights,controller}_NN_iso2`,
+and the goal arm `<tag>_hopper_goal_{weights,controller}_NN_iso2`. Afterwards read the `Finding` section of `results/pilot_report.md`.
+
+## Decisions taken (rerun pass)
+- "Same seeds": `claude -p` has no seed parameter, so "same" means same prompt (hash) and same attempt index NN; local arms are untouched.
+- Goal sentence: "The goal is to move forward as far as possible (forward distance)." appended after the strict task spec, hopper only.
+- Goal arm ids also carry `_iso2` so every attempt run under isolation is identifiable by suffix; clean Sonnet weights (ran
+  before the contaminating file existed) keep their old ids and stay in the main tables beside the `_iso2` ones.
+- CRITIQUES.md states the stand-still finding qualitatively (return about the 1000-step survival value, distance about zero)
+  and points to results/ for exact figures, since CRITIQUES carries no measured numbers.
+- Preflight also runs on every call (not only once) and requires the fresh cwd to be empty. A failed pre-flight aborts the batch.
+- Old `scripts/run_claude_round2.sh` kept but marked superseded; Makefile target renamed `claude-rerun`.
+- Slip: I ran one empty heredoc command by mistake (created empty `results/_scratch/edit_report.py`, harmless); no other rule deviations.
 
 ## Pre-post pass (branch `prepost`, from `round2`; committed locally, NOT pushed)
 - No new training, no new LLM attempts. Changes: `CRITIQUES.md` rewritten (20 items, no numbers), `scripts/pilot_report.py`
@@ -37,7 +72,7 @@ Updated: 2026-11-06
 - Reports (local): `results/pilot_report.md`, `results/notable/analysis.md` (+ `analysis_data.json`), `results/circuit/`, `results/variants/`.
 - Tests: `PYTHONPATH=. .venv/bin/python -m pytest tests` (27 pass).
 
-## Organizer: run these
+## Organizer: run these (OLD round-2 command, superseded)
 The session could not run `claude -p` (permission system refuses batches). From the `round2` worktree, in a shell where
 `claude` is logged in (120 calls: Sonnet 5.5 controller arm, Opus 5.5 weights + controller arms, plus an Opus isolation probe).
 Resumable: finished attempts are skipped, so just rerun after an interruption.

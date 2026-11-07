@@ -4,7 +4,7 @@ R  ?= $(CURDIR)/results
 export PYTHONPATH := $(CURDIR)
 SIM = ~/projects/bin/sim-run
 
-.PHONY: clips test baselines lqr score variants report circuit notable local-controller local-weights claude-round2
+.PHONY: clips test baselines lqr score variants report circuit notable local-controller local-weights claude-rerun
 test:            ; $(PY) -m pytest tests -q
 baselines:       ; $(SIM) $(PY) scripts/run_baselines.py --out $(R)/baselines
 lqr:             ; $(SIM) $(PY) scripts/make_lqr.py $(R)/baselines/lqr
@@ -16,5 +16,5 @@ notable:         ; $(SIM) $(PY) scripts/analyze_weights.py $(R) claude_hopper_na
 # local models: M=qwen3-coder-30b|gpt-oss-20b; runs inside gpu-run, 420 s chunks, rerun until it stops printing "time budget"
 local-controller: ; PY=$(PY) scripts/run_local.sh $(M) $(R) controller 420
 local-weights:    ; PY=$(PY) scripts/run_local.sh $(M) $(R) weights 420
-claude-round2:   ; PY=$(PY) scripts/run_claude_round2.sh $(R)
+claude-rerun:    ; PY=$(PY) scripts/run_claude_rerun.sh $(R)   # isolated rerun + goal arm (organizer)
 clips:          ; FFMPEG=$(FFMPEG) $(SIM) $(PY) scripts/make_clips.py $(R)   # FFMPEG = an ffmpeg binary with libx264; needs MUJOCO_GL=egl-capable libs

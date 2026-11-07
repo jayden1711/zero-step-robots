@@ -21,7 +21,9 @@ from .tasks import HIDDEN, TASKS
 
 ROOT = Path(__file__).resolve().parent.parent
 PROMPTS = ROOT / "prompts"
-ARMS = {"strict": "v2", "named": "v1"}
+ARMS = {"strict": "v2", "named": "v1", "goal": "v2"}
+# `goal` = the strict prompt plus one sentence naming the goal (forward distance); hopper only.
+ARM_TASKS = {"goal": ("hopper",)}
 MODES = ("weights", "controller")
 
 
@@ -29,12 +31,21 @@ def _read(name: str) -> str:
     return (PROMPTS / name).read_text()
 
 
+def arm_valid(task: str, arm: str) -> bool:
+    return task in ARM_TASKS.get(arm, (task,))
+
+
 def component_files(task: str, mode: str, arm: str) -> list:
     v = ARMS[arm]
-    return [f"template_{v}.md", f"task_{task}_{v}.md", f"format_{mode}_{v}.md"]
+    files = [f"template_{v}.md", f"task_{task}_{v}.md", f"format_{mode}_{v}.md"]
+    if arm == "goal":
+        files.append(f"goal_{task}_{v}.md")
+    return files
 
 
 def build_prompt(task: str, mode: str, arm: str = "strict") -> str:
+    if not arm_valid(task, arm):
+        raise ValueError(f"arm {arm!r} is not defined for task {task!r}")
     t, sh = TASKS[task], shapes(task)
     v = ARMS[arm]
     fmt = _read(f"format_{mode}_{v}.md")
@@ -43,7 +54,10 @@ def build_prompt(task: str, mode: str, arm: str = "strict") -> str:
             "{{B2_SHAPE}}": list(sh["b2"])}
     for k, val in subs.items():
         fmt = fmt.replace(k, str(val))
-    text = _read(f"template_{v}.md").replace("{{TASK_SPEC}}", _read(f"task_{task}_{v}.md").strip())
+    spec = _read(f"task_{task}_{v}.md").strip()
+    if arm == "goal":
+        spec += "\n\n" + _read(f"goal_{task}_{v}.md").strip()
+    text = _read(f"template_{v}.md").replace("{{TASK_SPEC}}", spec)
     text = text.replace("{{OUTPUT_FORMAT}}", fmt.strip())
     assert "{{" not in text, "unfilled placeholder"
     return text.strip() + "\n"
@@ -58,7 +72,7 @@ def template_hashes(task: str, mode: str, arm: str) -> dict:
 
 
 def new_attempt(attempt_id: str, task: str, mode: str, model: str, interface: str, results: Path,
-                arm: str = "strict") -> Path:
+                arm: str = "strict", extra: dict = None) -> Path:
     d = results / "attempts" / attempt_id
     if d.exists():
         raise FileExistsError(f"{d} already exists; attempts are never overwritten")
@@ -67,7 +81,7 @@ def new_attempt(attempt_id: str, task: str, mode: str, model: str, interface: st
     meta = {"id": attempt_id, "task": task, "mode": mode, "model": model, "interface": interface,
             "arm": arm, "prompt_version": ARMS[arm], "prompt_sha256": prompt_hash(task, mode, arm),
             "template_sha256": template_hashes(task, mode, arm),
-            "created": datetime.now(timezone.utc).isoformat()}
+            "created": datetime.now(timezone.utc).isoformat(), **(extra or {})}
     (d / "meta.json").write_text(json.dumps(meta, indent=1))
     return d
 

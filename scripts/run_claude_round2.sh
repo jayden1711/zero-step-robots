@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# SUPERSEDED by scripts/run_claude_rerun.sh (the round-2 runs it started were contaminated by /tmp/CLAUDE.md). Kept for the record.
 # Organizer: Claude arms of round 2 (120 `claude -p` calls), then scoring, variants and the report. Resumable: finished
 # attempts are skipped, so rerun after any interruption. Run from the repo root.
 # usage: PY=<python> scripts/run_claude_round2.sh RESULTS_DIR

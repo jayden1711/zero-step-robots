@@ -4,8 +4,10 @@
     python scripts/run_pilot.py local   --results R --name qwen3-coder-30b --port 8089 [--n 10] [--mode weights|controller]
     python scripts/run_pilot.py probe   --results R          # isolation probe for claude -p
 
-`claude` calls `claude -p` once per attempt in a fresh empty temp dir outside any repo, with all tools disabled,
-no MCP servers, no session persistence. `local` talks to a llama.cpp server on 127.0.0.1 (started via gpu-run by
+`claude` calls `claude -p` once per attempt in a fresh empty dir under /var/tmp, with all tools disabled,
+no MCP servers, no session persistence. A pre-flight check refuses to run if the cwd or any ancestor holds CLAUDE.md,
+CLAUDE.local.md or .claude, or if ~/.claude/CLAUDE.md exists. `--arms strict,named,goal` picks the prompt arms
+(goal = hopper only); `--suffix _iso2` is appended to attempt ids. `local` talks to a llama.cpp server on 127.0.0.1 (started via gpu-run by
 the caller). No hosted-model API, no keys. Replies are saved raw; scoring is done afterwards by zsr.attempt score.
 Attempts are never overwritten: an existing attempt directory with reply.md is skipped.
 """
@@ -47,8 +49,28 @@ def claude_version() -> str:
     return subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip()
 
 
+ISOLATION_ROOT = "/var/tmp"
+INSTRUCTION_NAMES = ("CLAUDE.md", "CLAUDE.local.md", ".claude")
+
+
+def preflight(cwd) -> None:
+    """Refuse to run claude -p if any instruction file could be loaded: one in cwd or any ancestor, or ~/.claude/CLAUDE.md."""
+    cwd = Path(cwd).resolve()
+    found = [str(a / n) for a in (cwd, *cwd.parents) for n in INSTRUCTION_NAMES if os.path.lexists(a / n)]
+    user_md = Path.home() / ".claude" / "CLAUDE.md"
+    if user_md.exists() or user_md.is_symlink():
+        found.append(str(user_md))
+    if found:
+        raise SystemExit("isolation pre-flight FAILED, refusing to run claude -p. Instruction files visible from "
+                         f"{cwd}: {found}")
+
+
 def call_claude(prompt: str, model: str, timeout: int = 900):
-    with tempfile.TemporaryDirectory(prefix="zsr_claude_") as cwd:
+    """Run one claude -p call in a fresh empty directory under /var/tmp (re-checked every call)."""
+    with tempfile.TemporaryDirectory(prefix="zsr_claude_", dir=ISOLATION_ROOT) as cwd:
+        if os.listdir(cwd):
+            raise SystemExit(f"{cwd} is not empty")
+        preflight(cwd)
         cmd = ["claude", *CLAUDE_FLAGS, "--model", model]
         t0 = time.time()
         p = subprocess.run(cmd, input=prompt, capture_output=True, text=True, cwd=cwd, env=claude_env(), timeout=timeout)
@@ -70,9 +92,14 @@ def call_local(prompt: str, name: str, port: int, seed: int, timeout: int = 3600
 def run_cells(args):
     res = Path(args.results)
     t_start = time.time()
-    for task, arm in CELLS:
+    if args.cmd == "claude":
+        preflight(ISOLATION_ROOT)
+    arms = args.arms.split(",")
+    for task, arm in CELLS + [("hopper", "goal")]:
+        if arm not in arms:
+            continue
         for i in range(args.n):
-            aid = f"{args.tag}_{task}_{arm}_{args.mode}_{i:02d}"
+            aid = f"{args.tag}_{task}_{arm}_{args.mode}_{i:02d}{args.suffix}"
             d = res / "attempts" / aid
             if (d / "reply.md").exists():
                 continue
@@ -81,9 +108,14 @@ def run_cells(args):
                 return
             if d.exists():
                 raise SystemExit(f"{d} exists without reply.md; inspect it (attempts are never deleted)")
-            interface = ("claude -p (subscription CLI), fresh empty cwd, no tools, no MCP" if args.cmd == "claude"
+            interface = (f"claude -p (subscription CLI), fresh empty cwd under {ISOLATION_ROOT}, no tools, no MCP"
+                         if args.cmd == "claude"
                          else "local llama.cpp server via gpu-run, /v1/chat/completions on 127.0.0.1")
-            new_attempt(aid, task, args.mode, args.model_label, interface, res, arm)
+            extra = {"attempt_index": i}
+            if args.cmd == "claude":
+                extra["isolation"] = (f"fresh empty dir under {ISOLATION_ROOT}; pre-flight: no CLAUDE.md / CLAUDE.local.md / "
+                                      ".claude in cwd or any ancestor, no ~/.claude/CLAUDE.md")
+            new_attempt(aid, task, args.mode, args.model_label, interface, res, arm, extra)
             prompt = (d / "prompt.md").read_text()
             run = {"started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
             try:
@@ -117,9 +149,9 @@ def probe(args):
     res = Path(args.results)
     res.mkdir(parents=True, exist_ok=True)
     cmd, p, dt = call_claude(PROBE_PROMPT, args.model)
-    out = res / f"claude_isolation_probe_{time.strftime('%Y%m%dT%H%M%S')}.json"
+    out = res / f"claude_isolation_probe_{args.model}_{time.strftime('%Y%m%dT%H%M%S')}.json"
     out.write_text(json.dumps({"cli_version": claude_version(), "command": cmd, "env_extra": {
-        "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}, "cwd": "fresh empty tempfile.TemporaryDirectory",
+        "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}, "cwd": f"fresh empty tempfile.TemporaryDirectory under {ISOLATION_ROOT}",
         "prompt": PROBE_PROMPT, "seconds": dt, "returncode": p.returncode, "stdout": p.stdout, "stderr": p.stderr},
         indent=1))
     print(out)
@@ -133,6 +165,8 @@ def main():
     ap.add_argument("--model", default="claude-sonnet-5-5")
     ap.add_argument("--mode", choices=("weights", "controller"), default="weights")
     ap.add_argument("--tag", help="attempt id prefix; default: 'claude' for claude-sonnet-5-5 (pilot naming), else the model id")
+    ap.add_argument("--arms", default="strict,named", help="comma list from strict,named,goal (goal = hopper only)")
+    ap.add_argument("--suffix", default="", help="appended to attempt ids, e.g. _iso2 for the isolated rerun")
     ap.add_argument("--name", help="local model key: gpt-oss-20b | qwen3-coder-30b")
     ap.add_argument("--port", type=int, default=8089)
     ap.add_argument("--max-seconds", type=float, default=0, help="stop starting new attempts after this long (resumable chunks)")

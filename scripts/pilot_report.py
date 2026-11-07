@@ -53,23 +53,29 @@ def hop_note(s):
     return None if d is None or not n else (d, d / (n * HOPPER_DT))
 
 
-cells = collections.defaultdict(list)
+cells = collections.defaultdict(list)       # clean attempts: main tables
+ccells = collections.defaultdict(list)      # contaminated (/tmp/CLAUDE.md loaded): listed separately, never in main tables
 for i, m in meta.items():
     if i in stock:
-        cells[(m["task"], m["model"], m["mode"], m["arm"])].append(i)
+        (ccells if m.get("contaminated") else cells)[(m["task"], m["model"], m["mode"], m["arm"])].append(i)
 
 L = ["# Report (local, not for git)", "",
      "Simulation only (MuJoCo via Gymnasium). Score = mean return over 100 episodes, reset seeds 10000..10099.",
      "Every attempt is listed, failures (unparsable/invalid replies) included and counted as failures, not dropped.",
      f"`full` = attempts whose mean return is >= {FULL:.0f}. On hopper a return near 1000 can mean standing without "
      "falling for 1000 steps (reward is 1/step alive + forward speed): see the distance columns. For hopper, the "
-     f"per-attempt cells read `return/forward-distance`; `n moving` counts attempts with mean forward distance >= {MOVES_M:.0f} m "
-     "per episode (threshold fixed in the script, not tuned). Forward speed = distance / (mean steps x 0.008 s).", ""]
+     f"per-attempt cells read `return/forward-distance`; hopper `success` = mean forward distance >= {MOVES_M:.0f} m "
+     "over the 100 scoring episodes (owner decision 2026-11-06, applied to every hopper arm, old and new). "
+     "Forward speed = distance / (mean steps x 0.008 s).",
+     "Attempts labelled `contaminated: /tmp/CLAUDE.md` in their meta (round-2 Sonnet controller and Opus runs that had an "
+     "unrelated project file loaded) are excluded from every table below and listed in their own section at the end. "
+     "Their isolated reruns have ids ending `_iso2`. The hopper `goal` arm is the strict prompt plus one sentence "
+     "naming forward distance as the goal.", ""]
 
 
-def table(task, variant):
+def table(task, variant, cellmap=None):
     rows = []
-    for (t, model, mode, arm), ids in sorted(cells.items()):
+    for (t, model, mode, arm), ids in sorted((cells if cellmap is None else cellmap).items()):
         if t != task:
             continue
         sc, dist, spd, pa = [], [], [], []
@@ -94,7 +100,8 @@ def table(task, variant):
         if task == "hopper":
             mv = sum(1 for x in d if x >= MOVES_M)
             rows.append(f"| {model} | {mode} | {arm} | {len(ids)} | {nfail} | {full} | {mean} | {med} | {iqr} | {lo} | {hi} | "
-                        f"{f1(st.median(d)) if d else '-'} | {f1(st.median(spd)) if spd else '-'} | {mv} | {', '.join(pa)} |")
+                        f"{f1(st.mean(d)) if d else '-'} | {f1(st.median(d)) if d else '-'} | "
+                        f"{f1(st.median(spd)) if spd else '-'} | {mv}/{len(ids)} | {', '.join(pa)} |")
         else:
             rows.append(f"| {model} | {mode} | {arm} | {len(ids)} | {nfail} | {full} | {mean} | {med} | {iqr} | {lo} | {hi} | "
                         f"{', '.join('F' if x is None else f'{x:.0f}' for x in sc)} |")
@@ -103,9 +110,9 @@ def table(task, variant):
 
 HDR = ["| model | mode | arm | n | unparsable | full | mean | median | IQR | min | max | per-attempt |",
        "|---|---|---|---|---|---|---|---|---|---|---|---|"]
-HDR_H = ["| model | mode | arm | n | unparsable | full | mean return | median return | IQR | min | max | median fwd distance (m) | "
-         f"median fwd speed (m/s) | n moving (dist >= {MOVES_M:.0f} m) | per-attempt return/distance |",
-         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
+HDR_H = ["| model | mode | arm | n | unparsable | full | mean return | median return | IQR | min | max | mean fwd distance (m) | "
+         f"median fwd distance (m) | median fwd speed (m/s) | success (mean fwd dist >= {MOVES_M:.0f} m) | per-attempt return/distance |",
+         "|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|"]
 
 
 def brow(task, label, vals, ss):
@@ -117,7 +124,8 @@ def brow(task, label, vals, ss):
         d = [h[0] for h in hn if h]
         sp = [h[1] for h in hn if h]
         return (f"| baseline: {label} | - | - | {len(vals)} | 0 | {full} | {mean} | {med} | {iqr} | {lo} | {hi} | "
-                f"{f1(st.median(d)) if d else '-'} | {f1(st.median(sp)) if sp else '-'} | {sum(1 for x in d if x >= MOVES_M)} | "
+                f"{f1(st.mean(d)) if d else '-'} | {f1(st.median(d)) if d else '-'} | {f1(st.median(sp)) if sp else '-'} | "
+                f"{sum(1 for x in d if x >= MOVES_M)}/{len(vals)} | "
                 f"{', '.join(f'{v:.0f}/{h[0]:.1f}m' for v, h in zip(vals, hn) if h)} |")
     return (f"| baseline: {label} | - | - | {len(vals)} | 0 | {full} | {mean} | {med} | {iqr} | {lo} | {hi} | "
             f"{', '.join(f'{x:.0f}' for x in vals)} |")
@@ -162,13 +170,49 @@ for task in ("cartpole", "hopper"):
         L += [f"## {task}: {'stock environment' if variant is None else 'variant ' + variant}", ""] + (HDR_H if task == "hopper" else HDR)
         L += table(task, variant) + baseline_rows(task, variant) + [""]
 
+def hop_stats(ids):
+    """(n scored ok, n standing, n success, median return of standing, median distance of standing)."""
+    ok = [stock[i] for i in ids if not stock[i].get("failure") and not stock[i].get("load_error")]
+    stand = [s for s in ok if s["mean_return"] >= FULL and s.get("mean_distance") is not None and s["mean_distance"] < MOVES_M]
+    succ = [s for s in ok if s.get("mean_distance") is not None and s["mean_distance"] >= MOVES_M]
+    return (len(ok), len(stand), len(succ),
+            f1(st.median([s["mean_return"] for s in stand])) if stand else "-",
+            f1(st.median([s["mean_distance"] for s in stand])) if stand else "-")
+
+
+L += ["## Finding: the LLM exploited the healthy reward (hopper)", "",
+      "The hopper reward pays 1 per step while the robot is healthy, so an attempt that simply stays upright for all 1000 "
+      f"steps earns a return near 1000 while travelling nowhere. `standing` = mean return >= {FULL:.0f} AND mean forward "
+      f"distance < {MOVES_M:.0f} m. The do-nothing zero policy and PPO are in the hopper tables above for reference. "
+      "Clean attempts first; the contaminated ones are shown separately and are not pooled.", "",
+      "| set | model | mode | arm | scored | standing | success | median return of standing | median distance of standing (m) |",
+      "|---|---|---|---|---|---|---|---|---|"]
+for label, cm in (("clean", cells), ("contaminated", ccells)):
+    for (t, model, mode, arm), ids in sorted(cm.items()):
+        if t == "hopper":
+            n_ok, n_st, n_su, r, dd = hop_stats(ids)
+            L.append(f"| {label} | {model} | {mode} | {arm} | {n_ok}/{len(ids)} | {n_st} | {n_su} | {r} | {dd} |")
+L += ["", "Comparison with the `goal` arm (strict prompt plus the one goal sentence), clean attempts only: "
+      "`success` out of 10 attempts per cell.", "",
+      "| model | mode | strict success | goal success | strict standing | goal standing |", "|---|---|---|---|---|---|"]
+for (t, model, mode, arm), ids in sorted(cells.items()):
+    if t == "hopper" and arm == "goal":
+        a, b = hop_stats(cells.get((t, model, mode, "strict"), [])), hop_stats(ids)
+        L.append(f"| {model} | {mode} | {a[2]}/{len(cells.get((t, model, mode, 'strict'), []))} | {b[2]}/{len(ids)} | {a[1]} | {b[1]} |")
+L.append("")
+
+L += ["## Contaminated attempts (`contaminated: /tmp/CLAUDE.md`), stock environment, excluded from every table above", ""]
+for task in ("cartpole", "hopper"):
+    L += [f"### {task}", ""] + (HDR_H if task == "hopper" else HDR) + table(task, None, ccells) + [""]
+
 L += ["## Failures (unparsable or invalid replies)", ""]
 for i, s in sorted(stock.items()):
     if s.get("failure"):
-        L.append(f"- {i}: {s['failure']}")
+        L.append(f"- {i}{' [contaminated]' if meta[i].get('contaminated') else ''}: {s['failure']}")
 L += ["", "## Faults inside episodes (controller crashed mid-episode; reward earned before the crash is kept)", ""]
 for i, s in sorted(stock.items()):
     if s.get("n_faults"):
-        L.append(f"- {i}: {s['n_faults']} of {s['n_episodes']} episodes, first: {s['first_fault']}")
+        L.append(f"- {i}{' [contaminated]' if meta[i].get('contaminated') else ''}: {s['n_faults']} of {s['n_episodes']} "
+                 f"episodes, first: {s['first_fault']}")
 (R / "pilot_report.md").write_text("\n".join(L) + "\n")
 print(R / "pilot_report.md")
