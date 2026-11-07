@@ -14,6 +14,7 @@ Attempts are never overwritten: an existing attempt directory with reply.md is s
 import argparse
 import json
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -47,6 +48,24 @@ def claude_env():
 
 def claude_version() -> str:
     return subprocess.run(["claude", "--version"], capture_output=True, text=True).stdout.strip()
+
+
+EMAIL_RE = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
+REDACTION = "[redacted-email]"
+
+
+def redact(text):
+    return EMAIL_RE.sub(REDACTION, text) if isinstance(text, str) else text
+
+
+def write_redacted(path, text) -> None:
+    """Every file holding Claude output goes to disk through here: email addresses are replaced first."""
+    Path(path).write_text(redact(text))
+
+
+def assert_no_email(path) -> None:
+    if EMAIL_RE.search(Path(path).read_text()):
+        raise SystemExit(f"redaction FAILED: {path} still contains an email address; delete it by hand and investigate")
 
 
 ISOLATION_ROOT = "/var/tmp"
@@ -140,9 +159,13 @@ def run_cells(args):
             except Exception as e:
                 reply = ""
                 run["error"] = f"{type(e).__name__}: {e}"
-            (d / "run.json").write_text(json.dumps(run, indent=1))
-            (d / "reply.md").write_text(reply)
-            print(aid, "reply chars:", len(reply), run.get("error", ""), flush=True)
+            write_redacted(d / "run.json", json.dumps(run, indent=1))
+            write_redacted(d / "reply.md", reply)
+            for f in d.iterdir():
+                if f.is_file():
+                    write_redacted(f, f.read_text())
+                    assert_no_email(f)
+            print(aid, "reply chars:", len(reply), redact(run.get("error", "")), flush=True)
 
 
 def probe(args):
@@ -150,10 +173,11 @@ def probe(args):
     res.mkdir(parents=True, exist_ok=True)
     cmd, p, dt = call_claude(PROBE_PROMPT, args.model)
     out = res / f"claude_isolation_probe_{args.model}_{time.strftime('%Y%m%dT%H%M%S')}.json"
-    out.write_text(json.dumps({"cli_version": claude_version(), "command": cmd, "env_extra": {
+    write_redacted(out, json.dumps({"cli_version": claude_version(), "command": cmd, "env_extra": {
         "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}, "cwd": f"fresh empty tempfile.TemporaryDirectory under {ISOLATION_ROOT}",
         "prompt": PROBE_PROMPT, "seconds": dt, "returncode": p.returncode, "stdout": p.stdout, "stderr": p.stderr},
         indent=1))
+    assert_no_email(out)
     print(out)
 
 

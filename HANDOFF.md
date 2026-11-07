@@ -13,6 +13,11 @@ Updated: 2026-11-06
   Tests: 34 pass (`PYTHONPATH=. .venv/bin/python -m pytest tests`).
 - New isolation probes done (one per model, allowed in this session): `results/claude_isolation_probe_claude-sonnet-5-5_*.json`
   and `..._claude-opus-5-5_*.json`; both replies list no tools, no files, no memory, no CLAUDE.md; cwd under /var/tmp.
+- Email redaction (owner addition): `scripts/run_pilot.py` replaces every email address with `[redacted-email]` before any
+  probe JSON, `run.json`, `reply.md` or other file in an attempt dir is written (and in the printed log line), then re-reads
+  every written file and exits loudly if an address is still there (the probe does the same on its own file). Test:
+  `tests/test_redaction.py` (fake address, incl. a stubbed probe end-to-end). The 3 existing probe files contain no address.
+  Tests: 39 pass.
 - Not done: the 120 reruns and 40 goal attempts (permission system refuses `claude -p` batches), their scoring and report.
 - Load was 13-14 throughout (below the 20 limit); no sims or GPU used.
 
