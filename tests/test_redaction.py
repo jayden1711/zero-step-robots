@@ -63,11 +63,12 @@ def test_probe_verdict_refuses_instruction_file():
     assert not ok and "instruction" in why
 
 
-def test_probe_verdict_refuses_missing_verdict_and_email():
+def test_probe_verdict_refuses_missing_verdict():
     assert not run_pilot.probe_verdict(_out("no tools, nothing"))[0]
     assert not run_pilot.probe_verdict("not json")[0]
-    ok, why = run_pilot.probe_verdict(_out(f"{FAKE}\nINSTRUCTION_FILES: none"))
-    assert not ok and "email" in why
+    # an account email in the raw reply (Claude Code's session context) is not an instruction file: it is accepted
+    # here and redacted before writing (write_redacted fails loudly if a written file still contains one)
+    assert run_pilot.probe_verdict(_out(f"{FAKE}\nINSTRUCTION_FILES: none"))[0]
 
 
 def test_claude_flags_exclude_user_settings():

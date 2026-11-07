@@ -101,9 +101,13 @@ def call_claude(prompt: str, model: str, timeout: int = 900):
 
 
 def probe_verdict(stdout: str):
-    """(ok, why) for a probe call: ok only if the reply's last line is the 'none' line and no email is in the output."""
-    if EMAIL_RE.search(stdout):
-        return False, "probe output contains an email address"
+    """(ok, why) for a probe call: ok only if the reply's last line is the 'none' line.
+
+    Claude Code puts the logged-in account's email in every session's context (a system reminder, not an
+    instruction file); under subscription auth it can't be switched off (--bare needs an API key). So an email in the
+    raw reply is expected: it is redacted before anything is written (write_redacted), and write_redacted still fails
+    loudly if a written file contains an address. The probe only checks for instruction files.
+    """
     try:
         reply = (json.loads(stdout).get("result") or "").strip()
     except json.JSONDecodeError:
