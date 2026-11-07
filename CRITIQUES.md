@@ -28,9 +28,10 @@ Main report: `results/pilot_report.md`. Clips: `results/clips/` (`make clips`).
    distance and forward speed next to the return, a count of attempts that travel at least 1 m (threshold fixed in the
    script), and the per-attempt return/distance pairs; (b) the do-nothing (zero-weights) baseline is in every hopper
    table (it falls early, so standing is better than nothing); (c) `results/notable/analysis.md` (addendum) states which
-   attempts move forward; (d) the clips (`results/clips/README.md`) show the best and median LLM attempts standing, next to
-   PPO moving. (c) and (d) were written before the isolated rerun: the two LLM clips are contaminated Opus attempts and
-   the addendum quotes pre-rerun Opus counts, so both are stale until regenerated (Reviewer recheck, R3). No claim of hopping or locomotion is made for any LLM attempt unless the table shows forward distance for
+   attempts move forward; (d) the clips (`results/clips/README.md`, re-rendered from clean attempts only) show the best Claude
+   weights attempt by return standing, the median attempt of its cell failing early, the best goal-arm attempt by forward
+   distance moving a little and then falling, and stock PPO moving. (c) was written before the isolated rerun: the addendum
+   quotes pre-rerun Opus counts and is stale until regenerated (Reviewer recheck, R3). No claim of hopping or locomotion is made for any LLM attempt unless the table shows forward distance for
    it. **Limitation:** a standing score is not evidence of locomotion, and the post must say so beside every hopper
    number. A forward-speed-only metric, or a harder task (get from A to B), would separate these cases better and was not
    used, so as not to change the reward after seeing the results; this is stated as a limitation, not run.
@@ -75,11 +76,12 @@ standing as locomotion in any post, and describe the `goal` result only as measu
 7. **"Cherry-picked."** Addressed. Every attempt is logged and scored, failures included (`results/attempts/*/`); the
    report lists all attempts per cell with mean, median, IQR, min, max and the full per-attempt list, plus counts of
    unparsable replies and mid-episode crashes (`scripts/pilot_report.py`). The notable-attempts analysis is labelled as
-   selected on score. The clips are one best and one median attempt chosen by a rule written in `scripts/make_clips.py`
-   before viewing, each labelled with its rank; the best-by-return clip turned out to be a standing attempt and was kept
-   rather than swapped (`results/clips/README.md`). The existing clips predate the isolated rerun and show contaminated
-   Opus attempts; `scripts/make_clips.py` now skips contaminated attempts, so the clips must be regenerated (and will
-   show different attempts) before any use (Reviewer recheck, R3). All attempts will be published, not a selection.
+   selected on score. The clips are the best Claude weights attempt by return, the median attempt of that cell, the best goal-arm attempt
+   by forward distance and stock PPO seed 0, chosen by rules written in `scripts/make_clips.py` before viewing, each
+   labelled with its ranks, model, mode, arm, attempt id, seed, and mean return and mean forward distance; the best-by-return
+   clip turned out to be a standing attempt and the cell median a failing one, and both were kept rather than swapped
+   (`results/clips/README.md`). They were re-rendered from clean attempts only after the isolated rerun; the earlier
+   contaminated-Opus clips are kept aside locally and are not to be used (Reviewer recheck, R3). All attempts will be published, not a selection.
 8. **"Ten attempts per cell is small."** Limitation. Spreads are reported, no significance claims are made, and claims are
    descriptive ("in these attempts"). Extra experiment if wanted: more attempts for the local models are cheap (one
    command per arm, `make local-weights|local-controller`); not run, to keep the pre-specified size. Hosted-model arms
@@ -219,11 +221,10 @@ A to F are absent here until the branches are merged; this recheck does not repe
    loophole. **Addressed** (named finding reworded). Not tested: whether the same models would try to hop given a simulator.
 3. **"Your clips and analysis still describe the contaminated runs."** True. The best and median clips are contaminated Opus
    attempts, and `results/notable/analysis.md` (addendum) and the fresh-seed re-scoring in `results/reviewer/` quote
-   pre-rerun Opus counts and the old attempt totals. **Addressed in code, not in the files:** `scripts/make_clips.py` now skips
-   contaminated attempts; a dry run (`results/_scratch/recheck_select.py`) shows the selection changes (the best-by-return
-   attempt would now be a Sonnet goal-arm weights attempt, the cell median a failing one), so the clips must be rendered again
-   and described from scratch before use. Rendering needs an ffmpeg with libx264 and was not done here. The stale local files
-   carry a note. The three analysed weights attempts are Sonnet attempts from the clean first round and are unaffected.
+   pre-rerun Opus counts and the old attempt totals. **Clips addressed** (branch `clips2`): `scripts/make_clips.py` skips
+   contaminated attempts, the four clips were re-rendered from clean attempts (best-by-return is now a Sonnet goal-arm
+   weights attempt that stands, the cell median a failing one, plus a best-by-distance goal-arm clip and PPO seed 0), and
+   `results/clips/README.md` was rewritten. The notable addendum and the fresh-seed summary are still stale and carry a note. The three analysed weights attempts are Sonnet attempts from the clean first round and are unaffected.
 4. **"The rerun may differ from the contaminated runs only by noise, so what did contamination change?"** Compared cell by
    cell on the same prompts: no difference that exceeds what two replicates of the same prompt show (cartpole ceilings
    identical; hopper standing counts differ by a few of ten, in either direction, between the contaminated and the rerun cell). So the contaminated
@@ -266,7 +267,7 @@ earlier fresh-seed summary; `results/reviewer/recheck_rerun.md`; `results/_scrat
 
 ### R-F. Before any post
 
-Merge or reconcile `prepost` and `rerun` (the earlier reviewer's corrections are only on `prepost`); regenerate the clips and
-rewrite the notable addendum from the clean attempts; handle the git history; state "one reply, no execution, simulation" and
+Merge or reconcile `prepost` and `rerun` (the earlier reviewer's corrections are only on `prepost`); rewrite the notable addendum from the clean attempts
+(the clips were regenerated on `clips2`); handle the git history; state "one reply, no execution, simulation" and
 "stands still" beside every hopper number, "on the stock environment" beside the 1 m statement, and the goal-arm limit (R-C1);
 the owner decides whether to run the distance-scored arm.
