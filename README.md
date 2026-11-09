@@ -34,4 +34,6 @@ and run from the repo root with `PYTHONPATH=.` (or `pip install -e .`-style equi
 - Lindner et al. (DeepMind), Tracr, arXiv 2301.05062: compiles programs to exact transformer weights; closest analogue for `circuitc/` [verify].
 - Related, not yet checked against the sources, so cited by name only: RoboStriker (arXiv 2601.22517) [verify];
   URMA / MetaMorph [verify]; Text2Robot [verify].
+- Contrast (added 2026-11-09): Ma et al., "Eureka: Human-Level Reward Design via Coding Large Language Models", arXiv 2310.12931 [verify]:
+  there the LLM writes reward code and RL (Isaac Gym) trains the policy; here the LLM writes the policy weights (or controller) directly, with no training.
 
