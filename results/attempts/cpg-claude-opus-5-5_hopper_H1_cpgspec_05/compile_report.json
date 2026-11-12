@@ -1,0 +1,35 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_torso_balance_and_lean",
+  "type": "linear",
+  "scale": 0.09797958971132711,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 2.5
+ },
+ {
+  "unit": 1,
+  "name": "knee_pd_rhythm",
+  "type": "linear",
+  "scale": 0.06998542122237651,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.5
+ },
+ {
+  "unit": 2,
+  "name": "ankle_pd_rhythm_speed",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.2,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

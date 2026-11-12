@@ -1,0 +1,20 @@
+Round 1 stayed upright but the leg collapsed on landing, so the height dropped below 0.7. This revision adds a height-dependent leg extension (more leg torque as the torso sags) and softens the thigh velocity damping, which was saturating.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.0, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.1, "a1": 5.3, "a2": 0.0},
+ "units": [
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"cos(hop)": 0.3, "sin(hop)": 0.15},
+   "range": 1.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"sin(hop)": 0.3},
+   "range": 1.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "foot_rhythm", "inputs": {"sin(hop)": 0.2, "cos(hop)": 0.1},
+   "range": 1.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "height_spring", "inputs": {"obs[0]": -4.0},
+   "range": 6.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 1.0, "obs[7]": 0.15},
+   "range": 5.0, "tol": 0.05, "to": {"a0": -5.0}}
+ ]}
+```

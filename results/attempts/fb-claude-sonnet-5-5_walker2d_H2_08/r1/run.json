@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T14:39:16-0600",
+ "prompt_sha256": "ef2ccca17cb0e8cd0831945e1322fb445b3b1ee7dc0689ab04bf0182b041308e",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 12.029118537902832,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":11114,\"stop_reason\":\"end_turn\",\"session_id\":\"4aca3da4-4557-4053-b9b0-69120b7e39d8\",\"total_cost_usd\":0.070349,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":5010,\"cache_read_input_tokens\":4505,\"output_tokens\":1468,\"output_tokens_details\":{\"thinking_tokens\":874},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":5010,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1468,\"cache_read_input_tokens\":4505,\"cache_creation_input_tokens\":5010,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":5010},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1468,\"cacheReadInputTokens\":4505,\"cacheCreationInputTokens\":5010,\"webSearchRequests\":0,\"costUSD\":0.070349,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":874,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Round 0 fell backward within 0.1 s. The balance gain on the thighs had the wrong sign: a backward lean (negative `obs[1]`) produced a negative thigh torque, which pitches the torso back further. This revision flips the balance gains to negative and lowers the rhythm amplitude.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [\\n  {\\\"name\\\": \\\"R\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 0.0},\\n  {\\\"name\\\": \\\"L\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 3.14159}\\n ],\\n \\\"couplings\\\": [\\n  {\\\"from\\\": \\\"R\\\", \\\"to\\\": \\\"L\\\", \\\"weight\\\": 3.0, \\\"phase_lag\\\": 3.14159},\\n  {\\\"from\\\": \\\"L\\\", \\\"to\\\": \\\"R\\\", \\\"weight\\\": 3.0, \\\"phase_lag\\\": 3.14159}\\n ],\\n \\\"bias\\\": {},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"rightLeg\\\", \\\"inputs\\\": {\\\"sin(R)\\\": 1.0}, \\\"range\\\": 1.2, \\\"tol\\\": 0.05,\\n   \\\"to\\\": {\\\"a0\\\": 0.4, \\\"a1\\\": -0.4, \\\"a2\\\": 0.15}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leftLeg\\\", \\\"inputs\\\": {\\\"sin(L)\\\": 1.0}, \\\"range\\\": 1.2, \\\"tol\\\": 0.05,\\n   \\\"to\\\": {\\\"a3\\\": 0.4, \\\"a4\\\": -0.4, \\\"a5\\\": 0.15}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[10]\\\": 0.13}, \\\"range\\\": 3.0, \\\"tol\\\": 0.05,\\n   \\\"to\\\": {\\\"a0\\\": -1.5, \\\"a3\\\": -1.5}}\\n ]}\\n```\",\"ttft_ms\":8166,\"type\":\"result\",\"duration_ms\":11150,\"uuid\":\"7a131259-e23e-41d4-bc68-05132b42ba80\",\"ttft_stream_ms\":747,\"time_to_request_ms\":33,\"first_content_frame_ms\":747,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 5010,
+  "cache_read_input_tokens": 4505,
+  "output_tokens": 1468,
+  "output_tokens_details": {
+   "thinking_tokens": 874
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 5010,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1468,
+    "cache_read_input_tokens": 4505,
+    "cache_creation_input_tokens": 5010,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 5010
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,131 @@
+{
+ "target": "cpg",
+ "obs_dim": 17,
+ "act_dim": 6,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "P",
+   "freq_hz": 0.85,
+   "phase0": 0.0
+  }
+ ],
+ "bias": {
+  "a0": 0.075,
+  "a3": 0.075,
+  "a1": -0.85,
+  "a4": -0.85
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "torso_pd",
+   "inputs": {
+    "obs[1]": -1.5,
+    "obs[10]": -0.1,
+    "obs[8]": -0.375
+   },
+   "range": 2.5,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0,
+    "a3": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "scissor",
+   "inputs": {
+    "obs[2]": -1.0,
+    "obs[5]": 1.0,
+    "obs[11]": -0.15,
+    "obs[14]": 0.15,
+    "sin(P)": 0.5
+   },
+   "range": 2.0,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0,
+    "a3": -1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "knee_R",
+   "inputs": {
+    "obs[3]": -3.0,
+    "obs[12]": -0.15
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "knee_L",
+   "inputs": {
+    "obs[6]": -3.0,
+    "obs[15]": -0.15
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a4": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "knee_flex_R",
+   "inputs": {
+    "cos(P)": 0.921,
+    "sin(P)": -0.389
+   },
+   "threshold": 0.3,
+   "sharpness": 6.0,
+   "to": {
+    "a1": -0.9
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "knee_flex_L",
+   "inputs": {
+    "cos(P)": -0.921,
+    "sin(P)": 0.389
+   },
+   "threshold": 0.3,
+   "sharpness": 6.0,
+   "to": {
+    "a4": -0.9
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_R",
+   "inputs": {
+    "obs[4]": -0.5,
+    "obs[13]": -0.03
+   },
+   "range": 1.5,
+   "tol": 0.05,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_L",
+   "inputs": {
+    "obs[7]": -0.5,
+    "obs[16]": -0.03
+   },
+   "range": 1.5,
+   "tol": 0.05,
+   "to": {
+    "a5": 1.0
+   }
+  }
+ ]
+}

@@ -1,0 +1,32 @@
+Round 1 fell because the knees collapsed (leg angles reached -2.0 to -2.3 rad) and because the thigh rhythm began at full amplitude, which kicked the torso backward. This revision makes four changes:
+
+- **Thigh rhythm:** it now uses sin, so it starts at zero and ramps up smoothly. Its amplitude is lower.
+- **Knees:** they are held straight with positive torque during stance and flex only during swing, via a reflex.
+- **Torso feedback:** I raised the torso-angle gain.
+- **Feet:** the feet are unchanged.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 3.0, "phase_lag": 3.14159},
+  {"from": "L", "to": "R", "weight": 3.0, "phase_lag": 3.14159}
+ ],
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"sin(R)": -0.3, "obs[1]": -1.5, "obs[10]": -0.15},
+   "range": 3.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "reflex", "name": "kneeR", "inputs": {"sin(R)": 1.0}, "threshold": 0.0,
+   "sharpness": 4.0, "to": {"a1": 0.5}},
+  {"type": "linear", "name": "footR", "inputs": {"obs[4]": -1.0, "obs[13]": -0.05},
+   "range": 2.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "thighL", "inputs": {"sin(L)": -0.3, "obs[1]": -1.5, "obs[10]": -0.15},
+   "range": 3.0, "tol": 0.05, "to": {"a3": 1.0}},
+  {"type": "reflex", "name": "kneeL", "inputs": {"sin(L)": 1.0}, "threshold": 0.0,
+   "sharpness": 4.0, "to": {"a4": 0.5}},
+  {"type": "linear", "name": "footL", "inputs": {"obs[7]": -1.0, "obs[16]": -0.05},
+   "range": 2.0, "tol": 0.05, "to": {"a5": 1.0}}
+ ]}
+```

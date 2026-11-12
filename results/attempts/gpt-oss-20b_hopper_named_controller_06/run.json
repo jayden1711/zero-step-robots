@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:53:38-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1006
+ },
+ "seconds": 29.190545558929443,
+ "usage": {
+  "completion_tokens": 2122,
+  "prompt_tokens": 775,
+  "total_tokens": 2897,
+  "prompt_tokens_details": {
+   "cached_tokens": 770
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to craft a deterministic controller for Hopper-v5. Need to maximize average reward. Known environment: Hopper is a classic control problem. Many strategies: PD controller to stabilize upright. We need simple but good. Use a linear feedback policy: action = K * state. Use some weights tuned manually. But we can approximate known solutions: For Hopper, typical policy uses sin/cos of angle? Let's think.\n\nObservation order: [height z, torso angle, thigh, leg, foot, torso x-vel, torso z-vel, torso angular vel, thigh joint vel, leg joint vel, foot joint vel].\n\nGoal: keep upright and move forward. Use a PD-like control to maintain target height ~1.0 m maybe? Also maintain small angle. Use torques on joints to keep them near zero? But we need forward motion: apply torques to push the leg.\n\nSimplify: Use a linear policy: action = W @ obs + b. We can choose weights manually by reasoning. We can design simple control: Thigh torque to counterbalance torso angle and maintain height. Leg torque to drive forward. Foot torque small.\n\nBut we can do a simple rule-based: set thigh torque = -k1 * torso_angle - k2 * torso_angular_velocity + k3 * torso_x_velocity? Actually to maintain upright, we need to oppose torso angle. Similarly to maintain height, need to adjust foot position? The leg joint: maybe push forward by applying torque when thigh is forward? Hard.\n\nAlternate approach: Use a simple PD on joint angles to keep them near zero and use a small forward torque on leg to create step. But we need to get forward velocity. The hopper can run forward by pushing on leg joint. Maybe apply constant torque on leg joint to push the foot backward relative to thigh, causing forward motion.\n\nThus simple controller: action[0] (thigh) = -k1 * torso_angle - k2 * torso_angular_velocity; action[1] (leg) = k3; action[2] (foot) = 0. Maybe also add small terms for height.\n\nSet k1=10, k2=2, k3=0.5? Might be too high. Clip to [-1,1].\n\nBetter: Use moderate values: thigh: -2 * torso_angle - 0.5 * torso_angular_velocity; leg: 0.4; foot: 0.\n\nAdd some feedback: leg torque maybe also depend on thigh angle? Let's just keep constant.\n\nAlso incorporate height: if height below target, push up. Height obs[0]. So action[0] += k_h * (target_height - height). target_height 1.0. So if height low, add torque to thigh. But too much could destabilize.\n\nAlso add foot torque to keep foot near zero angle. So action[2] = -k_f * foot_angle.\n\nThus:\n\n```\nh_t = obs[0]\ntorso_ang = obs[1]\nthigh_ang = obs[2]\nleg_ang = obs[3]\nfoot_ang = obs[4]\ntorso_vx = obs[5]\ntorso_vz = obs[6]\ntorso_ang_vel = obs[7]\nthigh_ang_vel = obs[8]\nleg_ang_vel = obs[9]\nfoot_ang_vel = obs[10]\n```\n\nCompute:\n\n```\nKh = 2.0\nKth = 2.0\nKta = 0.5\nKleg = 0.4\nKf = 1.0\n```\n\naction0 = -Kth * torso_ang - Kta * torso_ang_vel + Kh * (1.0 - h_t)\naction1 = Kleg\naction2 = -Kf * foot_ang\n\nClip to [-1,1].\n\nBut this may produce high torque if height difference large. Height difference ~0.005 maybe small. So ok.\n\nWe might also include thigh joint velocity? To dampen oscillation: subtract 0.1 * thigh_ang_vel. Add: action0 += -0.1 * thigh_ang_vel.\n\nLet's implement:\n\n```\na0 = -Kth * torso_ang - Kta * torso_ang_vel - Kfv * thigh_ang_vel + Kh * (1.0 - h_t)\na1 = Kleg\na2 = -Kf * foot_ang\n```\n\nWhere Kfv = 0.1.\n\nSet constants: Kth=5.0, Kta=2.0, Kfv=0.5, Kh=2.0, Kleg=0.5, Kf=1.0.\n\nBut we risk torque clipping. Let's calibrate: typical torso_angle up to 0.2 rad, so -5*0.2 = -1.0. Good. Torso_ang_vel up to 10, -2*10 = -20 clipped. So maybe too high. Use 0.5: -0.5*10=-5, still high. Let's reduce Kta to 0.1.\n\nLet's set:\n\n```\nKth=5.0\nKta=0.1\nKfv=0.1\nKh=1.5\nKleg=0.3\nKf=0.8\n```\n\nCheck ranges: torso_ang up to 0.2: -5*0.2=-1.0. tor_vel 10: -0.1*10=-1. So sum -2, clipped. But that's okay. Height diff maybe up to 0.3: 1.5*0.3=0.45. So final a0 around -1.55 clipped to -1. So okay.\n\nLeg action constant 0.3. Foot action: foot angle up to 0.1? Actually joint angles range -100 to 100, but typical around 0. But we clamp. Use -0.8*foot_ang. If foot_ang ~0.2, a2 = -0.16. So fine.\n\nLet's also use foot_ang_vel: add -0.1*foot_ang_vel maybe.\n\nSo final:\n\n```\na0 = -5*torso_ang - 0.1*torso_ang_vel - 0.1*thigh_ang_vel + 1.5*(1.0 - h_t)\na1 = 0.3\na2 = -0.8*foot_ang - 0.1*foot_ang_vel\n```\n\nClip.\n\nThis should maintain upright and move forward moderately. Might produce some reward but not high. But it's baseline.\n\nAlternatively, we could do simple policy that sets leg torque based on torso angle: if torso leaning forward, push back; else push forward. But fine.\n\nWe also can add a term for torso_vx: to increase velocity. Maybe add 0.2*torso_vx to leg torque.\n\nSo:\n\n```\na1 += 0.2 * torso_vx\n```\n\nThis encourages moving forward.\n\nAdd foot action: keep foot near zero.\n\nLet's produce code with these formulas.\n\nWe also need to define reset if we keep state. But we don't need state. So just implement act.\n\nWe'll also include numpy import.\n\nEdge: obs may be list; we convert to numpy array for convenience.\n\nLet's produce final code.\n\n",
+ "server_timings": {
+  "cache_n": 770,
+  "prompt_n": 5,
+  "prompt_ms": 44.903,
+  "prompt_per_token_ms": 8.980599999999999,
+  "prompt_per_second": 111.35113466806229,
+  "predicted_n": 2122,
+  "predicted_ms": 29117.046,
+  "predicted_per_token_ms": 13.727980198019802,
+  "predicted_per_second": 72.84392791768781
+ }
+}

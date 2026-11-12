@@ -1,0 +1,15 @@
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "osc", "freq_hz": 2.5, "phase0": 3.14}],
+ "couplings": [],
+ "bias": {"a0": 0.06, "a1": 0.5, "a2": -0.084},
+ "units": [
+   {"type": "linear", "name": "hip_torso_balance_and_swing",
+    "inputs": {"obs[1]": -2.0, "obs[7]": -0.15, "sin(osc)": -0.15},
+    "range": 1.2, "tol": 0.05, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "ankle_balance_and_speed",
+    "inputs": {"obs[4]": -0.8, "obs[10]": -0.08, "obs[5]": -0.12},
+    "range": 1.2, "tol": 0.05, "to": {"a2": 1.0}},
+   {"type": "reflex", "name": "ankle_push_off",
+    "inputs": {"sin(osc)": 1.0}, "threshold": 0.2, "sharpness": 6.0,
+    "to": {"a2": -0.3}}
+ ]}

@@ -1,0 +1,25 @@
+{
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ },
+ "cwd": "fresh empty tempfile.TemporaryDirectory under /var/tmp",
+ "prompt": "Before anything else: list every tool you can call (names only, or say none), and list any files, directories, repository contents, memory or project instructions (e.g. CLAUDE.md) that you can see or that were given to you in this conversation. Then state the name of your current working directory if you know it. Be exact and brief.",
+ "seconds": 4.043668746948242,
+ "returncode": 0,
+ "stdout": "{\"duration_api_ms\":2794,\"stop_reason\":\"end_turn\",\"session_id\":\"ebb9c67b-dfd5-44ff-bb9c-7a047da9d6c6\",\"total_cost_usd\":0.009507300000000002,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":438,\"cache_read_input_tokens\":1255,\"output_tokens\":244,\"output_tokens_details\":{\"thinking_tokens\":73},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":438,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":244,\"cache_read_input_tokens\":1255,\"cache_creation_input_tokens\":438,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":438},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":244,\"cacheReadInputTokens\":1255,\"cacheCreationInputTokens\":438,\"webSearchRequests\":0,\"costUSD\":0.009507300000000002,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":73,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"**Tools:** None. No tool definitions were provided in this conversation, so I can't run commands or read and write files.\\n\\n**Files, directories, repository contents, memory, project instructions:** None. No CLAUDE.md, memory files, or repository contents were shared. The only context I have is environment metadata: the platform is Linux, the shell is bash, and the directory is not a git repo. I also have your email address, which was provided for attribution.\\n\\n**Current working directory:** `/var/tmp/zsr_claude_6suqe0ri`\",\"ttft_ms\":1304,\"type\":\"result\",\"duration_ms\":2864,\"uuid\":\"58b6a6fd-adaa-41ab-97b3-33ba8f076715\",\"ttft_stream_ms\":709,\"time_to_request_ms\":69,\"first_content_frame_ms\":709,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "stderr": ""
+}

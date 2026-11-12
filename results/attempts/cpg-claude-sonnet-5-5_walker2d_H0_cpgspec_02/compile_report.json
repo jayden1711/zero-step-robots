@@ -1,0 +1,67 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_balance",
+  "type": "linear",
+  "scale": 0.07745966692414834,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 5.0
+ },
+ {
+  "unit": 1,
+  "name": "r_knee_hold",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 2,
+  "name": "l_knee_hold",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 3,
+  "name": "r_ankle_hold",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 4,
+  "name": "l_ankle_hold",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 5,
+  "name": "hip_drive",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 6,
+  "name": "knee_drive",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "oscillator": "g",
+  "index": 0,
+  "freq_hz": 1.2,
+  "input_columns": [
+   17,
+   18
+  ]
+ }
+]

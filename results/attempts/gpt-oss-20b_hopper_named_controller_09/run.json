@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:55:37-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1009
+ },
+ "seconds": 30.208789587020874,
+ "usage": {
+  "completion_tokens": 2333,
+  "prompt_tokens": 775,
+  "total_tokens": 3108,
+  "prompt_tokens_details": {
+   "cached_tokens": 770
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to propose a controller for Hopper-v5 that scores well. We need to produce a deterministic policy. We can attempt to design a simple policy like a proportional-derivative controller that stabilizes the hopper. In classic Hopper environment, the default solution is to use a simple controller that keeps the leg in stance position and pushes forward. Since we can't run simulation, we need to design a plausible policy. There is known solution: using a neural network or linear controller. We can approximate using simple rules: maintain torso height and angle near target: use PD on thigh, leg, foot to keep a standing posture, then apply small torques to accelerate forward.\n\nWe can define target angles: thigh = 0.5 rad, leg = -0.5 rad, foot = 0.0 rad. Then compute error, apply a torque a = kp*error + kd*velocity. Clip to [-1,1]. Also incorporate torso velocity target: we might want to push forward by slightly extending leg at right times. But simple PD might produce decent but low score.\n\nMaybe we can use a simple policy from research: \"Hopper\" typical target: thigh 0.6, leg -0.8, foot 0.0. But we also can adapt based on torso angle. We can add a term to adjust leg angle based on torso angle to maintain stability.\n\nGoal: maximize forward velocity. So we want to push forward. We can apply torque that tends to extend the leg during stance and flex foot for swing.\n\nSimpler: Use a sinusoidal policy: a(t) = [sin(t), sin(t+2\u03c0/3), sin(t+4\u03c0/3)] but we don't have time variable; we can use step count. We can maintain step counter. Reset sets counter = 0. Act increments. Use small amplitude to keep stable.\n\nBut we don't know the actual step count. We can use observation to infer phase: e.g., foot angle to approximate stance/swing. But we don't have time variable. Could use foot angle sign to produce pattern.\n\nLet's design a controller:\n\nGoal: maintain upright, maintain forward speed. Use PD to maintain torso height at 1.0 (target). Use PD to maintain torso angle at 0.0. Use PD on joint angles to maintain a standing posture: thigh=0.5, leg=-0.5, foot=0.0. Then add a small forward push: when torso is leaning forward, apply torque to push leg back; when leaning backward, push leg forward.\n\nBut we also have to avoid high torques.\n\nLet's craft code:\n\nglobal step_count.\n\ndef reset(): global step_count; step_count=0\n\ndef act(obs):\n    height=obs[0]; angle=obs[1]; thigh=obs[2]; leg=obs[3]; foot=obs[4]\n    th_v=obs[9]; leg_v=obs[10]; foot_v=obs[11]\n    # target\n    tgt_height=1.0\n    tgt_angle=0.0\n    tgt_thigh=0.5\n    tgt_leg=-0.5\n    tgt_foot=0.0\n\n    # PD\n    kp_pos=5.0\n    kd_pos=0.5\n    # height control\n    h_err = tgt_height - height\n    h_vel = -obs[6]  # torso z-velocity (obs[6] is z-velocity)\n    h_torque = kp_pos*h_err + kd_pos*h_vel\n    # angle control\n    ang_err = tgt_angle - angle\n    ang_vel = -obs[7]\n    ang_torque = kp_pos*ang_err + kd_pos*ang_vel\n\n    # joint control\n    kp_joint=10.0\n    kd_joint=1.0\n    th_err = tgt_thigh - thigh\n    th_torque = kp_joint*th_err + kd_joint*th_v\n    leg_err = tgt_leg - leg\n    leg_torque = kp_joint*leg_err + kd_joint*leg_v\n    foot_err = tgt_foot - foot\n    foot_torque = kp_joint*foot_err + kd_joint*foot_v\n\n    # combine: we only return torques for joints: thigh, leg, foot\n    a1 = th_torque + 0.1*ang_torque  # small contribution of torso angle\n    a2 = leg_torque - 0.1*ang_torque\n    a3 = foot_torque\n\n    # clip\n    for a in [a1,a2,a3]:\n        if a>1: a=1\n        if a<-1: a=-1\n\n    return [a1,a2,a3]\n\nBut we need to use numpy? We can just use python.\n\nBut we also need to incorporate time step to push forward: use foot angle sign: if foot angle < 0 -> stance, apply torque to extend leg: a2 += 0.3 * (-foot) maybe.\n\nLet's refine:\n\n    # stance detection\n    if foot < 0:\n        a2 += 0.3 * (-foot)  # push leg back\n    else:\n        a1 += 0.3 * foot  # swing\n\nBut we need to clip after modifications.\n\nAlso step counter can be used to alternate. But let's keep simple.\n\nLet's produce final module with imports: numpy as np for potential.\n\nAlso we can implement a simple integral term to maintain velocity: use step counter to adjust.\n\nBut maybe simpler.\n\nLet's produce final answer.",
+ "server_timings": {
+  "cache_n": 770,
+  "prompt_n": 5,
+  "prompt_ms": 49.899,
+  "prompt_per_token_ms": 9.979800000000001,
+  "prompt_per_second": 100.20240886590913,
+  "predicted_n": 2333,
+  "predicted_ms": 30118.012,
+  "predicted_per_token_ms": 12.915099485420239,
+  "predicted_per_second": 77.42874928132707
+ }
+}

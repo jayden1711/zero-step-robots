@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T19:38:04-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 13.714669227600098,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":12812,\"stop_reason\":\"end_turn\",\"session_id\":\"969b6e3f-6aee-408e-9782-af40267580eb\",\"total_cost_usd\":0.0669334,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":4311,\"cache_read_input_tokens\":3387,\"output_tokens\":1588,\"output_tokens_details\":{\"thinking_tokens\":977},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":4311,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1588,\"cache_read_input_tokens\":3387,\"cache_creation_input_tokens\":4311,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":4311},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1588,\"cacheReadInputTokens\":3387,\"cacheCreationInputTokens\":4311,\"webSearchRequests\":0,\"costUSD\":0.0669334,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":977,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I haven't run or tested this, so the gait parameters are an educated guess rather than a tuned result. The design is one 2 Hz oscillator giving a hop cycle of about 62 steps.\\n\\n- **Leg and foot:** the leg and foot torques follow cos(phase), so they extend together for push-off and flex together in flight.\\n- **Thigh rhythm:** the thigh gets a sin(phase) component, a quarter cycle out of phase with the leg, to swing the leg forward in flight.\\n- **Balance:** the thigh gets feedback from torso angle and angular velocity, both with negative sign. A forward lean produces a negative hip torque, which pitches the torso back.\\n- **Forward lean:** a small negative bias on the thigh keeps a slight forward-driving lean.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.05},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leg_cos\\\", \\\"inputs\\\": {\\\"cos(hop)\\\": 1.0},\\n   \\\"range\\\": 1.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 0.8, \\\"a2\\\": 0.3}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thigh_sin\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0},\\n   \\\"range\\\": 1.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": -0.4}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -4.0, \\\"obs[7]\\\": -0.5},\\n   \\\"range\\\": 6.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":9202,\"type\":\"result\",\"duration_ms\":12845,\"uuid\":\"ecae531b-efcf-40ed-a212-8e5d09eba2ff\",\"ttft_stream_ms\":1034,\"time_to_request_ms\":31,\"first_content_frame_ms\":1035,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 4311,
+  "cache_read_input_tokens": 3387,
+  "output_tokens": 1588,
+  "output_tokens_details": {
+   "thinking_tokens": 977
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 4311,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1588,
+    "cache_read_input_tokens": 3387,
+    "cache_creation_input_tokens": 4311,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 4311
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

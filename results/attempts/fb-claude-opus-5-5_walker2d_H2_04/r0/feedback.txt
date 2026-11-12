@@ -1,0 +1,46 @@
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | -0.37 | 0.70 | torso angle out of range
+1 | -0.38 | 0.70 | torso angle out of range
+2 | -0.42 | 0.82 | torso angle out of range
+3 | -0.36 | 0.70 | torso angle out of range
+4 | -0.34 | 0.69 | torso angle out of range
+5 | -0.34 | 0.68 | torso angle out of range
+6 | -0.37 | 0.69 | torso angle out of range
+7 | -0.31 | 0.70 | torso angle out of range
+8 | -0.35 | 0.78 | torso angle out of range
+9 | -0.37 | 0.69 | torso angle out of range
+
+Over the 10 episodes: mean d -0.36 m, min -0.42, max -0.31; mean time survived 0.71 s; mean forward speed -0.50 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+right thigh | -0.469 | -0.001 | 0.98 | 0.94
+right leg | -1.068 | 0.003 | 0.67 | 0.19
+right foot | -0.019 | 0.142 | 0.40 | 0.00
+left thigh | -0.820 | 0.029 | 0.95 | 0.89
+left leg | -0.806 | 0.008 | 0.88 | 0.60
+left foot | -0.049 | 0.205 | 0.61 | 0.11
+torso angle min -0.995, max -0.005 rad; torso height min 1.11, max 1.25 m
+right foot: on the ground 0.27 of the steps, 3 touchdowns
+left foot: on the ground 0.78 of the steps, 9 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | right foot contact | left foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | no | 1.57, 4.71
+0.10 | -0.09 | 1.18 | -0.460 | yes | yes | 2.09, 5.24
+0.20 | -0.12 | 1.18 | -0.506 | yes | yes | 2.58, 5.72
+0.30 | -0.19 | 1.16 | -0.649 | no | yes | 3.10, 6.24
+0.40 | -0.26 | 1.15 | -0.790 | no | yes | 3.58, 0.44
+0.50 | -0.30 | 1.14 | -0.861 | no | no | 4.10, 0.96
+0.60 | -0.33 | 1.13 | -0.871 | no | yes | 4.59, 1.45
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+R_thigh_pd_balance: 0.68
+L_thigh_pd_balance: 0.49
+R_knee_pd: 0.00
+L_knee_pd: 0.06
+R_foot_pd: 0.00
+L_foot_pd: 0.00

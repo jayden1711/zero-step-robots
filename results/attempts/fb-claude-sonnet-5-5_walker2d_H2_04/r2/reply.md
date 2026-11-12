@@ -1,0 +1,28 @@
+Round 1 stood on both feet with stiff legs and slowly tipped over backwards. The thighs were already at their joint limit (angle 0), so the hip feedback could do nothing. This revision adds ankle torque feedback on torso angle, because a positive foot torque with the foot planted pitches the body forward. It also deepens the knee flexion during swing and adds a small forward-lean bias at the feet. I have not run it.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a1": 0.1, "a4": 0.1, "a2": 0.1, "a5": 0.1},
+ "units": [
+  {"type": "linear", "name": "r_thigh", "inputs": {"sin(R)": 0.5, "obs[1]": -2.0, "obs[10]": -0.3},
+   "range": 4.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "l_thigh", "inputs": {"sin(L)": 0.5, "obs[1]": -2.0, "obs[10]": -0.3},
+   "range": 4.0, "tol": 0.05, "to": {"a3": 1.0}},
+  {"type": "linear", "name": "r_knee", "inputs": {"sin(R)": -0.6, "obs[3]": -0.5, "obs[12]": -0.05},
+   "range": 4.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "l_knee", "inputs": {"sin(L)": -0.6, "obs[6]": -0.5, "obs[15]": -0.05},
+   "range": 4.0, "tol": 0.05, "to": {"a4": 1.0}},
+  {"type": "linear", "name": "r_foot", "inputs": {"obs[4]": -0.3, "obs[13]": -0.03, "obs[1]": -1.5, "obs[10]": -0.15},
+   "range": 3.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "l_foot", "inputs": {"obs[7]": -0.3, "obs[16]": -0.03, "obs[1]": -1.5, "obs[10]": -0.15},
+   "range": 3.0, "tol": 0.05, "to": {"a5": 1.0}}
+ ]}
+```

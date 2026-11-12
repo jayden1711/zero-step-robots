@@ -1,0 +1,8 @@
+> STALE (reviewer recheck, rerun): this file (or its addendum / the Opus lines) was written before the isolated rerun and cites contaminated attempts (`contaminated: /tmp/CLAUDE.md`, mostly Opus). The Sonnet-only three-attempt analysis is unaffected. Do not use the affected parts as is; regenerate from the clean attempts. See CRITIQUES.md, 'Reviewer recheck (rerun)', R-C3.
+
+claude-opus-5-5_hopper n=31 fresh_mean_of_means=1000.9 orig_mean_of_means=1000.8 max_drop=0.1 min_frac_full=0.00 max|dist|=0.23 faults=0
+claude_hopper n=4 fresh_mean_of_means=961.6 orig_mean_of_means=985.8 max_drop=-97.3 min_frac_full=0.79 max|dist|=0.07 faults=0
+gpt-oss-20b_hopper n=3 fresh_mean_of_means=993.8 orig_mean_of_means=993.6 max_drop=0.2 min_frac_full=1.00 max|dist|=0.11 faults=0
+qwen3-coder-30b_hopper n=6 fresh_mean_of_means=997.6 orig_mean_of_means=997.3 max_drop=0.0 min_frac_full=1.00 max|dist|=0.07 faults=0
+n=44 total; fresh >= 900: 43; dropped by >50: [('claude_hopper_strict_weights_04', 944, 847, 0.79)]
+fresh frac_full<1: [('claude-opus-5-5_hopper_strict_controller_03', 0.0), ('claude_hopper_strict_weights_04', 0.79)]

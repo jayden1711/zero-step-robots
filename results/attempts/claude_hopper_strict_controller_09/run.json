@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:29:46-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 26.664503812789917,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":25545,\"stop_reason\":\"end_turn\",\"session_id\":\"7b85d8cc-8a3e-4578-903b-bf161caead5a\",\"total_cost_usd\":0.06453656000000002,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":133,\"cache_read_input_tokens\":6188,\"output_tokens\":2818,\"output_tokens_details\":{\"thinking_tokens\":2481},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":133,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2818,\"cache_read_input_tokens\":6188,\"cache_creation_input_tokens\":133,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":133},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2818,\"cacheReadInputTokens\":6188,\"cacheCreationInputTokens\":133,\"webSearchRequests\":0,\"costUSD\":0.06453656000000002,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":2481,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I've written this controller from first principles without any testing. It holds the leg joints straight against their stops and balances the torso with the ankle. Its aim is to survive all 1000 steps (about 1000 reward) rather than to run fast.\\n\\nThe observation and action layout matches a Hopper-style model, and the controller depends on these assumptions:\\n- All joint axes point the same way (`-y`), so a positive foot action pushes the torso toward a smaller `obs[1]` when `obs[1]` is positive.\\n- The thigh and leg joints have an upper limit of 0 (straight), so a positive torque on them presses against the stop.\\n\\nIf either assumption is wrong, the controller will fail.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    angle = obs[1]\\n    angvel = obs[7]\\n    ankle = 4.0 * angle + 0.6 * angvel\\n    ankle = float(np.clip(ankle, -1.0, 1.0))\\n    return [0.5, 0.5, ankle]\\n```\",\"ttft_ms\":23233,\"type\":\"result\",\"duration_ms\":25602,\"uuid\":\"a10c47f9-7991-4315-bb7f-2cfbdfb6e2bf\",\"ttft_stream_ms\":835,\"time_to_request_ms\":58,\"first_content_frame_ms\":835,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 133,
+  "cache_read_input_tokens": 6188,
+  "output_tokens": 2818,
+  "output_tokens_details": {
+   "thinking_tokens": 2481
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 133,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2818,
+    "cache_read_input_tokens": 6188,
+    "cache_creation_input_tokens": 133,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 133
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

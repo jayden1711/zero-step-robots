@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:50:27-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1000
+ },
+ "seconds": 27.605247020721436,
+ "usage": {
+  "completion_tokens": 2032,
+  "prompt_tokens": 775,
+  "total_tokens": 2807,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to write a controller for Hopper-v5. It's a standard benchmark. We need to produce a policy that yields high average reward. Since no training allowed, we can implement a simple linear policy or hand-designed controller. Usually for Hopper, simple PD controllers that keep joints near target angles and maintain upright posture. We need to produce actions: torques at thigh, leg, foot joints. Observations include state.\n\nGoal: reward = 1 + velocity - penalty. So want to maximize forward velocity while staying healthy. For 1000 steps, max reward if velocity ~something. But typical reward is small.\n\nWe can use a linear policy: action = K * obs. But we can set K to encourage upright and forward.\n\nBetter: Use a simple PD controller: maintain thigh, leg, foot angles to keep body upright and produce forward motion. We can target a desired angle trajectory: maybe keep thigh at 0.0, leg at -0.5 rad, foot at 0.0. Also use velocity feedback to push forward.\n\nAlternatively, use a precomputed policy from literature? But we can't import models.\n\nSimpler: use a rule-based controller: \n- Use torso height and angle to maintain upright: apply torque to thigh and leg to keep body upright. \n- Use torso velocity to maintain speed.\n\nWe can design as following: compute errors: \ne_thigh = desired_thigh - obs[2]\ne_leg = desired_leg - obs[3]\ne_foot = desired_foot - obs[4]\nThen compute action = clamp(Kp*e + Kd*angular_velocity_error?). Use Kp and Kd constants tuned manually.\n\nAlso include torque to maintain height: e_height = desired_height - obs[0].\n\nBut the action only acts on joints, not on body directly.\n\nWe can compute joint target angles that produce upright posture: the thigh and leg should maintain a certain posture to keep torso upright. In Hopper, thigh joint is hip, leg joint is knee. To keep upright, the thigh should be ~0 (straight) and leg ~-0.5? Actually leg angle negative means knee bent? Not sure.\n\nMaybe use simple linear policy derived from OpenAI gym's 'Hopper' example: In stable baseline, the policy used is linear with weights found by RL. But we can't replicate that exactly.\n\nWe can attempt to design a simple linear controller: action = clip(np.dot(W, obs), -1, 1). Choose W manually. We can approximate typical values. We can test offline but can't now.\n\nAlternatively, we can use a simple policy that uses the torso x velocity to generate action: a_thigh = 0.5 * obs[6] + 0.2 * obs[7], a_leg = -0.3 * obs[6] + 0.1 * obs[7], a_foot = 0.1 * obs[6] - 0.2 * obs[7]. These are arbitrary but maybe produce some forward motion.\n\nWe can also use a PD controller on joint angles relative to desired: e.g., desired thigh = 0.0, leg = -0.5, foot = 0.0. Then a = Kp*error - Kd*velocity. Choose Kp ~ 5, Kd ~ 2. That yields torques maybe in range [-1,1]. Also include height: if torso height too low, increase thigh torque.\n\nLet's design:\n\ndesired = {'height': 1.0, 'thigh': 0.0, 'leg': -0.5, 'foot': 0.0}\nKp = {'height': 0.5, 'thigh': 5.0, 'leg': 5.0, 'foot': 3.0}\nKd = {'thigh': 2.0, 'leg': 2.0, 'foot': 1.0}\n\nCompute error:\n\ne_height = desired['height'] - obs[0]\ne_thigh = desired['thigh'] - obs[2]\ne_leg = desired['leg'] - obs[3]\ne_foot = desired['foot'] - obs[4]\n\naction_thigh = Kp['height'] * e_height + Kp['thigh'] * e_thigh - Kd['thigh'] * obs[9]\naction_leg = Kp['leg'] * e_leg - Kd['leg'] * obs[10]\naction_foot = Kp['foot'] * e_foot - Kd['foot'] * obs[11]\n\nClip to [-1,1].\n\nAlso add a term to encourage forward velocity: use torso x-velocity obs[6]. Add to thigh and leg actions: e.g., +0.1 * obs[6] to thigh and -0.1 * obs[6] to leg.\n\nAlso maintain upright: use torso angle obs[1] and angular velocity obs[7]; add to thigh and leg: e.g., +0.2 * obs[1] and +0.1 * obs[7].\n\nBut careful not to exceed limits.\n\nLet's implement with these terms.\n\nAlso we can keep state: maybe keep integral of height error? But not necessary.\n\nDefine reset() that clears any state if needed.\n\nWe will implement in Python. We'll use numpy for vector operations. We'll convert obs list to numpy array.\n\nWe'll clamp each action to [-1,1] before returning.\n\nLet's write code.\n\nCheck shape: return list of 3 floats.\n\nAdd optional global variables for constants. Use module-level variables.\n\nLet's produce final code.",
+ "server_timings": {
+  "cache_n": 0,
+  "prompt_n": 775,
+  "prompt_ms": 662.133,
+  "prompt_per_token_ms": 0.8543651612903226,
+  "prompt_per_second": 1170.4597112664676,
+  "predicted_n": 2032,
+  "predicted_ms": 26918.743,
+  "predicted_per_token_ms": 13.253935499753815,
+  "predicted_per_second": 75.44928825242695
+ }
+}

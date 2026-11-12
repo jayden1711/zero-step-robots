@@ -66,7 +66,7 @@ def test_crashing_controller_is_scored_and_logged(tmp_path):
 
 
 def test_prompts_filled_and_stable():
-    for task in TASKS:
+    for task in attempt.PROMPT_TASKS:
         for mode in attempt.MODES:
             p = attempt.build_prompt(task, mode)
             assert "{{" not in p
@@ -76,7 +76,7 @@ def test_prompts_filled_and_stable():
 
 def test_strict_arm_has_no_sensor_names_and_named_arm_does():
     banned = ("angle", "height", "torso", "cart", "pole", "thigh", "foot", "Gymnasium", "MuJoCo")
-    for task in TASKS:
+    for task in attempt.PROMPT_TASKS:
         for mode in attempt.MODES:
             strict = attempt.build_prompt(task, mode, "strict")
             assert "{{" not in strict
@@ -89,7 +89,7 @@ def test_strict_arm_has_no_sensor_names_and_named_arm_does():
 def test_prompt_has_no_numbers_from_solutions():
     # Fairness guard: the prompt must not contain any constant from the reference controllers.
     p = "".join(attempt.build_prompt(t, "weights", a) for t in TASKS for a in attempt.ARMS
-            if attempt.arm_valid(t, a))
+            if attempt.arm_valid(t, a) and a not in attempt.LEVELS)
     for token in ("12.0", "2.37", "1.4", "K ="):
         assert token not in p
 

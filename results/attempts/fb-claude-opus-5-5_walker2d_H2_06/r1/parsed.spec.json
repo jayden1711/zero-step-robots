@@ -1,0 +1,130 @@
+{
+ "target": "cpg",
+ "obs_dim": 17,
+ "act_dim": 6,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "R",
+   "freq_hz": 1.0,
+   "phase0": 0.0
+  },
+  {
+   "name": "L",
+   "freq_hz": 1.0,
+   "phase0": 3.14159
+  }
+ ],
+ "couplings": [
+  {
+   "from": "R",
+   "to": "L",
+   "weight": 2.0,
+   "phase_lag": 3.14159
+  },
+  {
+   "from": "L",
+   "to": "R",
+   "weight": 2.0,
+   "phase_lag": 3.14159
+  }
+ ],
+ "bias": {
+  "a0": -0.19,
+  "a1": -0.45,
+  "a3": -0.19,
+  "a4": -0.45
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "hip_R",
+   "inputs": {
+    "cos(R)": 0.225,
+    "obs[2]": -1.0,
+    "obs[11]": -0.1,
+    "obs[1]": -1.5,
+    "obs[10]": -0.15,
+    "obs[8]": -0.225
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "knee_R",
+   "inputs": {
+    "sin(R)": 0.69,
+    "cos(R)": 0.29,
+    "obs[3]": -1.5,
+    "obs[12]": -0.1
+   },
+   "range": 3.0,
+   "tol": 0.03,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "ankle_R",
+   "inputs": {
+    "obs[4]": -0.5,
+    "obs[13]": -0.03
+   },
+   "range": 1.0,
+   "tol": 0.03,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "hip_L",
+   "inputs": {
+    "cos(L)": 0.225,
+    "obs[5]": -1.0,
+    "obs[14]": -0.1,
+    "obs[1]": -1.5,
+    "obs[10]": -0.15,
+    "obs[8]": -0.225
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a3": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "knee_L",
+   "inputs": {
+    "sin(L)": 0.69,
+    "cos(L)": 0.29,
+    "obs[6]": -1.5,
+    "obs[15]": -0.1
+   },
+   "range": 3.0,
+   "tol": 0.03,
+   "to": {
+    "a4": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "ankle_L",
+   "inputs": {
+    "obs[7]": -0.5,
+    "obs[16]": -0.03
+   },
+   "range": 1.0,
+   "tol": 0.03,
+   "to": {
+    "a5": 1.0
+   }
+  }
+ ]
+}

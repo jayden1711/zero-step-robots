@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T12:24:29-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 19.956782817840576,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":19026,\"stop_reason\":\"end_turn\",\"session_id\":\"a5ace015-46a1-41ca-a16a-1a0b20cbab26\",\"total_cost_usd\":0.050541699999999995,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":135,\"cache_read_input_tokens\":5395,\"output_tokens\":2189,\"output_tokens_details\":{\"thinking_tokens\":1436},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":135,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2189,\"cache_read_input_tokens\":5395,\"cache_creation_input_tokens\":135,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":135},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2189,\"cacheReadInputTokens\":5395,\"cacheCreationInputTokens\":135,\"webSearchRequests\":0,\"costUSD\":0.050541699999999995,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1436,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is an untested design: a linear state-feedback controller realised through the tanh layer, with gains chosen by hand from a rough model of the physics.\\n\\n- **Control law:** action = 0.1\u00b7x + 3.5\u00b7\u03b8 + 0.3\u00b7\u1e8b + 0.5\u00b7\u03b8\u0307. Pushing the cart toward the lean (positive \u03b8 gives positive force) catches the pole.\\n- **Cart terms:** the small positive gains on x and \u1e8b are the non-minimum-phase LQR signs. They keep the cart from drifting off the rail.\\n- **tanh layer:** all 16 hidden units are identical and scaled to stay in the near-linear region of tanh. Each row is 0.5 times the gain vector, and each output weight is 0.125, so the 16 units sum to the intended linear gain.\\n\\n```json\\n{\\n  \\\"W1\\\": [\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25],\\n    [0.05, 1.75, 0.15, 0.25]\\n  ],\\n  \\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n  \\\"W2\\\": [[0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125,0.125]],\\n  \\\"b2\\\": [0]\\n}\\n```\",\"ttft_ms\":14844,\"type\":\"result\",\"duration_ms\":19080,\"uuid\":\"9a0531c3-113e-4287-9975-5fe80cf448ba\",\"ttft_stream_ms\":894,\"time_to_request_ms\":52,\"first_content_frame_ms\":894,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 135,
+  "cache_read_input_tokens": 5395,
+  "output_tokens": 2189,
+  "output_tokens_details": {
+   "thinking_tokens": 1436
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 135,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2189,
+    "cache_read_input_tokens": 5395,
+    "cache_creation_input_tokens": 135,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 135
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

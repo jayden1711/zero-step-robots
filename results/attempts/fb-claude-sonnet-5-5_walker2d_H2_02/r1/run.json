@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T14:27:40-0600",
+ "prompt_sha256": "6e4e888a47251375f8e14720b336d7800672946e2ae2fff5c195f0d4d6faa33b",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 20.819180488586426,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":19401,\"stop_reason\":\"end_turn\",\"session_id\":\"d13c74e2-c74c-4b41-aea6-40c164ae58d6\",\"total_cost_usd\":0.091165,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":4937,\"cache_read_input_tokens\":4505,\"output_tokens\":2538,\"output_tokens_details\":{\"thinking_tokens\":1829},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":4937,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2538,\"cache_read_input_tokens\":4505,\"cache_creation_input_tokens\":4937,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":4937},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2538,\"cacheReadInputTokens\":4505,\"cacheCreationInputTokens\":4937,\"webSearchRequests\":0,\"costUSD\":0.091165,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1829,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Round 0 fell within 0.2 s, and the logs point to the knees buckling. The knee reflex plus bias gave about -0.5 torque at start, and the right knee reached -2.39 rad. This revision keeps the knees pushed straight in stance and flexes them only briefly in swing. It also halves the thigh feedback gains so the thigh unit stops saturating. I haven't run it.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [\\n  {\\\"name\\\": \\\"R\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 0.0},\\n  {\\\"name\\\": \\\"L\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 3.14159}\\n ],\\n \\\"couplings\\\": [\\n  {\\\"from\\\": \\\"L\\\", \\\"to\\\": \\\"R\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159},\\n  {\\\"from\\\": \\\"R\\\", \\\"to\\\": \\\"L\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159}\\n ],\\n \\\"bias\\\": {\\\"a1\\\": 0.1, \\\"a4\\\": 0.1},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thighR\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -1.0, \\\"obs[10]\\\": -0.1, \\\"sin(R)\\\": 0.4},\\n   \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thighL\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -1.0, \\\"obs[10]\\\": -0.1, \\\"sin(L)\\\": 0.4},\\n   \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a3\\\": 1.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"kneeR\\\", \\\"inputs\\\": {\\\"sin(R)\\\": 1.0}, \\\"threshold\\\": 0.3,\\n   \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a1\\\": -0.25}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"kneeL\\\", \\\"inputs\\\": {\\\"sin(L)\\\": 1.0}, \\\"threshold\\\": 0.3,\\n   \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a4\\\": -0.25}}\\n ]}\\n```\",\"ttft_ms\":15805,\"type\":\"result\",\"duration_ms\":19433,\"uuid\":\"89c00104-d1dd-44d9-b5c3-9bc9b1ca1e18\",\"ttft_stream_ms\":643,\"time_to_request_ms\":31,\"first_content_frame_ms\":643,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 4937,
+  "cache_read_input_tokens": 4505,
+  "output_tokens": 2538,
+  "output_tokens_details": {
+   "thinking_tokens": 1829
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 4937,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2538,
+    "cache_read_input_tokens": 4505,
+    "cache_creation_input_tokens": 4937,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 4937
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

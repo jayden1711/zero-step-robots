@@ -1,0 +1,16 @@
+This controller is untested, so the gains and joint signs are my best estimates. It is a single 2.5 Hz oscillator driving all three leg joints. Thigh balance feedback on torso angle and angular velocity is added on top.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.5, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.0},
+ "units": [
+  {"type": "linear", "name": "leg_foot_push", "inputs": {"sin(hop)": 1.0},
+   "range": 1.2, "tol": 0.02, "to": {"a1": 0.5, "a2": 0.2}},
+  {"type": "linear", "name": "thigh_swing", "inputs": {"cos(hop)": 1.0},
+   "range": 1.2, "tol": 0.02, "to": {"a0": 0.4}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 3.0, "obs[7]": 0.3},
+   "range": 4.0, "tol": 0.05, "to": {"a0": 1.0}}
+ ]}
+```

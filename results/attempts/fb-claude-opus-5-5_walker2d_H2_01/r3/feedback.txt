@@ -1,0 +1,54 @@
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | -1.15 | 1.81 | height too low
+1 | -1.18 | 1.72 | height too low
+2 | -0.48 | 8.00 | cut off at 1000 steps
+3 | -0.37 | 8.00 | cut off at 1000 steps
+4 | -1.15 | 1.85 | height too low
+5 | -1.27 | 5.74 | height too low
+6 | -1.17 | 1.80 | height too low
+7 | -1.24 | 2.36 | height too low
+8 | -1.17 | 1.70 | height too low
+9 | -1.15 | 1.80 | height too low
+
+Over the 10 episodes: mean d -1.03 m, min -1.27, max -0.37; mean time survived 3.48 s; mean forward speed -0.48 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+right thigh | -0.099 | 0.048 | 0.72 | 0.41
+right leg | -0.409 | 0.046 | 0.76 | 0.58
+right foot | 0.004 | 0.157 | 0.08 | 0.00
+left thigh | -0.150 | 0.048 | 0.66 | 0.35
+left leg | -0.420 | 0.065 | 0.64 | 0.38
+left foot | 0.000 | 0.169 | 0.08 | 0.00
+torso angle min -0.926, max -0.005 rad; torso height min 0.81, max 1.25 m
+right foot: on the ground 0.68 of the steps, 5 touchdowns
+left foot: on the ground 0.76 of the steps, 4 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | right foot contact | left foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | no | 1.87, 5.01
+0.10 | -0.02 | 1.20 | -0.069 | yes | yes | 2.46, 5.60
+0.20 | -0.04 | 1.20 | -0.130 | yes | yes | 3.00, 6.14
+0.30 | -0.06 | 1.20 | -0.168 | yes | yes | 3.59, 0.45
+0.40 | -0.09 | 1.20 | -0.190 | yes | yes | 4.13, 0.99
+0.50 | -0.10 | 1.20 | -0.120 | no | yes | 4.72, 1.58
+0.60 | -0.14 | 1.20 | -0.166 | no | yes | 5.26, 2.12
+0.70 | -0.16 | 1.20 | -0.175 | yes | yes | 5.85, 2.71
+0.80 | -0.19 | 1.20 | -0.166 | yes | yes | 0.11, 3.25
+0.90 | -0.24 | 1.19 | -0.198 | yes | yes | 0.70, 3.84
+1.00 | -0.29 | 1.19 | -0.216 | yes | yes | 1.24, 4.38
+1.10 | -0.32 | 1.20 | -0.149 | yes | no | 1.83, 4.97
+1.20 | -0.38 | 1.19 | -0.185 | yes | yes | 2.37, 5.52
+1.30 | -0.47 | 1.17 | -0.288 | yes | yes | 2.96, 6.10
+1.40 | -0.56 | 1.15 | -0.380 | yes | yes | 3.50, 0.36
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+R_thigh_pd_balance: 0.00
+R_knee_pd: 0.00
+R_foot_pd: 0.00
+L_thigh_pd_balance: 0.00
+L_knee_pd: 0.00
+L_foot_pd: 0.00

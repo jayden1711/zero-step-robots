@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T11:49:58-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1001
+ },
+ "seconds": 24.570714235305786,
+ "usage": {
+  "completion_tokens": 1928,
+  "prompt_tokens": 648,
+  "total_tokens": 2576,
+  "prompt_tokens_details": {
+   "cached_tokens": 643
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a deterministic policy that keeps |obs[1]| <= 0.2 as long as possible. Observation vector has 4 numbers: indices 0-3. We don't know the dynamics. But we can guess: maybe obs[1] is the \"angle\" or \"position\" that must be maintained. The action is a single number clipped [-3,3]. We can design a simple proportional controller: action = k * (-obs[1]) maybe. But we only have access to obs vector raw. We can design the network to output action = k * ( -obs[1] ). So we need to set W1 to zero for all inputs except obs[1]. b1 maybe zero. W2 then weight to produce action. Let's pick k = 10 maybe? But action clip to [-3,3], so if obs[1] is within 0.2, we want action small. Maybe we want to drive obs[1] back to zero. We don't know dynamics but typical simple system may be like a pendulum or cartpole. But the observation might include angle and angular velocity. We only have obs[1] is maybe the velocity? Not sure.\n\nBut we need to produce a policy that ensures the episode can last many steps. Without training, we guess a simple linear mapping from obs[1] to action to cancel the deviation. The hidden layer with tanh may add some nonlinearity. But we can choose trivial network: all weights zero, biases zero, and then action always zero. That might keep obs[1] within 0.2 for a while but might drift. We need better.\n\nLet's think: Observations are 4 raw numbers. We might guess they are (position, velocity, angle, angular velocity). Observations may be for a cartpole. In CartPole-v0, the observation is [cart position, cart velocity, pole angle, pole velocity]. For that environment, the reward is +1 for every step the pole stays upright. But this description says reward +1 for |obs[1]| <= 0.2. In CartPole, obs[1] is cart velocity. Reward is based on pole angle. So not that. Another env: \"Acrobot\" maybe? But reward based on obs[1] angle? Hard.\n\nBut we can guess that the environment is such that we need to keep obs[1] small. We can design a proportional controller: action = k * (-obs[1]). Choose k = 5 maybe. That will apply action to reduce the deviation. But we also need to keep action within [-3,3] due to clipping. So if obs[1] is at 0.2, action = -1. So within clip.\n\nBut we don't know dynamics: maybe action is force applied to cart, which influences cart velocity and pole angle. But controlling velocity may maintain angle.\n\nGiven we can't test, we design a simple network with W1 that selects obs[1] into hidden units with tanh. For example, W1: each row has weight 1 on obs[1], zeros elsewhere. b1 = 0. Then hidden h = tanh(obs[1] * 1). So h is a vector of tanh(obs[1]) repeated 16 times. Then W2: weights all equal to k/16? Actually we want output = k * (-obs[1])? But we can do: W2 = [-k, -k, ..., -k] / 16? Wait: The action = W2 @ h + b2. Since h is all same value tanh(obs[1]), sum of weights times tanh(obs[1]) plus b2. So action = sum_i W2_i * tanh(obs[1]) + b2. We want action proportional to -obs[1]. We can approximate -obs[1] \u2248 -tanh(obs[1]) when obs[1] small. For small values, tanh(x) \u2248 x. So we can set action = -k * tanh(obs[1]). That approximates -k * obs[1] when small. So choose W2_i = -k/16 for each i, then action = -k/16 * 16 * tanh(obs[1]) = -k * tanh(obs[1]). Add b2=0. So action = -k * tanh(obs[1]). For small obs[1], action ~ -k * obs[1]. Choose k=5 maybe.\n\nThus W1: each row weight 0 on all except obs[1] weight 1. So W1 matrix: 16 rows, each with 4 numbers: [0,1,0,0] maybe.\n\nb1: zeros [0]*16.\n\nW2: one row of 16 numbers: each -k/16 = -5/16 = -0.3125.\n\nb2: 0.\n\nHowever, we might want to keep action clipped within [-3,3]. For obs[1] up to 0.2, tanh(0.2)=~0.197. Multiply -5 gives -0.985, within clip.\n\nIf obs[1] grows, action may push back.\n\nBut we don't know other dynamics. Could also use different k.\n\nAlternatively, we can incorporate other observations like obs[0] maybe position, but not needed.\n\nWe can also add some small biases to handle noise.\n\nGiven no training, we guess this policy.\n\nAlternatively, we could use a simple linear mapping from obs[1] to action: action = -obs[1] * 15? But clip.\n\nBut we can keep tanh to avoid saturating.\n\nLet's implement W1 all zeros except column 1 weight 1. b1 zeros. W2 each -0.3125. b2 = 0.\n\nDouble-check shapes: W1 is list of 16 rows each with 4 numbers. So we can write:\n\nW1: [[0,1,0,0], ..., repeated 16 times]. But we should maybe vary slightly to avoid all identical, but fine.\n\nb1: [0,0,...] 16 zeros.\n\nW2: single row: [-0.3125]*16.\n\nb2: [0].\n\nOk.\n\nBut maybe we also want to include obs[3] or obs[0] to handle other dynamics? But not necessary.\n\nLet's produce JSON. Use plain decimals.\n\nWe should ensure numbers are decimals not scientific. Use 0, 1, -0.3125, 0. Good.\n\nLet's produce JSON.",
+ "server_timings": {
+  "cache_n": 643,
+  "prompt_n": 5,
+  "prompt_ms": 48.141,
+  "prompt_per_token_ms": 9.6282,
+  "prompt_per_second": 103.86157329511228,
+  "predicted_n": 1928,
+  "predicted_ms": 24486.217,
+  "predicted_per_token_ms": 12.706910742086144,
+  "predicted_per_second": 78.69733409615702
+ }
+}

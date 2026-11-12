@@ -1,0 +1,520 @@
+# Task: design the controller network of a simulated walking robot
+
+You will design the controller of a simulated robot. You cannot run code yourself. After each design you write, we
+test it on 10 practice episodes and send you a fixed summary of the results; you then revise it. There are 6 designs in
+total: this first one (round 0) and 5 revisions (rounds 1 to 5). Your round-5 design is final and is scored exactly as
+written, on different episodes from the practice ones. There is no training: the numbers you write become the final
+weights of the controller network.
+
+## The robot and environment
+
+Environment: Gymnasium `Hopper-v5` (MuJoCo), a planar one-legged robot (torso, thigh, leg, foot) that moves in
+the x-z plane. Forward is +x.
+
+- Observation `obs` (11 numbers, raw, not normalised; indices from 0):
+  - obs[0]: height (z) of the torso
+  - obs[1]: torso angle (radians)
+  - obs[2]: thigh joint angle
+  - obs[3]: leg joint angle
+  - obs[4]: foot joint angle
+  - obs[5]: torso x-velocity
+  - obs[6]: torso z-velocity
+  - obs[7]: torso angular velocity
+  - obs[8]: thigh joint angular velocity
+  - obs[9]: leg joint angular velocity
+  - obs[10]: foot joint angular velocity
+
+  Velocities (obs[5] to obs[10]) are clipped to [-10, 10].
+- Action (3 numbers): the torques at the thigh, leg and foot joints, in that order (a0, a1, a2). Values outside
+  [-1, 1] are clipped to that range.
+- One step is 0.008 seconds of simulated time. The action is applied for the whole step.
+- Initial state: every position and velocity is perturbed by a small uniform random amount (at most 0.005).
+
+Episode rules:
+
+- The hopper is healthy while all of these hold: torso height z > 0.7; |torso angle| < 0.2 radians; and every
+  joint angle and velocity is strictly inside (-100, 100).
+- The episode terminates as soon as the hopper is not healthy. Otherwise it is cut off after 1000 steps.
+- The environment's own reward per step is 1 (while healthy) + (torso x-velocity, measured over the step)
+  - 0.001 * (sum of the squared action values, after clipping).
+
+## Scoring
+
+Your controller is run in 100 episodes of 1000 steps (8 seconds of simulated time) with fixed random seeds (the
+seeds differ only in the tiny random perturbation of the initial state). For each episode we measure d, the forward
+displacement of the torso along +x from the start to the last step at which the robot was still healthy (so the
+fall that ends an episode earns nothing).
+
+- Your score is the mean of d over the 100 episodes, in metres. Higher is better.
+- The controller passes if the mean of d is at least 3 m and at least 50 of the 100 episodes reach d >= 3 m.
+
+The environment's own reward is given above for completeness; it is not the score.
+The controller is deterministic: it has no randomness.
+
+## Design hint
+
+A workable structure for this robot is a hopping gait driven by one rhythm:
+
+- One oscillator sets the hop cycle. Within each cycle the leg (thigh, leg and foot joints) compresses on landing
+  and then extends to push off (stance); in the air the thigh swings the leg forward ready for the next landing
+  (flight). The phase relationship between the joints is fixed by how each joint's command is taken from the
+  oscillator's cos and sin outputs.
+- Balance feedback is added on top of the rhythm: the torso angle (obs[1]) and the torso angular velocity (obs[7])
+  feed back to the thigh joint so the torso stays upright, and forward speed is regulated through how far the
+  torso leans.
+
+Facts and ranges (from the model files and the documentation, not tuned for you):
+
+- Sign conventions. A positive torso angle (obs[1]) means the torso leans forward (towards +x). For the thigh, leg
+  and foot joints, a positive torque drives the joint angle up, and a negative joint angle swings the part below the
+  joint backwards (towards -x). The thigh and leg joint angles are limited to [-2.62, 0] radians (0 = straight
+  in line with the part above), the foot to [-0.79, 0.79].
+- With the foot on the ground, a negative thigh torque pitches the torso backward (the reaction at the hip).
+- Admissible ranges: oscillator frequency 1 to 4 Hz for a hop cycle of a robot this size; rhythmic torque
+  amplitude up to 1 (the action limit) per joint; feedback that holds the torso upright opposes the sign of
+  obs[1] and of obs[7] at the thigh joint.
+
+## What you write: a circuit spec, compiled exactly into the controller network
+
+The controller is a fixed network with up to 4 phase oscillators and one hidden layer of 16 tanh units. At every
+step, with the current observation `obs`:
+
+    y      = [cos(phase_1), sin(phase_1), ..., cos(phase_M), sin(phase_M)]     (oscillator outputs)
+    h      = tanh(W1 @ [obs; y] + b1)                                          (16 hidden units)
+    action = clip(W2 @ h + b2, -1, 1)
+    then each phase advances by 0.008 s times its rate:
+    d(phase_i)/dt = 2*pi*freq_i + sum_j weight_ji * sin(phase_j - phase_i - lag_ji) + sum_k feedback_ik * obs[k]
+
+The phases start at their initial values at the beginning of every episode. There is no other memory.
+
+You do not write W1, b1, W2, b2 directly. You write a spec; a deterministic compiler turns it into the exact
+weights. Each unit of the spec uses one hidden unit (at most 16 units). Unit inputs are named `obs[k]` (k from 0 to
+10), `cos(NAME)` or `sin(NAME)` for an oscillator called NAME. Actions are named `a0` to a2.
+
+- `oscillators` (0 to 4): each has a `name` (letters, digits, underscore), `freq_hz` (its natural frequency),
+  `phase0` (initial phase, radians) and optionally `feedback`, an object mapping `obs[k]` to a gain (radians per
+  second per unit of obs[k]) that speeds the phase up or slows it down.
+- `couplings` (optional): each `{"from": A, "to": B, "weight": w, "phase_lag": L}` adds
+  `w * sin(phase_A - phase_B - L)` to the rate of B, pulling B towards lagging A by L radians (for w > 0).
+- `bias` (optional): constant offsets added to actions, e.g. `{"a0": <number>}`.
+- `units`, each one of:
+  - `linear`: adds `to[a] * z` to each action a in `to`, where `z = sum of inputs[name] * value(name)`. It is
+    realised by one tanh unit, so you must declare `range`, the largest |z| you need it to be linear for, and `tol`,
+    the relative error you accept inside that range (0 < tol < 1, e.g. 0.01). Outside the range the unit saturates.
+  - `reflex`: adds `to[a] * tanh(sharpness * (z - threshold))` to each action a in `to` (exact; sharpness > 0).
+
+Output format: reply with one JSON object in a single ```json code block, nothing else in the block:
+
+    {"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+     "oscillators": [{"name": "<name>", "freq_hz": <number>, "phase0": <number>, "feedback": {"obs[k]": <number>}}],
+     "couplings": [{"from": "<name>", "to": "<name>", "weight": <number>, "phase_lag": <number>}],
+     "bias": {"a<i>": <number>},
+     "units": [
+       {"type": "linear", "name": "<text>", "inputs": {"obs[k]": <number>, "sin(<name>)": <number>},
+        "range": <number>, "tol": <number>, "to": {"a<i>": <number>}},
+       {"type": "reflex", "name": "<text>", "inputs": {"cos(<name>)": <number>}, "threshold": <number>,
+        "sharpness": <number>, "to": {"a<i>": <number>}}
+     ]}
+
+The `<...>` parts are placeholders for you to fill in; lists may have any length within the limits. Numbers must be
+plain decimals (no expressions, no NaN or Infinity). You may write any explanation outside the code block. If the
+reply has no valid block, or the spec does not compile, the controller scores as a failure (d = 0).
+
+## Round 0: your reply
+
+This is a first-guess design for round 0, so I expect to tune it from the practice results. It has one 2.5 Hz oscillator driving all three joints. The thigh gets a sin drive and the leg and foot get cos drives, so they are out of phase. A constant positive leg bias helps hold the body up. Torso angle and angular velocity feed back to the thigh with negative gain to keep the torso upright.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.5, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a1": 0.3},
+ "units": [
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"sin(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a0": 0.4}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a1": 0.6}},
+  {"type": "linear", "name": "foot_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a2": 0.3}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 3.0, "obs[7]": 0.3},
+   "range": 3.0, "tol": 0.02, "to": {"a0": -1.0}}
+ ]}
+```
+
+## Round 0: test results of that design
+
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 0.89 | 1.59 | height too low
+1 | 0.83 | 1.66 | height too low
+2 | 0.88 | 1.51 | height too low
+3 | 0.89 | 1.52 | height too low
+4 | 0.91 | 1.54 | height too low
+5 | 0.91 | 1.53 | height too low
+6 | 0.91 | 1.59 | height too low
+7 | 0.89 | 1.53 | height too low
+8 | 0.83 | 1.68 | height too low
+9 | 0.90 | 1.58 | height too low
+
+Over the 10 episodes: mean d 0.88 m, min 0.83, max 0.91; mean time survived 1.57 s; mean forward speed 0.56 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+thigh | -1.222 | 0.005 | 0.17 | 0.00
+leg | -0.412 | 0.074 | 0.42 | 0.00
+foot | -0.045 | 0.813 | 0.19 | 0.00
+torso angle min -0.112, max 0.078 rad; torso height min 0.71, max 1.25 m
+foot: on the ground 0.66 of the steps, 7 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | 0.00
+0.10 | 0.01 | 1.22 | 0.016 | yes | 1.63
+0.20 | 0.06 | 1.22 | 0.031 | yes | 3.14
+0.30 | 0.03 | 1.24 | -0.098 | yes | 4.78
+0.40 | 0.03 | 1.24 | -0.054 | no | 0.00
+0.50 | 0.04 | 1.23 | 0.014 | yes | 1.63
+0.60 | 0.08 | 1.25 | 0.054 | yes | 3.14
+0.70 | 0.08 | 1.20 | -0.088 | yes | 4.78
+0.80 | 0.09 | 1.21 | -0.043 | yes | 6.28
+0.90 | 0.14 | 1.24 | 0.008 | yes | 1.63
+1.00 | 0.20 | 1.25 | 0.062 | yes | 3.14
+1.10 | 0.23 | 1.18 | -0.047 | no | 4.78
+1.20 | 0.31 | 1.14 | -0.019 | yes | 6.28
+1.30 | 0.48 | 1.11 | 0.016 | no | 1.63
+1.40 | 0.62 | 0.99 | 0.071 | no | 3.14
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+thigh_rhythm: 0.00
+leg_rhythm: 0.00
+foot_rhythm: 0.00
+balance: 0.00
+
+## Round 1: your reply
+
+Round 0 fell by height after about 1.6 s because the leg gradually collapsed, while the torso angle stayed fine. For round 1 I'm making these changes:
+
+- **Height feedback on the leg:** the leg torque now rises as the torso height drops below about 1.25 m. The nominal leg torque is 0.4.
+- **Forward lean:** a small positive thigh bias gives the torso a slight forward lean for speed.
+- **Smaller rhythm amplitudes:** these are reduced so the rhythm does not buckle the leg.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.5, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.2, "a1": 2.9},
+ "units": [
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"sin(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a0": 0.3}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a1": 0.4}},
+  {"type": "linear", "name": "foot_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a2": 0.3}},
+  {"type": "linear", "name": "height_hold", "inputs": {"obs[0]": 1.0},
+   "range": 1.6, "tol": 0.02, "to": {"a1": -2.0}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 3.0, "obs[7]": 0.3},
+   "range": 3.0, "tol": 0.02, "to": {"a0": -1.0}}
+ ]}
+```
+
+## Round 1: test results of that design
+
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 0.98 | 1.59 | height too low
+1 | 0.95 | 1.66 | height too low
+2 | 0.94 | 1.48 | height too low
+3 | 0.94 | 1.49 | height too low
+4 | 0.96 | 1.46 | height too low
+5 | 0.97 | 1.52 | height too low
+6 | 0.99 | 1.59 | height too low
+7 | 0.95 | 1.50 | height too low
+8 | 0.95 | 1.68 | height too low
+9 | 0.98 | 1.58 | height too low
+
+Over the 10 episodes: mean d 0.96 m, min 0.94, max 0.99; mean time survived 1.56 s; mean forward speed 0.62 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+thigh | -1.238 | 0.006 | 0.08 | 0.00
+leg | 0.001 | 0.003 | 0.58 | 0.12
+foot | -0.099 | 0.819 | 0.19 | 0.00
+torso angle min -0.005, max 0.134 rad; torso height min 0.71, max 1.25 m
+foot: on the ground 0.85 of the steps, 3 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | 0.00
+0.10 | 0.01 | 1.22 | 0.017 | yes | 1.63
+0.20 | 0.06 | 1.22 | 0.052 | yes | 3.14
+0.30 | 0.06 | 1.23 | 0.024 | yes | 4.78
+0.40 | 0.04 | 1.23 | 0.005 | no | 0.00
+0.50 | 0.05 | 1.22 | 0.050 | yes | 1.63
+0.60 | 0.10 | 1.24 | 0.089 | yes | 3.14
+0.70 | 0.13 | 1.20 | 0.035 | yes | 4.78
+0.80 | 0.12 | 1.20 | 0.009 | yes | 6.28
+0.90 | 0.17 | 1.23 | 0.093 | yes | 1.63
+1.00 | 0.25 | 1.22 | 0.124 | yes | 3.14
+1.10 | 0.33 | 1.16 | 0.044 | yes | 4.78
+1.20 | 0.40 | 1.13 | 0.015 | yes | 6.28
+1.30 | 0.54 | 1.08 | 0.099 | yes | 1.63
+1.40 | 0.69 | 0.97 | 0.131 | no | 3.14
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+thigh_rhythm: 0.00
+leg_rhythm: 0.00
+foot_rhythm: 0.00
+height_hold: 0.00
+balance: 0.00
+
+## Round 2: your reply
+
+Round 1 never hopped. The leg stayed locked straight, with leg torque saturated 12% of the time, and the whole body tipped forward over the planted foot until the height fell below 0.7 m. For round 2 I'm making these changes:
+
+- **Leg:** the large constant torque is replaced by a moderate bias plus a mild height feedback, so the leg can flex and extend and the robot actually hops.
+- **Thigh restoring term:** a new term pushes the thigh back toward 0 when it drifts negative, so the leg is not left trailing behind the torso.
+- **Balance gain:** the torso-angle gain is lowered so the balance feedback does not keep driving the thigh negative.
+- **Thigh swing:** the rhythmic swing is slightly larger, to bring the leg forward in flight.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.5, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.1, "a1": 1.65},
+ "units": [
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"sin(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a0": 0.5}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a1": 0.6}},
+  {"type": "linear", "name": "foot_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a2": 0.3}},
+  {"type": "linear", "name": "height_hold", "inputs": {"obs[0]": 1.0},
+   "range": 1.6, "tol": 0.02, "to": {"a1": -1.0}},
+  {"type": "linear", "name": "thigh_restore", "inputs": {"obs[2]": 1.0},
+   "range": 2.7, "tol": 0.02, "to": {"a0": -1.5}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 2.0, "obs[7]": 0.3},
+   "range": 3.0, "tol": 0.02, "to": {"a0": -1.0}}
+ ]}
+```
+
+## Round 2: test results of that design
+
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 0.23 | 0.98 | torso angle out of range
+1 | 0.44 | 1.29 | torso angle out of range
+2 | 0.26 | 0.94 | torso angle out of range
+3 | 0.25 | 0.94 | torso angle out of range
+4 | 0.27 | 0.94 | torso angle out of range
+5 | 0.25 | 0.95 | torso angle out of range
+6 | 0.24 | 0.98 | torso angle out of range
+7 | 0.25 | 0.94 | torso angle out of range
+8 | 0.43 | 1.29 | torso angle out of range
+9 | 0.24 | 0.98 | torso angle out of range
+
+Over the 10 episodes: mean d 0.29 m, min 0.23, max 0.44; mean time survived 1.02 s; mean forward speed 0.28 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+thigh | -0.164 | 0.009 | 0.16 | 0.00
+leg | -0.092 | 0.033 | 0.50 | 0.13
+foot | -0.098 | 0.619 | 0.19 | 0.00
+torso angle min -0.056, max 0.198 rad; torso height min 1.20, max 1.25 m
+foot: on the ground 0.84 of the steps, 3 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | 0.00
+0.10 | 0.01 | 1.22 | 0.017 | yes | 1.63
+0.20 | 0.06 | 1.22 | 0.048 | yes | 3.14
+0.30 | 0.06 | 1.23 | -0.007 | yes | 4.78
+0.40 | 0.04 | 1.23 | -0.046 | no | 0.00
+0.50 | 0.05 | 1.22 | 0.055 | yes | 1.63
+0.60 | 0.10 | 1.24 | 0.087 | yes | 3.14
+0.70 | 0.12 | 1.20 | 0.015 | yes | 4.78
+0.80 | 0.12 | 1.20 | -0.024 | yes | 6.28
+0.90 | 0.18 | 1.23 | 0.132 | yes | 1.63
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+thigh_rhythm: 0.00
+leg_rhythm: 0.00
+foot_rhythm: 0.00
+height_hold: 0.00
+thigh_restore: 0.00
+balance: 0.00
+
+## Round 3: your reply
+
+Round 3 goes back to the round 0 layout, which was the only design that hopped and balanced the torso. I made three changes to address how it failed, which was a slow forward runaway ending in a leg collapse.
+
+- **Speed feedback:** the thigh gets a term on forward speed (obs[5]) so the torso pitches back as speed builds.
+- **Angular-velocity gain:** the gain on torso angular velocity is raised from 0.3 to 0.4.
+- **Leg height feedback:** a mild height term on the leg torque, calibrated so the leg torque is unchanged at a height of 1.25 m. It stiffens the leg as the torso sinks.
+
+I'm also dropping the round 1 and 2 leg setups, which locked the leg straight. The thigh rhythm is trimmed from 0.4 to 0.3, since a rhythmic thigh torque with the foot planted pitches the torso.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.5, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.05, "a1": 1.3},
+ "units": [
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"sin(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a0": 0.3}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a1": 0.6}},
+  {"type": "linear", "name": "foot_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a2": 0.3}},
+  {"type": "linear", "name": "height_hold", "inputs": {"obs[0]": 1.0},
+   "range": 1.6, "tol": 0.02, "to": {"a1": -0.8}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 3.0, "obs[7]": 0.4, "obs[5]": 0.5},
+   "range": 6.0, "tol": 0.05, "to": {"a0": -1.0}}
+ ]}
+```
+
+## Round 3: test results of that design
+
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 0.78 | 1.50 | torso angle out of range
+1 | 0.71 | 1.50 | torso angle out of range
+2 | 0.52 | 1.22 | torso angle out of range
+3 | 0.51 | 1.22 | torso angle out of range
+4 | 0.86 | 1.45 | height too low
+5 | 0.85 | 1.47 | height too low
+6 | 0.78 | 1.49 | torso angle out of range
+7 | 0.51 | 1.22 | torso angle out of range
+8 | 0.69 | 1.50 | torso angle out of range
+9 | 0.79 | 1.50 | torso angle out of range
+
+Over the 10 episodes: mean d 0.70 m, min 0.51, max 0.86; mean time survived 1.41 s; mean forward speed 0.49 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+thigh | -1.294 | 0.009 | 0.16 | 0.01
+leg | -0.318 | 0.067 | 0.44 | 0.02
+foot | -0.060 | 0.822 | 0.19 | 0.00
+torso angle min -0.197, max 0.022 rad; torso height min 0.76, max 1.25 m
+foot: on the ground 0.71 of the steps, 7 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | 0.00
+0.10 | 0.01 | 1.22 | 0.015 | yes | 1.63
+0.20 | 0.06 | 1.22 | 0.006 | yes | 3.14
+0.30 | 0.04 | 1.24 | -0.056 | yes | 4.78
+0.40 | 0.03 | 1.23 | -0.051 | no | 0.00
+0.50 | 0.05 | 1.22 | 0.007 | yes | 1.63
+0.60 | 0.09 | 1.24 | 0.001 | yes | 3.14
+0.70 | 0.10 | 1.20 | -0.037 | yes | 4.78
+0.80 | 0.12 | 1.21 | -0.026 | yes | 6.28
+0.90 | 0.16 | 1.23 | -0.028 | yes | 1.63
+1.00 | 0.24 | 1.22 | -0.041 | yes | 3.14
+1.10 | 0.29 | 1.15 | -0.098 | yes | 4.78
+1.20 | 0.40 | 1.11 | -0.108 | yes | 6.28
+1.30 | 0.54 | 1.03 | -0.156 | no | 1.63
+1.40 | 0.66 | 0.88 | -0.138 | yes | 3.14
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+thigh_rhythm: 0.00
+leg_rhythm: 0.00
+foot_rhythm: 0.00
+height_hold: 0.00
+balance: 0.00
+
+## Round 4: your reply
+
+Round 4 keeps the round 0 and round 3 layout and changes four things, based on how round 3 failed:
+
+- **Speed feedback:** the gain on obs[5] is cut from 0.5 to 0.15. Round 3 pitched the torso backward too hard and fell over backward in several episodes.
+- **Torso-angle and angular-velocity feedback:** both are raised, since round 2 showed the torso tipping forward when the feedback was weak.
+- **Leg height feedback:** the slope is increased so the leg stiffens faster as the torso sinks. The leg torque at a height of 1.25 m is unchanged.
+- **Thigh restoring term:** a mild term pulls the thigh back toward 0, so the leg does not trail far behind the torso as it did in rounds 0 and 3, where the thigh reached about -1.2.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.5, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.05, "a1": 1.8},
+ "units": [
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"sin(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a0": 0.3}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a1": 0.6}},
+  {"type": "linear", "name": "foot_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.1, "tol": 0.02, "to": {"a2": 0.3}},
+  {"type": "linear", "name": "height_hold", "inputs": {"obs[0]": 1.0},
+   "range": 1.6, "tol": 0.02, "to": {"a1": -1.2}},
+  {"type": "linear", "name": "thigh_restore", "inputs": {"obs[2]": 1.0},
+   "range": 2.7, "tol": 0.02, "to": {"a0": -0.5}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 4.0, "obs[7]": 0.5, "obs[5]": 0.15},
+   "range": 8.0, "tol": 0.05, "to": {"a0": -1.0}}
+ ]}
+```
+
+## Round 4: test results of that design
+
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 0.93 | 1.51 | height too low
+1 | 0.95 | 1.59 | height too low
+2 | 0.94 | 1.43 | height too low
+3 | 0.95 | 1.45 | height too low
+4 | 0.94 | 1.41 | height too low
+5 | 0.94 | 1.46 | height too low
+6 | 0.92 | 1.50 | height too low
+7 | 0.94 | 1.45 | height too low
+8 | 0.94 | 1.60 | height too low
+9 | 0.92 | 1.50 | height too low
+
+Over the 10 episodes: mean d 0.94 m, min 0.92, max 0.95; mean time survived 1.49 s; mean forward speed 0.63 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+thigh | -1.154 | 0.005 | 0.13 | 0.00
+leg | -0.241 | 0.060 | 0.48 | 0.06
+foot | -0.075 | 0.818 | 0.19 | 0.00
+torso angle min -0.040, max 0.076 rad; torso height min 0.71, max 1.25 m
+foot: on the ground 0.74 of the steps, 8 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | 0.00
+0.10 | 0.01 | 1.22 | 0.016 | yes | 1.63
+0.20 | 0.06 | 1.22 | 0.027 | yes | 3.14
+0.30 | 0.05 | 1.24 | -0.036 | yes | 4.78
+0.40 | 0.04 | 1.23 | -0.039 | no | 0.00
+0.50 | 0.06 | 1.22 | 0.022 | yes | 1.63
+0.60 | 0.10 | 1.23 | 0.031 | yes | 3.14
+0.70 | 0.12 | 1.21 | -0.003 | yes | 4.78
+0.80 | 0.13 | 1.20 | -0.021 | yes | 6.28
+0.90 | 0.19 | 1.22 | 0.028 | yes | 1.63
+1.00 | 0.27 | 1.21 | 0.039 | yes | 3.14
+1.10 | 0.34 | 1.14 | -0.000 | yes | 4.78
+1.20 | 0.45 | 1.10 | -0.015 | no | 6.28
+1.30 | 0.60 | 1.01 | 0.042 | no | 1.63
+1.40 | 0.75 | 0.86 | 0.076 | yes | 3.14
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+thigh_rhythm: 0.00
+leg_rhythm: 0.00
+foot_rhythm: 0.00
+height_hold: 0.00
+thigh_restore: 0.00
+balance: 0.00
+
+## Now: round 5 of 5
+
+Above are your earlier replies and the test results of each design, in order. Write a revised design in the same output
+format (one complete spec in a single ```json code block). This is the last round: this design is final and is the one scored. You may resubmit an earlier design unchanged by copying
+its spec.

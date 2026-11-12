@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:25:44-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 49.884966135025024,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":48548,\"stop_reason\":\"end_turn\",\"session_id\":\"67f966f3-b296-46fc-abfc-ce35740c657f\",\"total_cost_usd\":0.10998922000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":2411,\"output_tokens\":4907,\"output_tokens_details\":{\"thinking_tokens\":3903},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4907,\"cache_read_input_tokens\":2411,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4907,\"cacheReadInputTokens\":2411,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.10998922000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3903,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like a one-legged hopper: obs[0] is height, obs[1] is torso pitch, obs[2:5] are the hip, knee and ankle angles, and obs[5:11] are the matching velocities. The controller just tries to stay upright for all 1000 steps, which earns about 1 reward per step. It makes no attempt to move forward, so the forward-velocity bonus will be near zero. I could not run this, so the score is unverified.\\n\\nEach hidden unit is `tanh(0.1\u00b7signal)`, which stays nearly linear for small signals. The output weights multiply the gains by 10 to cancel that 0.1 scale. Gains are in action units per rad or per rad/s.\\n\\n- **Hip (action 0):** keeps the torso upright with `\u22120.5\u00b7\u03b8 \u2212 0.05\u00b7\u03b8\u0307`.\\n- **Knee (action 1):** holds the knee straight with `\u22121\u00b7q_knee \u2212 0.05\u00b7q\u0307_knee`.\\n- **Ankle (action 2):** balances the whole body like an inverted pendulum. Leg lean is `\u03c6 = \u03b8 \u2212 q_hip \u2212 q_knee`, and the term is `\u22121\u00b7\u03c6 \u2212 0.1\u00b7\u03c6\u0307 \u2212 0.1\u00b7\u1e8b`.\\n\\n```json\\n{\\n\\\"W1\\\": [\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0.1,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0.1,0,0,0],\\n[0,0,0,0.1,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0.1,0],\\n[0,0.1,-0.1,-0.1,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0.1,-0.1,-0.1,0],\\n[0,0,0,0,0,0.1,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0]\\n],\\n\\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n\\\"W2\\\": [\\n[0,-5.0,-0.5,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,-10.0,-0.5,0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,-10.0,-1.0,-1.0,0,0,0,0,0,0,0,0]\\n],\\n\\\"b2\\\": [0,0,0]\\n}\\n```\",\"ttft_ms\":40831,\"type\":\"result\",\"duration_ms\":48627,\"uuid\":\"ff8482c3-c885-447a-96b0-1931574bacf6\",\"ttft_stream_ms\":828,\"time_to_request_ms\":78,\"first_content_frame_ms\":828,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 2411,
+  "output_tokens": 4907,
+  "output_tokens_details": {
+   "thinking_tokens": 3903
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4907,
+    "cache_read_input_tokens": 2411,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T23:03:37-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 21.583026885986328,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":20724,\"stop_reason\":\"end_turn\",\"session_id\":\"d191de42-195c-4760-992c-ebc7c16492bc\",\"total_cost_usd\":0.05161020000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":7031,\"output_tokens\":2455,\"output_tokens_details\":{\"thinking_tokens\":1760},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2455,\"cache_read_input_tokens\":7031,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2455,\"cacheReadInputTokens\":7031,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.05161020000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1760,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is an untested guess, since I can't run anything here. It combines a torso-pitch stabiliser on both hips with a 2 Hz alternating-leg oscillator. The knees flex during each leg's swing phase, and the feet get a small damping term.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"g\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a1\\\": 0.3, \\\"a4\\\": 0.3},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_pd\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[10]\\\": 0.1},\\n   \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 3.0, \\\"a3\\\": 3.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_swing\\\", \\\"inputs\\\": {\\\"sin(g)\\\": 1.0},\\n   \\\"range\\\": 1.2, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 0.5, \\\"a3\\\": -0.5}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"rknee\\\", \\\"inputs\\\": {\\\"cos(g)\\\": 1.0}, \\\"threshold\\\": 0.0,\\n   \\\"sharpness\\\": 3.0, \\\"to\\\": {\\\"a1\\\": -0.3}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"lknee\\\", \\\"inputs\\\": {\\\"cos(g)\\\": -1.0}, \\\"threshold\\\": 0.0,\\n   \\\"sharpness\\\": 3.0, \\\"to\\\": {\\\"a4\\\": -0.3}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"rfoot\\\", \\\"inputs\\\": {\\\"obs[4]\\\": 1.0, \\\"obs[15]\\\": 0.05},\\n   \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": -1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"lfoot\\\", \\\"inputs\\\": {\\\"obs[7]\\\": 1.0, \\\"obs[16]\\\": 0.05},\\n   \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a5\\\": -1.0}}\\n ]}\\n```\",\"ttft_ms\":17069,\"type\":\"result\",\"duration_ms\":20765,\"uuid\":\"ba26f005-6f64-4956-b614-c3e70a992f3d\",\"ttft_stream_ms\":989,\"time_to_request_ms\":39,\"first_content_frame_ms\":989,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 7031,
+  "output_tokens": 2455,
+  "output_tokens_details": {
+   "thinking_tokens": 1760
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2455,
+    "cache_read_input_tokens": 7031,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T20:42:35-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 443.96366143226624,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":443185,\"stop_reason\":\"end_turn\",\"session_id\":\"4b774539-c6b7-4133-9e4b-d692f1678e77\",\"total_cost_usd\":0.86808,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":2958,\"cache_read_input_tokens\":1440,\"output_tokens\":42206,\"output_tokens_details\":{\"thinking_tokens\":40473},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":2958,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":42206,\"cache_read_input_tokens\":1440,\"cache_creation_input_tokens\":2958,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":2958},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":42206,\"cacheReadInputTokens\":1440,\"cacheCreationInputTokens\":2958,\"webSearchRequests\":0,\"costUSD\":0.86808,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":40473,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller is untested, because I can't run the simulation. Every number below comes from reasoning about the Walker2d model, not from tuning, so it may not walk as intended.\\n\\nIt uses one phase oscillator, with the left leg at its phase + \u03c0 (exact antiphase). Each joint uses a PD law built from the joint's own angle and velocity, with a phase-dependent target.\\n\\n**Hips: differential plus common mode**\\n- **Scissor motion (differential):** one unit drives the difference between the two hip angles, q_R \u2212 q_L, towards 2\u00b7A\u00b7cos(\u03c8), with A = 0.25. It also adds a little velocity feedforward. The unit outputs +1 to the right hip and \u22121 to the left. Opposite torques cancel on the torso, so the leg rhythm does not tip the torso.\\n- **Torso balance (common mode):** a second unit adds the same torque to both hips: 0.7\u00b7(\u03b8 \u2212 \u03b8ref) + 0.06\u00b7\u03b8\u0307.\\n  - Positive thigh torque pitches the torso forward. Every joint shares the \u2212y axis with the torso joint, so this sign holds whatever the gait.\\n  - \u03b8ref is about 0.35 rad, leaning back. The hip joint's range is [\u2212150\u00b0, 0\u00b0], so a thigh can only swing behind the torso line. The torso must lean back for the front leg to reach ahead of vertical.\\n  - \u03b8ref rises slightly with forward speed, so the robot leans back more when fast.\\n\\n**Knees**\\n- PD with gain 2.0 towards +0.15 rad. That holds the knee straight against its 0 limit during stance.\\n- A swing reflex switches the target to about \u22120.9 rad over most of the swing phase. It releases just before touchdown so the leg straightens in time.\\n\\n**Ankles**\\n- A soft PD (gain 0.6) towards a foot aligned with the shank, which gives a heel-first touchdown.\\n- The knee reflex also lifts the toe during swing for ground clearance.\\n\\n**Cadence**\\n- The phase rate is 2\u03c0\u00b70.75 + 2.0\u00b7(x-velocity) rad/s. A faster body advances the step sooner, so the swing leg arrives in time to catch it.\\n\\n**Gains**\\n- Derivative gains are kept small enough relative to each body's inertia to stay stable at the 0.008 s control step.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"P\\\", \\\"freq_hz\\\": 0.75, \\\"phase0\\\": 1.5708, \\\"feedback\\\": {\\\"obs[8]\\\": 2.0}}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.189, \\\"a3\\\": -0.189, \\\"a1\\\": -0.75, \\\"a4\\\": -0.75, \\\"a2\\\": 0.18, \\\"a5\\\": 0.18},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_scissor\\\",\\n    \\\"inputs\\\": {\\\"cos(P)\\\": 1.0, \\\"sin(P)\\\": -0.3, \\\"obs[2]\\\": -2.0, \\\"obs[5]\\\": 2.0, \\\"obs[11]\\\": -0.2, \\\"obs[14]\\\": 0.2},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0, \\\"a3\\\": -1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_balance\\\",\\n    \\\"inputs\\\": {\\\"obs[1]\\\": 0.7, \\\"obs[10]\\\": 0.06, \\\"obs[8]\\\": -0.07},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0, \\\"a3\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_pd_R\\\",\\n    \\\"inputs\\\": {\\\"obs[3]\\\": -2.0, \\\"obs[12]\\\": -0.2},\\n    \\\"range\\\": 4.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_pd_L\\\",\\n    \\\"inputs\\\": {\\\"obs[6]\\\": -2.0, \\\"obs[15]\\\": -0.2},\\n    \\\"range\\\": 4.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swing_flex_R\\\",\\n    \\\"inputs\\\": {\\\"sin(P)\\\": -0.955, \\\"cos(P)\\\": 0.296},\\n    \\\"threshold\\\": 0.267, \\\"sharpness\\\": 6.0, \\\"to\\\": {\\\"a1\\\": -1.05, \\\"a2\\\": 0.18}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swing_flex_L\\\",\\n    \\\"inputs\\\": {\\\"sin(P)\\\": 0.955, \\\"cos(P)\\\": -0.296},\\n    \\\"threshold\\\": 0.267, \\\"sharpness\\\": 6.0, \\\"to\\\": {\\\"a4\\\": -1.05, \\\"a5\\\": 0.18}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_pd_R\\\",\\n    \\\"inputs\\\": {\\\"obs[4]\\\": -0.6, \\\"obs[13]\\\": -0.03},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_pd_L\\\",\\n    \\\"inputs\\\": {\\\"obs[7]\\\": -0.6, \\\"obs[16]\\\": -0.03},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a5\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":429054,\"type\":\"result\",\"duration_ms\":443213,\"uuid\":\"4b8ab54b-e5a1-4c14-bb76-ab57ab848669\",\"ttft_stream_ms\":2030,\"time_to_request_ms\":26,\"first_content_frame_ms\":2030,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 2958,
+  "cache_read_input_tokens": 1440,
+  "output_tokens": 42206,
+  "output_tokens_details": {
+   "thinking_tokens": 40473
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 2958,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 42206,
+    "cache_read_input_tokens": 1440,
+    "cache_creation_input_tokens": 2958,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 2958
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

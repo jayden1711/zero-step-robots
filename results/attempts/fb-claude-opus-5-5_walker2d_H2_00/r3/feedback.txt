@@ -1,0 +1,48 @@
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | -1.00 | 0.90 | height too low
+1 | -1.01 | 0.91 | height too low
+2 | -1.01 | 0.91 | height too low
+3 | -1.00 | 0.90 | height too low
+4 | -1.02 | 0.92 | height too low
+5 | -1.03 | 0.93 | height too low
+6 | -1.01 | 0.90 | height too low
+7 | -1.03 | 0.93 | height too low
+8 | -1.02 | 0.92 | height too low
+9 | -1.00 | 0.90 | height too low
+
+Over the 10 episodes: mean d -1.01 m, min -1.03, max -1.00; mean time survived 0.91 s; mean forward speed -1.11 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+right thigh | -0.211 | 0.044 | 0.71 | 0.50
+right leg | -0.412 | 0.012 | 0.30 | 0.00
+right foot | -0.204 | 0.063 | 0.08 | 0.00
+left thigh | -0.086 | 0.024 | 0.73 | 0.50
+left leg | -0.553 | 0.014 | 0.37 | 0.01
+left foot | -0.350 | 0.171 | 0.07 | 0.00
+torso angle min -0.867, max -0.005 rad; torso height min 0.81, max 1.25 m
+right foot: on the ground 0.89 of the steps, 2 touchdowns
+left foot: on the ground 0.80 of the steps, 2 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | right foot contact | left foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | no | 1.57, 4.71
+0.10 | -0.03 | 1.21 | -0.137 | yes | yes | 2.16, 5.30
+0.20 | -0.08 | 1.20 | -0.241 | yes | yes | 2.70, 5.84
+0.30 | -0.15 | 1.20 | -0.249 | yes | yes | 3.29, 0.15
+0.40 | -0.23 | 1.19 | -0.251 | yes | yes | 3.83, 0.69
+0.50 | -0.35 | 1.16 | -0.358 | yes | yes | 4.42, 1.28
+0.60 | -0.48 | 1.12 | -0.466 | yes | yes | 4.96, 1.82
+0.70 | -0.64 | 1.04 | -0.648 | yes | yes | 5.55, 2.41
+0.80 | -0.81 | 0.94 | -0.808 | yes | no | 6.09, 2.95
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+torso_balance_common_speed: 0.00
+hip_scissor_diff: 0.00
+R_knee_pd: 0.00
+L_knee_pd: 0.00
+R_foot_pd: 0.00
+L_foot_pd: 0.00

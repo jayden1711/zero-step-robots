@@ -1,0 +1,159 @@
+{
+ "target": "cpg",
+ "obs_dim": 17,
+ "act_dim": 6,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "P",
+   "freq_hz": 0.9,
+   "phase0": 1.3
+  }
+ ],
+ "bias": {
+  "a0": -0.175,
+  "a3": -0.175,
+  "a1": -0.425,
+  "a4": -0.425,
+  "a2": 0.13,
+  "a5": 0.13
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "hip_R",
+   "inputs": {
+    "obs[2]": -1.0,
+    "obs[11]": -0.15,
+    "obs[1]": -0.8,
+    "obs[10]": -0.1,
+    "obs[8]": -0.1
+   },
+   "range": 2.5,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "hip_L",
+   "inputs": {
+    "obs[5]": -1.0,
+    "obs[14]": -0.15,
+    "obs[1]": -0.8,
+    "obs[10]": -0.1,
+    "obs[8]": -0.1
+   },
+   "range": 2.5,
+   "tol": 0.05,
+   "to": {
+    "a3": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "ext_R",
+   "inputs": {
+    "cos(P)": 1.0
+   },
+   "threshold": 0.5,
+   "sharpness": 8.0,
+   "to": {
+    "a0": -0.325
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "ext_L",
+   "inputs": {
+    "cos(P)": -1.0
+   },
+   "threshold": 0.5,
+   "sharpness": 8.0,
+   "to": {
+    "a3": -0.325
+   }
+  },
+  {
+   "type": "linear",
+   "name": "knee_R",
+   "inputs": {
+    "obs[3]": -1.5,
+    "obs[12]": -0.12
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "knee_L",
+   "inputs": {
+    "obs[6]": -1.5,
+    "obs[15]": -0.12
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a4": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "flex_R",
+   "inputs": {
+    "cos(P)": -0.5,
+    "sin(P)": 0.866
+   },
+   "threshold": 0.5,
+   "sharpness": 8.0,
+   "to": {
+    "a1": -0.475,
+    "a2": 0.08
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "flex_L",
+   "inputs": {
+    "cos(P)": 0.5,
+    "sin(P)": -0.866
+   },
+   "threshold": 0.5,
+   "sharpness": 8.0,
+   "to": {
+    "a4": -0.475,
+    "a5": 0.08
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_R",
+   "inputs": {
+    "obs[4]": -0.5,
+    "obs[13]": -0.03
+   },
+   "range": 1.5,
+   "tol": 0.05,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_L",
+   "inputs": {
+    "obs[7]": -0.5,
+    "obs[16]": -0.03
+   },
+   "range": 1.5,
+   "tol": 0.05,
+   "to": {
+    "a5": 1.0
+   }
+  }
+ ]
+}

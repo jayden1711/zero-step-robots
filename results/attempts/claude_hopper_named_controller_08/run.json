@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:33:30-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 22.60772466659546,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":21265,\"stop_reason\":\"end_turn\",\"session_id\":\"2cf7418e-3f36-4e96-9d63-07697e06114a\",\"total_cost_usd\":0.05339686000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":134,\"cache_read_input_tokens\":6313,\"output_tokens\":2310,\"output_tokens_details\":{\"thinking_tokens\":1823},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":134,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2310,\"cache_read_input_tokens\":6313,\"cache_creation_input_tokens\":134,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":134},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2310,\"cacheReadInputTokens\":6313,\"cacheCreationInputTokens\":134,\"webSearchRequests\":0,\"costUSD\":0.05339686000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1823,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller is untested, since I can't run anything here. It is a conservative balance controller that aims to keep the hopper upright for the full 1000 steps rather than hop fast.\\n\\nThe sign conventions come from the MuJoCo model, where all hinge axes are `0 -1 0`. A positive torso angle means leaning backward. A positive foot or thigh torque pushes the torso forward when the foot is planted. So the torso-angle feedback is positive on those two joints. The leg joint is held near straight with a PD term, and a small velocity term nudges the target lean forward to pick up some velocity reward.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    z, ang, q_thigh, q_leg, q_foot, vx, vz, w, w_thigh, w_leg, w_foot = obs\\n\\n    vx_c = max(-1.0, min(1.0, vx))\\n    target = -0.03 - 0.02 * max(0.0, 1.0 - vx_c)\\n    err = ang - target\\n\\n    foot = 6.0 * err + 0.8 * w\\n    thigh = 3.0 * err + 0.4 * w - 0.5 * q_thigh - 0.05 * w_thigh\\n    leg = -3.0 * q_leg - 0.3 * w_leg\\n\\n    return [float(np.clip(thigh, -1, 1)),\\n            float(np.clip(leg, -1, 1)),\\n            float(np.clip(foot, -1, 1))]\\n```\",\"ttft_ms\":18109,\"type\":\"result\",\"duration_ms\":21391,\"uuid\":\"3b8785c5-dcca-4a90-9219-9e03980c8f73\",\"ttft_stream_ms\":1154,\"time_to_request_ms\":125,\"first_content_frame_ms\":1154,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 134,
+  "cache_read_input_tokens": 6313,
+  "output_tokens": 2310,
+  "output_tokens_details": {
+   "thinking_tokens": 1823
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 134,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2310,
+    "cache_read_input_tokens": 6313,
+    "cache_creation_input_tokens": 134,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 134
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

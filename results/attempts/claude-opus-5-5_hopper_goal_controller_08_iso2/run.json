@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:45:34-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 93.73631525039673,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":92612,\"stop_reason\":\"end_turn\",\"session_id\":\"a4215655-f19c-4b37-ad03-288ea66ad1c3\",\"total_cost_usd\":0.19783016000000003,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":2308,\"output_tokens\":8902,\"output_tokens_details\":{\"thinking_tokens\":7699},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":167,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":8902,\"cache_read_input_tokens\":2308,\"cache_creation_input_tokens\":167,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":167},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":8902,\"cacheReadInputTokens\":2308,\"cacheCreationInputTokens\":167,\"webSearchRequests\":0,\"costUSD\":0.19783016000000003,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":7699,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller aims for a reliable score of about **1000** by balancing in place for the full 1000 steps. It does not try to hop forward. I couldn't run or test it, so the gains and signs come from working through the physics by hand, not from simulation.\\n\\n**Why not hop?** The observations, actions and health rules match the MuJoCo Hopper. A forward-hopping gait could score about 2000\u20133000. But a gait designed without any testing would very likely fall early, and an early fall scores well under 1000. Staying upright for all 1000 steps earns about 1 per step, so I chose that.\\n\\n**How it balances:**\\n- **Hip and knee (actions 0 and 1):** Both joints can only bend one way from straight. Each is held straight by a PD controller with a small positive bias that presses it against its joint limit. That makes the body behave like one rigid stick above the ankle.\\n- **Ankle (action 2):** This joint balances the stick like an inverted pendulum.\\n  - The lean angle of the stick is `obs[1] - obs[2] - obs[3]` (torso angle minus hip and knee angles).\\n  - A positive ankle torque tips the body forward when the foot is on the ground.\\n  - The target lean is slightly forward, so the centre of mass sits over the middle of the foot, which extends further forward of the ankle than behind it.\\n- **Ankle limits:** The ankle command is limited to \u00b10.2. A larger torque could lift the toe or heel off the ground.\\n- **Gains:** They were sized from estimated body masses and lengths: gravity pulls with about 78 Nm per radian of lean, the actuator gives 200 Nm per unit of action, and the inertia about the ankle is about 7.5 kg\u00b7m\u00b2. The ankle loop is set close to critical damping.\\n\\n```python\\nimport numpy as np\\n\\n# Target lean (rad) of the rigid leg+torso stick about the ankle; slightly\\n# forward so the centre of mass sits over the middle of the foot.\\nPHI_TARGET = 0.04\\n\\nKP_ANKLE = 1.5\\nKD_ANKLE = 0.35\\nANKLE_LIM = 0.2\\n\\nKP_JOINT = 3.0\\nKD_JOINT = 0.15\\nJOINT_BIAS = 0.15   # press hip/knee into their straight (0) limit\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    obs = np.asarray(obs, dtype=float)\\n    theta, q_thigh, q_leg, q_foot = obs[1], obs[2], obs[3], obs[4]\\n    dtheta, dq_thigh, dq_leg = obs[7], obs[8], obs[9]\\n\\n    # Hip and knee: hold straight, biased into the joint limit.\\n    a_hip = KP_JOINT * (0.0 - q_thigh) - KD_JOINT * dq_thigh + JOINT_BIAS\\n    a_knee = KP_JOINT * (0.0 - q_leg) - KD_JOINT * dq_leg + JOINT_BIAS\\n\\n    # Ankle: balance the stick as an inverted pendulum.\\n    phi = theta - q_thigh - q_leg\\n    dphi = dtheta - dq_thigh - dq_leg\\n    a_foot = -KP_ANKLE * (phi - PHI_TARGET) - KD_ANKLE * dphi\\n    a_foot = float(np.clip(a_foot, -ANKLE_LIM, ANKLE_LIM))\\n\\n    a = np.clip([a_hip, a_knee, a_foot], -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\",\"ttft_ms\":81599,\"type\":\"result\",\"duration_ms\":92674,\"uuid\":\"87d0abdf-43a7-4100-aeac-b5da0836e020\",\"ttft_stream_ms\":734,\"time_to_request_ms\":60,\"first_content_frame_ms\":734,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 167,
+  "cache_read_input_tokens": 2308,
+  "output_tokens": 8902,
+  "output_tokens_details": {
+   "thinking_tokens": 7699
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 167,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 8902,
+    "cache_read_input_tokens": 2308,
+    "cache_creation_input_tokens": 167,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 167
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

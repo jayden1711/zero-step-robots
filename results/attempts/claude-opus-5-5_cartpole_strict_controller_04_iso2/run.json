@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:50:39-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 30.931881189346313,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":29900,\"stop_reason\":\"end_turn\",\"session_id\":\"7d5676d1-9c4d-4a1a-9966-a4cab0d1664c\",\"total_cost_usd\":0.06411768,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":2144,\"output_tokens\":2825,\"output_tokens_details\":{\"thinking_tokens\":2212},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2825,\"cache_read_input_tokens\":2144,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":2825,\"cacheReadInputTokens\":2144,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.06411768,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2212,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like a cart-pole balancing task: obs[1] is the pole angle, with a 0.2 rad failure threshold. I assume the observation is `[cart position, pole angle, cart velocity, pole angular velocity]` and that positive action pushes the cart toward +x. This matches the standard MuJoCo inverted pendulum. I haven't run this, so the gains are untested.\\n\\nThe controller is a linear state-feedback law:\\n\\n- **Fast inner loop on the pole.** Strong proportional-derivative feedback on angle and angular rate keeps the pole upright, aiming for about 8 rad/s bandwidth, well damped.\\n- **Slow outer loop on the cart.** Small positive gains on cart position and velocity bring the cart back toward the centre. The positive sign is deliberate: it makes the pole lean toward the centre, which then drives the cart there.\\n\\nA rough linearised model gave pole dynamics of about \u03b8\u0308 \u2248 32\u03b8 \u2212 21u and cart dynamics of about \u1e8d \u2248 8.5u \u2212 3\u03b8. From these, the gains are k\u03b8\u22484.5, k\u03c9\u22480.6, kx\u22480.25 and kv\u22480.5. They keep enough stability margin at the 0.04 s step.\\n\\n```python\\nimport numpy as np\\n\\nK_X = 0.25      # cart position\\nK_TH = 4.5      # pole angle\\nK_V = 0.5       # cart velocity\\nK_W = 0.6       # pole angular velocity\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, v, w = (float(o) for o in obs[:4])\\n    if not all(np.isfinite([x, th, v, w])):\\n        return [0.0]\\n    u = K_X * x + K_TH * th + K_V * v + K_W * w\\n    u = float(np.clip(u, -3.0, 3.0))\\n    return [u]\\n```\",\"ttft_ms\":24826,\"type\":\"result\",\"duration_ms\":29974,\"uuid\":\"c1fa5a58-426e-4a81-9d3b-59ce16d5abc7\",\"ttft_stream_ms\":695,\"time_to_request_ms\":73,\"first_content_frame_ms\":696,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 2144,
+  "output_tokens": 2825,
+  "output_tokens_details": {
+   "thinking_tokens": 2212
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2825,
+    "cache_read_input_tokens": 2144,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

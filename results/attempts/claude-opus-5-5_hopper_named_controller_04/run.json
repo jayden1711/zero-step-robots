@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:26:16-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 54.601810693740845,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":53261,\"stop_reason\":\"end_turn\",\"session_id\":\"c8b1f4e5-ec0d-42e2-a42c-74601f982e85\",\"total_cost_usd\":0.11177496,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":3248,\"output_tokens\":4981,\"output_tokens_details\":{\"thinking_tokens\":3943},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":167,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4981,\"cache_read_input_tokens\":3248,\"cache_creation_input_tokens\":167,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":167},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4981,\"cacheReadInputTokens\":3248,\"cacheCreationInputTokens\":167,\"webSearchRequests\":0,\"costUSD\":0.11177496,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3943,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller tries to stand still and balanced for the full 1000 steps. It doesn't try to hop forward. Hopping could earn more, but a fall ends the episode, so standing still is the safer bet when the gait can't be tested first.\\n\\n**Expected score:** about 1 per step (roughly 1000 per episode), plus or minus a little drift, minus a small torque cost. I haven't run it, so this is an estimate from the dynamics, not a measured result.\\n\\nHow it works:\\n- **Pose:** it holds a nearly straight leg, with the thigh and knee each bent 0.05 rad. This keeps them slightly away from their joint limits at 0. At a limit, the joint stops pushing back in one direction, which would block corrections.\\n- **Hip:** the hip torque keeps the torso upright. By the action\u2013reaction rule, a positive hip torque pushes the torso backward, so a forward lean is answered with positive torque. A weak extra pull keeps the thigh near its target.\\n- **Knee:** a simple spring-and-damper (PD) loop holds it at its target.\\n- **Ankle:** a PD loop keeps the foot flat, meaning the foot's world angle (torso + thigh + leg + foot) stays at 0. This acts as a stiff ankle spring (about 400 Nm/rad, while gravity's pull to tip over is about 130 Nm/rad), so the body stays balanced over the foot.\\n- **Ankle limit:** the ankle torque is capped at 0.3, so the foot doesn't roll onto its heel or toe.\\n\\n```python\\nimport numpy as np\\n\\n# Nominal standing pose (joint angles, rad); slightly off the 0 joint limits.\\nTHIGH_DES = -0.05\\nLEG_DES = -0.05\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    obs = np.asarray(obs, dtype=float)\\n    torso, q_t, q_l, q_f = obs[1], obs[2], obs[3], obs[4]\\n    w_torso, qd_t, qd_l, qd_f = obs[7], obs[8], obs[9], obs[10]\\n\\n    # Hip: keep torso upright (positive hip torque pitches torso back),\\n    # with a weak pull toward the nominal thigh angle.\\n    a_t = 3.0 * torso + 0.4 * w_torso \\\\\\n        - 0.5 * (q_t - THIGH_DES) - 0.05 * qd_t\\n\\n    # Knee: PD to nominal.\\n    a_l = -2.0 * (q_l - LEG_DES) - 0.2 * qd_l\\n\\n    # Ankle: keep the foot flat (world angle of foot = 0).\\n    foot_world = torso + q_t + q_l + q_f\\n    foot_world_vel = w_torso + qd_t + qd_l + qd_f\\n    a_f = -2.0 * foot_world - 0.2 * foot_world_vel\\n    a_f = float(np.clip(a_f, -0.3, 0.3))\\n\\n    a = np.clip([a_t, a_l, a_f], -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\",\"ttft_ms\":43955,\"type\":\"result\",\"duration_ms\":53330,\"uuid\":\"574549bc-c8ba-4227-8928-5fad50db968c\",\"ttft_stream_ms\":1284,\"time_to_request_ms\":63,\"first_content_frame_ms\":1284,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 167,
+  "cache_read_input_tokens": 3248,
+  "output_tokens": 4981,
+  "output_tokens_details": {
+   "thinking_tokens": 3943
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 167,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4981,
+    "cache_read_input_tokens": 3248,
+    "cache_creation_input_tokens": 167,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 167
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

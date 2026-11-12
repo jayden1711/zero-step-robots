@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:23:04-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 16.92918848991394,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":15927,\"stop_reason\":\"end_turn\",\"session_id\":\"64c79b44-e458-410f-9902-842f466f4dec\",\"total_cost_usd\":0.04152126000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":138,\"cache_read_input_tokens\":5373,\"output_tokens\":1778,\"output_tokens_details\":{\"thinking_tokens\":1231},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":138,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1778,\"cache_read_input_tokens\":5373,\"cache_creation_input_tokens\":138,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":138},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1778,\"cacheReadInputTokens\":5373,\"cacheCreationInputTokens\":138,\"webSearchRequests\":0,\"costUSD\":0.04152126000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1231,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a best-effort standing and balance controller, written without being able to run it. I assumed the layout matches a Hopper-style system (obs[0] height, obs[1] torso angle, obs[2:5] joint angles, obs[5:8] body velocities, obs[8:11] joint velocities). The sign conventions are my guess and are the main risk. Staying upright for all 1000 steps earns about 1000 reward, so the controller only tries to stay alive and doesn't chase forward speed.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    z, ang = obs[0], obs[1]\\n    q_thigh, q_leg, q_foot = obs[2], obs[3], obs[4]\\n    vx, vz, wang = obs[5], obs[6], obs[7]\\n    dq_thigh, dq_leg, dq_foot = obs[8], obs[9], obs[10]\\n\\n    # Ankle: resist torso lean and forward drift\\n    foot = 3.0 * ang + 0.4 * wang + 0.2 * vx - 0.3 * q_foot - 0.02 * dq_foot\\n    # Hip: help level the torso while holding the thigh near neutral\\n    thigh = 1.0 * ang + 0.2 * wang - 0.5 * q_thigh - 0.03 * dq_thigh\\n    # Knee: hold the leg near straight\\n    leg = -1.0 * q_leg - 0.05 * dq_leg\\n\\n    return [float(np.clip(thigh, -1, 1)),\\n            float(np.clip(leg, -1, 1)),\\n            float(np.clip(foot, -1, 1))]\\n```\",\"ttft_ms\":12434,\"type\":\"result\",\"duration_ms\":15996,\"uuid\":\"85af61d6-175a-4900-84c9-4f89b33768ee\",\"ttft_stream_ms\":904,\"time_to_request_ms\":68,\"first_content_frame_ms\":904,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 138,
+  "cache_read_input_tokens": 5373,
+  "output_tokens": 1778,
+  "output_tokens_details": {
+   "thinking_tokens": 1231
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 138,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1778,
+    "cache_read_input_tokens": 5373,
+    "cache_creation_input_tokens": 138,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 138
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

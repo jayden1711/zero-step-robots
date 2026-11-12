@@ -1,0 +1,137 @@
+{
+ "seed": 3845359218,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.22652770312611695,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 0.31462961071188705,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 0.24412626992437106,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": 0.3399510692388648,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": 0.022994392949349844,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.16912095823425144,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 1.5003285260649504,
+    "phase0": -0.031166805831555372
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": 0.14183203301856293,
+   "a1": -0.017705492649727622,
+   "a2": -0.3278651804716298
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "thigh_rhythm",
+    "inputs": {
+     "cos(hop)": 0.17040434078350172,
+     "sin(hop)": -0.029538860719167954
+    },
+    "range": 1.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.2658777472663083
+    }
+   },
+   {
+    "type": "linear",
+    "name": "leg_rhythm",
+    "inputs": {
+     "sin(hop)": 0.2887858439585884
+    },
+    "range": 1.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 0.8338588236330418
+    }
+   },
+   {
+    "type": "linear",
+    "name": "foot_rhythm",
+    "inputs": {
+     "sin(hop)": 0.34101743743982443,
+     "cos(hop)": 0.39920995738564213
+    },
+    "range": 1.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 1.660230116324009
+    }
+   },
+   {
+    "type": "linear",
+    "name": "balance",
+    "inputs": {
+     "obs[1]": 0.5074091388286308,
+     "obs[7]": 0.11542173319186017
+    },
+    "range": 4.0,
+    "tol": 0.05,
+    "to": {
+     "a0": -0.798611184496976
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 116.89056411711849,
+  "sem_return": 0.19939035055350773,
+  "std_return": 1.983908938810252,
+  "median_return": 117.49023695771183,
+  "min_return": 112.24247142356207,
+  "max_return": 120.79968911516248,
+  "mean_length": 75.57,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.3389003239381204,
+  "mean_distance_healthy": 0.3402435440678568,
+  "median_distance_healthy": 0.3418867417817876,
+  "min_distance_healthy": 0.30825061184728575,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

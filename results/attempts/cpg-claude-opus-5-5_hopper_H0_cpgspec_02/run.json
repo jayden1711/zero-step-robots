@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-09T18:05:10-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 580.587560415268,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":579655,\"stop_reason\":\"end_turn\",\"session_id\":\"1e0b3433-2d63-4306-9030-b2f22934c557\",\"total_cost_usd\":1.102126,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":3930,\"output_tokens\":54999,\"output_tokens_details\":{\"thinking_tokens\":53554},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":54999,\"cache_read_input_tokens\":3930,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":54999,\"cacheReadInputTokens\":3930,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":1.102126,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":53554,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller is a guess I couldn't simulate, so treat its chance of passing as low. It rests on two assumptions about the Hopper model, and if the first is wrong it will likely fail within the first second:\\n\\n1. All four hinges (`rooty`, thigh, leg, foot) turn about the axis (0, \u22121, 0). That means:\\n   - obs[1] > 0 is the torso leaning **back**.\\n   - A positive joint angle swings the lower segment forward.\\n   - A positive foot angle lifts the toes.\\n2. The hip (range \u2212150\u00b0..0) can only swing the thigh backward relative to the torso. So the robot can only travel with its leg leaning forward.\\n\\n**How it works**\\n\\n- **Hip (a0): keeps the torso upright.** It drives the torso toward a slight backward lean of 0.03 rad. Gains are about 400 Nm/rad and 24 Nm\u00b7s/rad: `a0 = 2(r \u2212 0.03) + 0.12\u00b7\u1e59`.\\n- **Knee (a1): stays locked straight.** It presses the knee against its 0\u00b0 limit with a constant torque, plus extra torque if the knee starts to bend.\\n- **Ankle (a2): steers the foot's angle in the world.** Call that angle \u03c63 (the sum of torso, thigh, leg and foot angles). The ankle tracks a target \u03c63_des = 0.8\u00b7(\u2212lean) \u2212 0.3\u00b7(v \u2212 v_des), with stiffness 200 Nm/rad and damping.\\n  - **In the air**, this places the foot. If the robot leans forward or moves too fast, it points the toes down so it lands on the toes, ahead of the body, which brakes it. If it is too slow, it lifts the toes so it lands on the heel, behind the ankle.\\n  - **On the ground**, the foot is flat (\u03c63 = 0), so the same rule becomes a balance controller. It holds a forward lean and regulates speed by shifting the pressure point between heel and toe. Its stiffness is about 160 Nm/rad, against about 77 Nm/rad of gravity.\\n- **Hop pump.** A 2 Hz oscillator fires a toe push lasting about 40% of each cycle, peaking at about 100 Nm. This lifts the heel and launches a small hop.\\n  - The push starts earlier when the robot leans further forward or is already rising. It is weaker when the body is upright, so a push doesn't flip the robot backward.\\n  - The oscillator starts at phase \u03c0, so the first push comes after the initial drop has settled.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 3.14159}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.06, \\\"a1\\\": 0.4, \\\"a2\\\": -0.15},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_torso_pd\\\",\\n    \\\"inputs\\\": {\\\"obs[1]\\\": 2.0, \\\"obs[7]\\\": 0.12},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.03, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_lock\\\",\\n    \\\"inputs\\\": {\\\"obs[3]\\\": -2.0, \\\"obs[9]\\\": -0.1},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_foot_placement_balance\\\",\\n    \\\"inputs\\\": {\\\"obs[1]\\\": -0.2, \\\"obs[2]\\\": -0.2, \\\"obs[3]\\\": -0.2, \\\"obs[4]\\\": -1.0,\\n               \\\"obs[5]\\\": -0.3,\\n               \\\"obs[7]\\\": -0.1, \\\"obs[8]\\\": -0.1, \\\"obs[9]\\\": -0.1, \\\"obs[10]\\\": -0.1},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"toe_push_pump\\\",\\n    \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0, \\\"obs[1]\\\": -1.0, \\\"obs[2]\\\": -1.0, \\\"obs[3]\\\": -1.0, \\\"obs[6]\\\": 0.3},\\n    \\\"threshold\\\": 0.35, \\\"sharpness\\\": 6.0, \\\"to\\\": {\\\"a2\\\": -0.25}}\\n ]}\\n```\",\"ttft_ms\":567424,\"type\":\"result\",\"duration_ms\":579682,\"uuid\":\"d3d9ae22-6102-4b63-b728-0220f7d2dcf4\",\"ttft_stream_ms\":2446,\"time_to_request_ms\":24,\"first_content_frame_ms\":2447,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 3930,
+  "output_tokens": 54999,
+  "output_tokens_details": {
+   "thinking_tokens": 53554
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 54999,
+    "cache_read_input_tokens": 3930,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

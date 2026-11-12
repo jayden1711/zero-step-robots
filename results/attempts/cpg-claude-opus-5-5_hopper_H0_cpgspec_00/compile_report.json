@@ -1,0 +1,32 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_torso_pd",
+  "type": "linear",
+  "scale": 0.3872983346207417,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 1,
+  "name": "knee_pd",
+  "type": "linear",
+  "scale": 0.25819888974716115,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 2,
+  "name": "ankle_balance_footplace",
+  "type": "linear",
+  "scale": 0.25819888974716115,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 3,
+  "name": "ankle_hop_thrust",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ }
+]

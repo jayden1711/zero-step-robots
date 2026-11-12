@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:24:44-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 16.345743656158447,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":14510,\"stop_reason\":\"end_turn\",\"session_id\":\"8b3f8f9c-3791-4b0e-9518-8e3cf0b549d4\",\"total_cost_usd\":0.03671074,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":135,\"cache_read_input_tokens\":6127,\"output_tokens\":1553,\"output_tokens_details\":{\"thinking_tokens\":1289},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":135,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1553,\"cache_read_input_tokens\":6127,\"cache_creation_input_tokens\":135,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":135},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1553,\"cacheReadInputTokens\":6127,\"cacheCreationInputTokens\":135,\"webSearchRequests\":0,\"costUSD\":0.03671074,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1289,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I can't run anything here, so this is an untested hand-tuned state-feedback (LQR-style) controller. The gains are my estimates from the model's approximate masses and pole length, not tuned values.\\n\\nPositive pole angle means the pole leans toward +x, so the cart is pushed the same way. The cart-position and velocity terms also have positive sign, as in standard LQR for this system. They make the cart lean the pole back toward the centre, and the gains on them are small.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, theta, v, w = obs\\n    u = 0.1 * x + 0.3 * v + 6.0 * theta + 0.8 * w\\n    if u > 3.0:\\n        u = 3.0\\n    elif u < -3.0:\\n        u = -3.0\\n    return [u]\\n```\",\"ttft_ms\":12722,\"type\":\"result\",\"duration_ms\":14612,\"uuid\":\"73cd2497-83c2-41d2-95f8-50cca24eb676\",\"ttft_stream_ms\":973,\"time_to_request_ms\":105,\"first_content_frame_ms\":973,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 135,
+  "cache_read_input_tokens": 6127,
+  "output_tokens": 1553,
+  "output_tokens_details": {
+   "thinking_tokens": 1289
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 135,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1553,
+    "cache_read_input_tokens": 6127,
+    "cache_creation_input_tokens": 135,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 135
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,123 @@
+{
+ "seed": 187373928,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.8526863962531804,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 1.0885059249258473,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 1.2488028368098363,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": 0.2188279300124864,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": 0.9647296132529888,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.007999264014518922,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 1.5095022149286665,
+    "phase0": -0.11648531264370829
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -0.04095638752094602,
+   "a1": 0.22037180435019488
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "balance",
+    "inputs": {
+     "obs[1]": -3.311351537912816,
+     "obs[7]": -0.008468597301508118
+    },
+    "range": 6.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.539852087825031
+    }
+   },
+   {
+    "type": "linear",
+    "name": "leg_rhythm",
+    "inputs": {
+     "sin(hop)": 0.9818274607785329
+    },
+    "range": 1.2,
+    "tol": 0.02,
+    "to": {
+     "a1": 0.3980349057932383,
+     "a2": 0.5848581146465753
+    }
+   },
+   {
+    "type": "linear",
+    "name": "thigh_rhythm",
+    "inputs": {
+     "cos(hop)": 1.1121352280553862
+    },
+    "range": 1.2,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.059987194323438846
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 282.3145717832147,
+  "sem_return": 0.09626435268055496,
+  "std_return": 0.9578182155835315,
+  "median_return": 282.29697712602547,
+  "min_return": 279.9759988672617,
+  "max_return": 284.1315612918307,
+  "mean_length": 125.53,
+  "frac_full_length": 0.0,
+  "mean_distance": 1.262604857516411,
+  "mean_distance_healthy": 1.2480742601207364,
+  "median_distance_healthy": 1.2493091949247122,
+  "min_distance_healthy": 1.2214933410209048,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

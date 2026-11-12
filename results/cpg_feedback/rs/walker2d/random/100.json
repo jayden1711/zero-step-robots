@@ -1,0 +1,211 @@
+{
+ "seed": 100,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": -0.06698562468268912,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.07541394385194829,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.2837543663947536,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.09838395049940167,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.07252748176081661,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.18102976726949313,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "o0",
+    "freq_hz": 2.5879390943876057,
+    "phase0": 1.814981275978436,
+    "feedback": {
+     "obs[14]": -0.9613826412454365
+    }
+   },
+   {
+    "name": "o1",
+    "freq_hz": 2.5876509642264094,
+    "phase0": 4.965369903480955
+   },
+   {
+    "name": "o2",
+    "freq_hz": 2.908540566571108,
+    "phase0": 1.1937516340791434
+   },
+   {
+    "name": "o3",
+    "freq_hz": 1.49659017506177,
+    "phase0": 3.953839934369558
+   }
+  ],
+  "couplings": [
+   {
+    "from": "o1",
+    "to": "o3",
+    "weight": 4.988372465860947,
+    "phase_lag": 3.007270224043279
+   },
+   {
+    "from": "o2",
+    "to": "o0",
+    "weight": 1.6096263139610252,
+    "phase_lag": 2.275648145657205
+   },
+   {
+    "from": "o3",
+    "to": "o0",
+    "weight": 1.9488256633809002,
+    "phase_lag": -2.3144213886844778
+   },
+   {
+    "from": "o3",
+    "to": "o2",
+    "weight": 1.3728649434976674,
+    "phase_lag": 0.9809122110174444
+   }
+  ],
+  "bias": {
+   "a0": 0.02793030931825441,
+   "a1": 0.09417176988027731,
+   "a2": 0.053740280349812486,
+   "a3": 0.03790051219688961,
+   "a4": -0.2579876065993886,
+   "a5": -0.020215137824556362
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "j0",
+    "inputs": {
+     "cos(o0)": 0.6690643439657278,
+     "sin(o0)": -0.8552018439030824
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j1",
+    "inputs": {
+     "cos(o0)": -0.545506074733042,
+     "sin(o0)": 0.911956432657856,
+     "obs[11]": -0.07772050691944417
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j2",
+    "inputs": {
+     "cos(o3)": -0.23055518438582978,
+     "sin(o3)": -0.8074551842729785
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j3",
+    "inputs": {
+     "cos(o0)": 0.19429054406494628,
+     "sin(o0)": -0.7022521334870968
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a3": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j4",
+    "inputs": {
+     "cos(o2)": 0.1619763698556198,
+     "sin(o2)": -0.6301020098282353
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a4": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j5",
+    "inputs": {
+     "cos(o3)": -0.7862890601518795,
+     "sin(o3)": 0.4960573874519105
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a5": 1.0
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "walker2d",
+  "variant": "stock",
+  "env_id": "Walker2d-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": -5.729573876330254,
+  "sem_return": 0.00518105990558672,
+  "std_return": 0.05155089516955597,
+  "median_return": -5.721689559690276,
+  "min_return": -5.845473272663358,
+  "max_return": -5.611907188165441,
+  "mean_length": 6.0,
+  "frac_full_length": 0.0,
+  "mean_distance": -0.08565464011440872,
+  "mean_distance_healthy": -0.06696312721757577,
+  "median_distance_healthy": -0.06696224102073356,
+  "min_distance_healthy": -0.06764310204438156,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

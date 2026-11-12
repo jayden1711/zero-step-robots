@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:34:22-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 37.00631284713745,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":35948,\"stop_reason\":\"end_turn\",\"session_id\":\"49418410-b7fb-4f1d-b05b-e65c13271350\",\"total_cost_usd\":0.1000417,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":2714,\"cache_read_input_tokens\":535,\"output_tokens\":3456,\"output_tokens_details\":{\"thinking_tokens\":2707},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":2714,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3456,\"cache_read_input_tokens\":535,\"cache_creation_input_tokens\":2714,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":2714},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3456,\"cacheReadInputTokens\":535,\"cacheCreationInputTokens\":2714,\"webSearchRequests\":0,\"costUSD\":0.1000417,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2707,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like a cart-pole: obs = [cart position, pole angle, cart velocity, pole angular velocity], and a positive action pushes the cart toward the side the pole leans.\\n\\n**Design.** I linearised the dynamics with rough mass estimates (cart about 10 kg, pole about 5 kg and 0.6 m long, actuator gain about 100). That gives approximately:\\n\\n- \u03b8\u0308 \u2248 32.7\u00b7\u03b8 \u2212 22.2\u00b7a\\n- \u1e8d \u2248 8.9\u00b7a \u2212 3.3\u00b7\u03b8\\n\\nI then picked a linear state feedback, a = 0.3\u00b7x + 4.4\u00b7\u03b8 + 0.5\u00b7\u1e8b + 0.5\u00b7\u03b8\u0307.\\n\\n- **Angle loop:** roughly 8 rad/s and well damped, which is comfortably within the 0.04 s step.\\n- **Position loop:** slower, about 1 rad/s, so the cart does not drift over 1000 steps.\\n- **Gain signs:** all positive. To bring the cart back to the centre, it must first move outward so the pole tips back inward.\\n\\n**Network.** One hidden unit carries this feedback. Its input weights are scaled by 0.1 so tanh stays in its linear range, and the output weight of 10 undoes the scaling. All other units are zeroed.\\n\\n```json\\n{\\\"W1\\\": [[0.03, 0.44, 0.05, 0.05], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]], \\\"b1\\\": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], \\\"W2\\\": [[10.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], \\\"b2\\\": [0.0]}\\n```\",\"ttft_ms\":30205,\"type\":\"result\",\"duration_ms\":36011,\"uuid\":\"257715f2-fc28-4f62-b5c2-92ca3e8c5f03\",\"ttft_stream_ms\":1221,\"time_to_request_ms\":62,\"first_content_frame_ms\":1221,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 2714,
+  "cache_read_input_tokens": 535,
+  "output_tokens": 3456,
+  "output_tokens_details": {
+   "thinking_tokens": 2707
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 2714,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3456,
+    "cache_read_input_tokens": 535,
+    "cache_creation_input_tokens": 2714,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 2714
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

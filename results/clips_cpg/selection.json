@@ -1,0 +1,207 @@
+{
+ "addendum": "docs/addendum-2026-11-11-cpg-clips.md",
+ "mujoco": "3.17.0",
+ "seeds": [
+  10000,
+  10001,
+  10002
+ ],
+ "clips": [
+  {
+   "key": "hopper_opus_fb08_r5",
+   "task": "hopper",
+   "id": "fb-claude-opus-5-5_hopper_H2_08 round 5",
+   "why": "passing LLM design (feedback arm)",
+   "cpg": "/home/jayden/projects/zero-step-robots/results/attempts/fb-claude-opus-5-5_hopper_H2_08/r5/parsed.cpg.json",
+   "score": "/home/jayden/projects/zero-step-robots/results/attempts/fb-claude-opus-5-5_hopper_H2_08/r5/score.json",
+   "rank_list": null,
+   "heldout_mean_d": 6.896928261720907,
+   "heldout_n_clean_3m": 100,
+   "episodes": [
+    {
+     "seed": 10000,
+     "steps": 1000,
+     "fell": false,
+     "d": 6.88923298709141
+    },
+    {
+     "seed": 10001,
+     "steps": 1000,
+     "fell": false,
+     "d": 6.895222401964765
+    },
+    {
+     "seed": 10002,
+     "steps": 1000,
+     "fell": false,
+     "d": 6.8950997597874615
+    }
+   ]
+  },
+  {
+   "key": "hopper_opus_fb03_r5",
+   "task": "hopper",
+   "id": "fb-claude-opus-5-5_hopper_H2_03 round 5",
+   "why": "passing LLM design (feedback arm; passed at round 0)",
+   "cpg": "/home/jayden/projects/zero-step-robots/results/attempts/fb-claude-opus-5-5_hopper_H2_03/r5/parsed.cpg.json",
+   "score": "/home/jayden/projects/zero-step-robots/results/attempts/fb-claude-opus-5-5_hopper_H2_03/r5/score.json",
+   "rank_list": null,
+   "heldout_mean_d": 6.418143236058582,
+   "heldout_n_clean_3m": 100,
+   "episodes": [
+    {
+     "seed": 10000,
+     "steps": 920,
+     "fell": true,
+     "d": 7.008250896298876
+    },
+    {
+     "seed": 10001,
+     "steps": 904,
+     "fell": true,
+     "d": 6.79651000448703
+    },
+    {
+     "seed": 10002,
+     "steps": 754,
+     "fell": true,
+     "d": 5.75846511179225
+    }
+   ]
+  },
+  {
+   "key": "walker2d_opus_fb_lowermedian_r5",
+   "task": "walker2d",
+   "id": "fb-claude-opus-5-5_walker2d_H2_06 round 5",
+   "why": "failing LLM design: lower median of Opus walker2d feedback attempts (rank rule)",
+   "cpg": "/home/jayden/projects/zero-step-robots/results/attempts/fb-claude-opus-5-5_walker2d_H2_06/r5/parsed.cpg.json",
+   "score": "/home/jayden/projects/zero-step-robots/results/attempts/fb-claude-opus-5-5_walker2d_H2_06/r5/score.json",
+   "rank_list": [
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_08",
+     "heldout_mean_d": -6.574243220890124
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_05",
+     "heldout_mean_d": -2.352996698157951
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_02",
+     "heldout_mean_d": -2.0198745836465077
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_07",
+     "heldout_mean_d": -1.7043248782203742
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_06",
+     "heldout_mean_d": -1.2291193026207239
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_04",
+     "heldout_mean_d": -0.9677865895058108
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_00",
+     "heldout_mean_d": 0.031021877691129154
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_03",
+     "heldout_mean_d": 0.060631895404982254
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_01",
+     "heldout_mean_d": 0.7749029691358215
+    },
+    {
+     "id": "fb-claude-opus-5-5_walker2d_H2_09",
+     "heldout_mean_d": 0.8256770644741593
+    }
+   ],
+   "heldout_mean_d": -1.2291193026207239,
+   "heldout_n_clean_3m": 0,
+   "episodes": [
+    {
+     "seed": 10000,
+     "steps": 182,
+     "fell": true,
+     "d": -1.2359108339504177
+    },
+    {
+     "seed": 10001,
+     "steps": 182,
+     "fell": true,
+     "d": -1.2339997716253268
+    },
+    {
+     "seed": 10002,
+     "steps": 182,
+     "fell": true,
+     "d": -1.2215631940409233
+    }
+   ]
+  },
+  {
+   "key": "hopper_tuned_cpg",
+   "task": "hopper",
+   "id": "hopper search-tuned CPG (baseline)",
+   "why": "baseline: structure by hand, parameters by search on dev seeds",
+   "spec": "/home/jayden/projects/zero-step-robots/results/cpg/baselines/hopper/tuned_cpg.spec.json",
+   "score": "/home/jayden/projects/zero-step-robots/results/cpg/baselines/hopper/tuned_cpg.score.json",
+   "rank_list": null,
+   "heldout_mean_d": 3.2690514098618286,
+   "heldout_n_clean_3m": 80,
+   "episodes": [
+    {
+     "seed": 10000,
+     "steps": 346,
+     "fell": true,
+     "d": 3.197469441129076
+    },
+    {
+     "seed": 10001,
+     "steps": 373,
+     "fell": true,
+     "d": 3.2539115649904855
+    },
+    {
+     "seed": 10002,
+     "steps": 320,
+     "fell": true,
+     "d": 3.0193865140449567
+    }
+   ]
+  },
+  {
+   "key": "walker2d_tuned_cpg",
+   "task": "walker2d",
+   "id": "walker2d search-tuned CPG (baseline)",
+   "why": "baseline: structure by hand, parameters by search on dev seeds",
+   "spec": "/home/jayden/projects/zero-step-robots/results/cpg/baselines/walker2d/tuned_cpg.spec.json",
+   "score": "/home/jayden/projects/zero-step-robots/results/cpg/baselines/walker2d/tuned_cpg.score.json",
+   "rank_list": null,
+   "heldout_mean_d": 1.2865487343482738,
+   "heldout_n_clean_3m": 0,
+   "episodes": [
+    {
+     "seed": 10000,
+     "steps": 220,
+     "fell": true,
+     "d": 1.289171850140026
+    },
+    {
+     "seed": 10001,
+     "steps": 220,
+     "fell": true,
+     "d": 1.2850342396793775
+    },
+    {
+     "seed": 10002,
+     "steps": 218,
+     "fell": true,
+     "d": 1.3499084736660087
+    }
+   ]
+  }
+ ]
+}

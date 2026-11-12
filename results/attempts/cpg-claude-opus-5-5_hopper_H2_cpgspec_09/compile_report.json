@@ -1,0 +1,59 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_balance_pd",
+  "type": "linear",
+  "scale": 0.7745966692414834,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 0.5
+ },
+ {
+  "unit": 1,
+  "name": "speed_regulation",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 2,
+  "name": "thigh_rhythm",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 3,
+  "name": "ankle_pushoff_rhythm",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 4,
+  "name": "foot_centering",
+  "type": "linear",
+  "scale": 0.25819888974716115,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 5,
+  "name": "knee_hold_straight",
+  "type": "linear",
+  "scale": 0.3872983346207417,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.0,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

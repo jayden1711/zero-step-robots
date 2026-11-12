@@ -1,0 +1,125 @@
+{
+ "seed": 4120978998,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.9605760520133891,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 0.933551238741771,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 0.25059608162857044,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.2275560320416979,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.2082167329491995,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": 0.24210569059339235,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 2.0,
+    "phase0": 0.0
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": 0.15,
+   "a1": 0.3,
+   "a2": 0.0
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "balance",
+    "inputs": {
+     "obs[1]": -3.0,
+     "obs[7]": -0.3
+    },
+    "range": 4.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "hop_sin",
+    "inputs": {
+     "sin(hop)": 1.0
+    },
+    "range": 1.0,
+    "tol": 0.01,
+    "to": {
+     "a0": 0.2,
+     "a1": 0.7,
+     "a2": 0.3
+    }
+   },
+   {
+    "type": "linear",
+    "name": "hop_cos",
+    "inputs": {
+     "cos(hop)": 1.0
+    },
+    "range": 1.0,
+    "tol": 0.01,
+    "to": {
+     "a0": 0.3
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 233.3722130438194,
+  "sem_return": 0.21155712039589133,
+  "std_return": 2.1049667702436454,
+  "median_return": 233.51500730118306,
+  "min_return": 228.12677733469425,
+  "max_return": 238.78159909113762,
+  "mean_length": 113.09,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.9707906974314214,
+  "mean_distance_healthy": 0.9606172347624725,
+  "median_distance_healthy": 0.9615096968700447,
+  "min_distance_healthy": 0.9425764710498208,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

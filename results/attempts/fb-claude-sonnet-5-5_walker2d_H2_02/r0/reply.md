@@ -1,0 +1,24 @@
+This is my round-0 design: two antiphase oscillators, one per leg. Each drives a thigh with a sine, a knee that flexes during swing, and torso-angle and angular-velocity feedback on both thighs. I haven't run it.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a1": -0.15, "a4": -0.15},
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"obs[1]": -2.0, "obs[10]": -0.2, "sin(R)": 0.5},
+   "range": 3.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "thighL", "inputs": {"obs[1]": -2.0, "obs[10]": -0.2, "sin(L)": 0.5},
+   "range": 3.0, "tol": 0.05, "to": {"a3": 1.0}},
+  {"type": "reflex", "name": "kneeR", "inputs": {"sin(R)": 1.0}, "threshold": -0.2,
+   "sharpness": 5.0, "to": {"a1": -0.45}},
+  {"type": "reflex", "name": "kneeL", "inputs": {"sin(L)": 1.0}, "threshold": -0.2,
+   "sharpness": 5.0, "to": {"a4": -0.45}}
+ ]}
+```

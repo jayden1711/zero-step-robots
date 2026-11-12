@@ -1,0 +1,16 @@
+The torso fell backward at about 0.4 s, partly because the thigh's rhythmic term was negative during stance and pitched the torso back. This revision strengthens the upright feedback, cuts the thigh rhythm to a small swing, and adds a slight forward-lean bias.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.0, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.15},
+ "units": [
+  {"type": "linear", "name": "thigh_balance_swing", "inputs": {"obs[1]": -8.0, "obs[7]": -0.8, "cos(hop)": 0.15},
+   "range": 12.0, "tol": 0.02, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "leg_push", "inputs": {"sin(hop)": 0.6},
+   "range": 1.0, "tol": 0.01, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "foot_push", "inputs": {"cos(hop)": 0.3},
+   "range": 1.0, "tol": 0.01, "to": {"a2": 1.0}}
+ ]}
+```

@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:53:19-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1005
+ },
+ "seconds": 19.39633083343506,
+ "usage": {
+  "completion_tokens": 1524,
+  "prompt_tokens": 775,
+  "total_tokens": 2299,
+  "prompt_tokens_details": {
+   "cached_tokens": 770
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to write a controller for Hopper-v5. Goal maximize average reward. The environment reward: 1 per step + (torso x-velocity) - 0.001 * sum(action^2). So we want high forward speed, but small torques. Classic control: we can use a simple policy that attempts to maintain a walking gait. Since we can't test, we need to guess a decent controller.\n\nWe need to produce code that defines act(obs) returning 3 actions.\n\nWe can use a linear policy based on observation, maybe with some heuristics.\n\nAlternatively, a simple proportional controller: set torques to drive thigh, leg, foot joints to desired angles that approximate a walking gait.\n\nWe need to consider observation indices:\n\n0: torso height z\n1: torso angle\n2: thigh joint angle\n3: leg joint angle\n4: foot joint angle\n5: torso x-velocity\n6: torso z-velocity\n7: torso angular velocity\n8: thigh joint angular velocity\n9: leg joint angular velocity\n10: foot joint angular velocity\n\nWe can use a PD controller for each joint to track desired angles. Desired angles could be a function of phase, which we can derive from torso angle or velocity.\n\nSimpler: use a recurrent approach: we can store a phase counter incrementing each step. Use that to compute desired positions.\n\nSince we can't test, but typical policies use a phase variable that increments at each step; we can set desired joint angles as sine wave: thigh: sin(phase), leg: sin(phase+phase_shift), foot: sin(phase+other_shift). We'll compute torques as proportional to error and derivative. Gains tuned to small values to keep torque small.\n\nWe can define global phase variable that increments each act call; reset sets to 0.\n\nImplement:\n\nphase = 0.0, increment by dt=0.008 each step? Actually we can just increment by dt to simulate time.\n\nDesired angles: desired_thigh = -0.5 * sin(phase)   (in radians?). For hopper, thigh angle positive maybe relative to vertical? Might not matter.\n\nLet's keep small amplitude.\n\nUse Kp=1.0, Kd=0.1 for each joint. Compute error: desired - current angle. derivative: - current angular velocity.\n\nTorque = Kp*error + Kd*derivative.\n\nClip to [-1,1].\n\nReturn.\n\nWe also could incorporate torso velocity: maybe adjust phase speed: phase += dt * (1 + 0.1 * torso_vel). But that might help.\n\nWe also might include a feedforward: use torso angle.\n\nBut keep simple.\n\nDefine global phase, dt=0.008. Also maintain time.\n\nLet's write module.\n\nPotential issues: obs may be list; we need to convert to numpy array.\n\nAlso, ensure act returns list of floats length 3.\n\nWe need to ensure no errors.\n\nLet's produce code.\n\nAlso we might incorporate small constant offset to torques to encourage forward motion: e.g., add 0.05 to thigh torque.\n\nBut keep simple.\n\nOk, produce final code.",
+ "server_timings": {
+  "cache_n": 770,
+  "prompt_n": 5,
+  "prompt_ms": 45.409,
+  "prompt_per_token_ms": 9.0818,
+  "prompt_per_second": 110.11033055121231,
+  "predicted_n": 1524,
+  "predicted_ms": 19323.767,
+  "predicted_per_token_ms": 12.687962573867367,
+  "predicted_per_second": 78.8148604772558
+ }
+}

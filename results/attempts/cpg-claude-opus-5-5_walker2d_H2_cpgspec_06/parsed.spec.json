@@ -1,0 +1,22 @@
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [{"name": "osc", "freq_hz": 0.6, "phase0": 1.5708, "feedback": {"obs[8]": 3.0}}],
+ "couplings": [],
+ "bias": {"a0": -1.225, "a1": -0.8, "a2": 0.17, "a3": -1.225, "a4": -0.8, "a5": 0.17},
+ "units": [
+   {"type": "linear", "name": "thigh_R", "inputs": {"obs[2]": -4.0, "obs[11]": -0.12, "cos(osc)": 0.9, "obs[1]": -0.5, "obs[10]": -0.03},
+    "range": 3.0, "tol": 0.05, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "thigh_L", "inputs": {"obs[5]": -4.0, "obs[14]": -0.12, "cos(osc)": -0.9, "obs[1]": -0.5, "obs[10]": -0.03},
+    "range": 3.0, "tol": 0.05, "to": {"a3": 1.0}},
+   {"type": "linear", "name": "knee_R", "inputs": {"obs[3]": -1.5, "obs[12]": -0.1},
+    "range": 2.5, "tol": 0.05, "to": {"a1": 1.0}},
+   {"type": "linear", "name": "knee_L", "inputs": {"obs[6]": -1.5, "obs[15]": -0.1},
+    "range": 2.5, "tol": 0.05, "to": {"a4": 1.0}},
+   {"type": "linear", "name": "foot_R", "inputs": {"obs[4]": -0.4, "obs[13]": -0.02, "obs[8]": -0.1},
+    "range": 1.2, "tol": 0.05, "to": {"a2": 1.0}},
+   {"type": "linear", "name": "foot_L", "inputs": {"obs[7]": -0.4, "obs[16]": -0.02, "obs[8]": -0.1},
+    "range": 1.2, "tol": 0.05, "to": {"a5": 1.0}},
+   {"type": "reflex", "name": "swing_R", "inputs": {"sin(osc)": -0.878, "cos(osc)": -0.479}, "threshold": 0.2,
+    "sharpness": 4.0, "to": {"a1": -0.65, "a2": 0.1}},
+   {"type": "reflex", "name": "swing_L", "inputs": {"sin(osc)": 0.878, "cos(osc)": 0.479}, "threshold": 0.2,
+    "sharpness": 4.0, "to": {"a4": -0.65, "a5": 0.1}}
+ ]}

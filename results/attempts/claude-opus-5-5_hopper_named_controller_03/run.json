@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:25:40-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 35.63499045372009,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":34388,\"stop_reason\":\"end_turn\",\"session_id\":\"63f94294-b3f4-47a3-b633-86d8b7bfa197\",\"total_cost_usd\":0.06722496,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":3248,\"output_tokens\":2956,\"output_tokens_details\":{\"thinking_tokens\":1936},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":167,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2956,\"cache_read_input_tokens\":3248,\"cache_creation_input_tokens\":167,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":167},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":2956,\"cacheReadInputTokens\":3248,\"cacheCreationInputTokens\":167,\"webSearchRequests\":0,\"costUSD\":0.06722496,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":1936,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Standing still is the safest way to score here, so the controller holds the hopper upright on its foot.\\n\\n- **Standing is worth about 1000.** The healthy bonus pays 1 per step for 1000 steps.\\n- **A hopping gait is worth more, but only if it works.** It could add a few hundred points over an episode. A gait that hasn't been tuned in simulation usually falls early, and then the episode loses most of that ~1000.\\n\\n**Why standing is stable:**\\n- **The rigid pose is self-stable.** With every joint held at 0, the robot is a rigid upright column (torso height about 1.25). Its centre of mass sits over the flat foot, which runs from x\u2248-0.13 to x\u22480.26. That pose is statically stable, so the controller only has to keep the joints stiff and damp out the small starting perturbation.\\n- **Torso tilt is corrected through the joints.** All joint axes share the torso's rotation sign. A small lean is corrected by spreading the torque over hip, knee and ankle.\\n- **Gains are moderate.** Action saturates at \u00b11, which the 200 gear turns into \u00b1200 N\u00b7m. Kp\u22484 per radian gives about 800 N\u00b7m/rad, and Kd\u22480.4 gives damping. That is stiff and well damped given the model's joint armature and the 0.002 s internal timestep.\\n- **Control cost is negligible.** Near the upright pose the gravity torques are tiny, so the actions stay close to 0.\\n\\nI could not run this. I expect about 999 per episode.\\n\\n```python\\nimport numpy as np\\n\\n# Joint-space PD targets (all joints straight -> rigid upright column over the foot)\\n_Q_TARGET = np.array([0.0, 0.0, 0.0])\\n\\n_KP = np.array([4.0, 4.0, 3.0])      # stiffness per joint (action units / rad)\\n_KD = np.array([0.40, 0.40, 0.30])   # damping per joint (action units / (rad/s))\\n\\n# Torso attitude feedback distributed over the joints (same rotation axis as joints)\\n_K_TORSO = 2.0\\n_KD_TORSO = 0.2\\n_TORSO_SPLIT = np.array([0.5, 0.3, 0.2])\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    o = np.asarray(obs, dtype=float)\\n    torso_ang = o[1]\\n    q = o[2:5]\\n    torso_w = o[7]\\n    qd = o[8:11]\\n\\n    # Hold joints stiff at the straight posture.\\n    a = -_KP * (q - _Q_TARGET) - _KD * qd\\n\\n    # Small correction to keep the torso upright: if the torso leans with\\n    # positive angle, push the joints in the positive direction so the\\n    # torso is rotated back relative to the leg/foot on the ground.\\n    a += _TORSO_SPLIT * (_K_TORSO * torso_ang + _KD_TORSO * torso_w)\\n\\n    a = np.clip(a, -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\",\"ttft_ms\":24144,\"type\":\"result\",\"duration_ms\":34464,\"uuid\":\"a177f83a-28ed-42e9-b5e0-be7384533511\",\"ttft_stream_ms\":1242,\"time_to_request_ms\":77,\"first_content_frame_ms\":1242,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 167,
+  "cache_read_input_tokens": 3248,
+  "output_tokens": 2956,
+  "output_tokens_details": {
+   "thinking_tokens": 1936
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 167,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2956,
+    "cache_read_input_tokens": 3248,
+    "cache_creation_input_tokens": 167,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 167
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

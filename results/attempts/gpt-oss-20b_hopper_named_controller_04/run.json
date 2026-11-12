@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:52:47-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1004
+ },
+ "seconds": 31.704906225204468,
+ "usage": {
+  "completion_tokens": 2419,
+  "prompt_tokens": 775,
+  "total_tokens": 3194,
+  "prompt_tokens_details": {
+   "cached_tokens": 770
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a controller for Hopper-v5 to maximize reward. Classic control problem. We can use a simple policy, maybe PD controllers to maintain upright and forward velocity. Could also use linear policy trained offline, but here we can't train. We can hand craft. Use simple heuristics: want to maintain height ~1.0, angle ~0, forward velocity ~desired speed maybe 2 m/s. But reward per step includes forward velocity. We can try to keep torso angle small. Use proportional control on joint angles to follow some target trajectory. Alternatively use simple sinusoidal pattern? But we have no training. Use PD to maintain upright height and angle.\n\nObservations: index: 0: height; 1: angle; 2: thigh angle; 3: leg angle; 4: foot angle; 5: torso x-vel; 6: torso z-vel; 7: torso ang vel; 8: thigh ang vel; 9: leg ang vel; 10: foot ang vel.\n\nWe can compute errors: height error = desired_height - z. desired height maybe 1.0. angle error = -angle (since we want angle zero). For joint angles, maybe set target values to maintain a stance: e.g., thigh = -0.5 rad, leg = -1.0 rad, foot = 0? But not sure.\n\nAlternatively, we can use a simple learned linear policy offline? We can't train here but maybe we can approximate with known good parameters. We could attempt to use simple control that tries to produce forward velocity by setting leg joint to a lower angle when foot is forward.\n\nBut maybe simplest approach: keep torques zero? That will maintain initial stance? The hopper might not move forward. Reward per step would be 1, but maybe it will die if not stable? If no torques, it might fall quickly due to gravity. So we need at least some torque.\n\nMaybe use a simple PD on joint angles to keep them at some target angles that produce a walking pattern. We could set target angles: thigh = -0.5 rad, leg = -1.0 rad, foot = 0 rad. Then compute torque = Kp*(target - current) + Kd*(-current angular velocity). Use moderate gains Kp=10, Kd=1. But we need to ensure torques in [-1,1], so we clip. That might produce some motion. But will it maintain upright? Might produce a forward gait.\n\nAlternatively, we can use simple policy: set thigh torque to 0.2*(height error) - 0.3*angle error, etc. But maybe a better approach: we can use a linear controller based on observation. For example, use linear regression with known coefficients from typical policy: act = W @ obs + b. We can guess some weights to approximate a stable policy. But we don't know.\n\nSimpler: We can implement a small PID to keep torso upright and height: use joint torques to counteract tilt.\n\nIdea: Use a \"balance\" controller: apply torques to thigh and leg to keep torso upright. For instance, we can compute torque to minimize angle: thigh torque = -0.5 * angle - 0.1 * ang_vel. Leg torque = -0.5 * angle - 0.1 * ang_vel. Foot torque maybe small to maintain foot contact.\n\nBut we also want forward velocity, maybe by alternating leg extension. But we can ignore forward velocity for now, maybe get reward 1 per step for 1000 steps? But if it falls quickly, reward small. Maybe we can get 300 steps average? Need high.\n\nBut maybe a simple heuristic: set torques proportional to thigh angle error: thigh target = 0 rad? Actually we want thigh and leg to keep body upright, so target thigh angle maybe -0.3 rad, leg angle maybe -0.8 rad. But if we set them fixed, the body will tilt until gravity pushes? Might result in walking.\n\nAlternatively, we could set torques to maintain foot contact: foot torque to keep foot horizontal: target foot angle 0.\n\nLet's try: set target angles: thigh_target = -0.3, leg_target = -1.0, foot_target = 0.0.\n\nCompute error = target - current. Torque = Kp*error - Kd*vel. Choose Kp=5, Kd=1. Clip to [-1,1]. That might produce decent control.\n\nAlso we might include height: if height too low, apply upward torque to thigh? Not directly. Height is a function of joint angles.\n\nGiven limited time, let's implement that.\n\nAdd a reset function to initialize nothing.\n\nImplement act function reading obs: get joint angles 2,3,4, velocities 8,9,10.\n\nCompute errors, torques.\n\nAlso maybe include torso angle control: if torso angle not zero, maybe adjust thigh and leg to counter. But we ignore for now.\n\nWe might need to tune gains.\n\nLet's do: Kp_thigh=6, Kd_thigh=1.5; Kp_leg=8, Kd_leg=2; Kp_foot=4, Kd_foot=1.5.\n\nCompute torques: a1 = Kp_thigh*(thigh_target - thigh) - Kd_thigh*thigh_vel; clip to [-1,1].\n\nSimilarly for leg, foot.\n\nAlso include small adjustment for torso angle: maybe adjust thigh torque by -0.3 * angle - 0.1 * ang_vel.\n\nWe can add: a1 += -0.3*obs[1] - 0.1*obs[7]; a2 += -0.3*obs[1] - 0.1*obs[7].\n\nClip.\n\nReturn [a1,a2,a3].\n\nWe need to ensure deterministic.\n\nOk.\n\nLet's write module.\n\nAlso import numpy as np maybe for clipping.\n\nWe'll clip with np.clip.\n\nEdge: The action must be list of floats. We'll return [float(a1), float(a2), float(a3)].\n\nWe also define reset() that does nothing.\n\nLet's produce code.\n\nBut we may consider if this will survive. The robot may still fall. But maybe 1-2 sec. The reward would be maybe 1 per step until falling. That's maybe 200-300 steps, average 200. We want higher but maybe okay. But we can try to get 500? Hard.\n\nMaybe we can add forward speed: use thigh and leg torques to push forward. For example, if torso velocity is low, add positive torque to thigh to extend.\n\nAdd: if obs[5] < 1.0: a1 += 0.2; a2 += 0.2. Clip.\n\nAlso if velocity too high, reduce.\n\nThis may help.\n\nLet's write final.\n\n",
+ "server_timings": {
+  "cache_n": 770,
+  "prompt_n": 5,
+  "prompt_ms": 48.396,
+  "prompt_per_token_ms": 9.6792,
+  "prompt_per_second": 103.31432349780974,
+  "predicted_n": 2419,
+  "predicted_ms": 31620.195,
+  "predicted_per_token_ms": 13.077003722084367,
+  "predicted_per_second": 76.4701166453907
+ }
+}

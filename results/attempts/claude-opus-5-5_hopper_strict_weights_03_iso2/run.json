@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:34:29-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 29.431142330169678,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":25575,\"stop_reason\":\"end_turn\",\"session_id\":\"c02cc766-ab73-41d7-9896-c7899a9dcde8\",\"total_cost_usd\":0.055759220000000005,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":168,\"cache_read_input_tokens\":2391,\"output_tokens\":2443,\"output_tokens_details\":{\"thinking_tokens\":1652},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":168,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2443,\"cache_read_input_tokens\":2391,\"cache_creation_input_tokens\":168,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":168},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":2443,\"cacheReadInputTokens\":2391,\"cacheCreationInputTokens\":168,\"webSearchRequests\":0,\"costUSD\":0.055759220000000005,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":1652,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like a one-legged hopper. The plan is to hold all three joints rigidly at their upright angles with a gentle PD controller. The locked body's centre of mass sits over the foot, so it should stand balanced for the full 1000 steps. That gives a reward of about 1 per step, with negligible control cost.\\n\\nEach hidden unit is tanh(0.1\u00b7x), which is nearly linear over the expected range. The output weights then give, for each joint i:\\n\\naction_i \u2248 \u22121.0\u00b7q_i \u2212 0.05\u00b7q\u0307_i\\n\\nwhere q_i is the joint angle (obs[2], obs[3], obs[4]) and q\u0307_i its rate (obs[8], obs[9], obs[10]).\\n\\n```json\\n{\\\"W1\\\": [[0,0,0.1,0,0,0,0,0,0,0,0],[0,0,0,0.1,0,0,0,0,0,0,0],[0,0,0,0,0.1,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0.1,0,0],[0,0,0,0,0,0,0,0,0,0.1,0],[0,0,0,0,0,0,0,0,0,0,0.1],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0]],\\n\\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n\\\"W2\\\": [[-10,0,0,-0.5,0,0,0,0,0,0,0,0,0,0,0,0],[0,-10,0,0,-0.5,0,0,0,0,0,0,0,0,0,0,0],[0,0,-10,0,0,-0.5,0,0,0,0,0,0,0,0,0,0]],\\n\\\"b2\\\": [0,0,0]}\\n```\",\"ttft_ms\":19611,\"type\":\"result\",\"duration_ms\":25789,\"uuid\":\"77981974-d887-462f-b518-9436f19b4225\",\"ttft_stream_ms\":953,\"time_to_request_ms\":190,\"first_content_frame_ms\":953,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 168,
+  "cache_read_input_tokens": 2391,
+  "output_tokens": 2443,
+  "output_tokens_details": {
+   "thinking_tokens": 1652
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 168,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2443,
+    "cache_read_input_tokens": 2391,
+    "cache_creation_input_tokens": 168,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 168
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

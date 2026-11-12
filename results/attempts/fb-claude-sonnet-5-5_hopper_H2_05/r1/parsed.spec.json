@@ -1,0 +1,59 @@
+{
+ "target": "cpg",
+ "obs_dim": 11,
+ "act_dim": 3,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "hop",
+   "freq_hz": 2.0,
+   "phase0": 0.0
+  }
+ ],
+ "couplings": [],
+ "bias": {
+  "a0": 0.05,
+  "a1": 0.5,
+  "a2": 0.0
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "balance",
+   "inputs": {
+    "obs[1]": 5.0,
+    "obs[7]": 0.5
+   },
+   "range": 2.0,
+   "tol": 0.05,
+   "to": {
+    "a0": -1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "push",
+   "inputs": {
+    "sin(hop)": 1.0
+   },
+   "range": 1.2,
+   "tol": 0.02,
+   "to": {
+    "a1": 0.4,
+    "a2": 0.3
+   }
+  },
+  {
+   "type": "linear",
+   "name": "swing",
+   "inputs": {
+    "cos(hop)": 1.0
+   },
+   "range": 1.2,
+   "tol": 0.02,
+   "to": {
+    "a0": 0.1
+   }
+  }
+ ]
+}

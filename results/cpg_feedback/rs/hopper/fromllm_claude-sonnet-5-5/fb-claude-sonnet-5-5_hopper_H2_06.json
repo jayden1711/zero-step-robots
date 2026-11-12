@@ -1,0 +1,109 @@
+{
+ "seed": 2853827572,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.04659986815637194,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 0.2972284555352735,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 0.20979520781888766,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": 0.08954182393247329,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": 0.004522583775658836,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": 0.2745992225350535,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 0.9553382607326102,
+    "phase0": -0.1657459061815416
+   }
+  ],
+  "couplings": [],
+  "bias": {},
+  "units": [
+   {
+    "type": "linear",
+    "name": "rhythm",
+    "inputs": {
+     "cos(hop)": 0.8712632976468121
+    },
+    "range": 1.5,
+    "tol": 0.02,
+    "to": {
+     "a0": -0.3373353968956342,
+     "a1": 0.6772204336130672,
+     "a2": 0.41059608193040587
+    }
+   },
+   {
+    "type": "linear",
+    "name": "balance",
+    "inputs": {
+     "obs[1]": -2.8693760366041126,
+     "obs[7]": -0.21647806646131196
+    },
+    "range": 2.0,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.8470182069877341
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 107.14309072766187,
+  "sem_return": 0.10066516920779851,
+  "std_return": 1.0016057871597166,
+  "median_return": 107.19587909195369,
+  "min_return": 104.59361737824757,
+  "max_return": 109.26629457593877,
+  "mean_length": 72.07,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.2887806073453604,
+  "mean_distance_healthy": 0.29789957340824097,
+  "median_distance_healthy": 0.2986449649314881,
+  "min_distance_healthy": 0.2817787634479196,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

@@ -1,0 +1,18 @@
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [{"name": "gait", "freq_hz": 0.65, "phase0": 0.0, "feedback": {"obs[8]": 1.5}}],
+ "couplings": [],
+ "bias": {"a1": -0.45, "a4": -0.45, "a2": 0.08, "a5": 0.08},
+ "units": [
+  {"type": "reflex", "name": "hipR", "inputs": {"obs[1]": 1.5, "obs[2]": -4.3, "obs[5]": 4.3, "obs[10]": 0.055, "obs[11]": -0.43, "obs[14]": 0.43, "sin(gait)": 1.075, "cos(gait)": 0.72}, "threshold": 0.45, "sharpness": 1.0, "to": {"a0": 1.0}},
+  {"type": "reflex", "name": "hipL", "inputs": {"obs[1]": 1.5, "obs[2]": 4.3, "obs[5]": -4.3, "obs[10]": 0.055, "obs[11]": 0.43, "obs[14]": -0.43, "sin(gait)": -1.075, "cos(gait)": -0.72}, "threshold": 0.45, "sharpness": 1.0, "to": {"a3": 1.0}},
+  {"type": "reflex", "name": "kneeR", "inputs": {"obs[3]": -2.0, "obs[12]": -0.14}, "threshold": -0.1, "sharpness": 1.0, "to": {"a1": 1.0}},
+  {"type": "reflex", "name": "kneeL", "inputs": {"obs[6]": -2.0, "obs[15]": -0.14}, "threshold": -0.1, "sharpness": 1.0, "to": {"a4": 1.0}},
+  {"type": "reflex", "name": "ankleR", "inputs": {"obs[1]": -1.0, "obs[2]": -1.0, "obs[3]": -1.0, "obs[4]": -1.0, "obs[13]": -0.06, "obs[8]": -0.4}, "threshold": -0.24, "sharpness": 1.0, "to": {"a2": 0.5}},
+  {"type": "reflex", "name": "ankleL", "inputs": {"obs[1]": -1.0, "obs[5]": -1.0, "obs[6]": -1.0, "obs[7]": -1.0, "obs[16]": -0.06, "obs[8]": -0.4}, "threshold": -0.24, "sharpness": 1.0, "to": {"a5": 0.5}},
+  {"type": "reflex", "name": "swingflexR", "inputs": {"cos(gait)": 0.9394, "sin(gait)": -0.3429}, "threshold": 0.4, "sharpness": 6.0, "to": {"a1": -0.45, "a2": 0.08}},
+  {"type": "reflex", "name": "swingflexL", "inputs": {"cos(gait)": -0.9394, "sin(gait)": 0.3429}, "threshold": 0.4, "sharpness": 6.0, "to": {"a4": -0.45, "a5": 0.08}},
+  {"type": "reflex", "name": "prod1", "inputs": {"obs[8]": 0.35, "sin(gait)": 0.5}, "threshold": -0.6585, "sharpness": 1.0, "to": {"a0": -2.0, "a3": 2.0}},
+  {"type": "reflex", "name": "prod2", "inputs": {"obs[8]": -0.35, "sin(gait)": -0.5}, "threshold": -0.6585, "sharpness": 1.0, "to": {"a0": -2.0, "a3": 2.0}},
+  {"type": "reflex", "name": "prod3", "inputs": {"obs[8]": 0.35, "sin(gait)": -0.5}, "threshold": -0.6585, "sharpness": 1.0, "to": {"a0": 2.0, "a3": -2.0}},
+  {"type": "reflex", "name": "prod4", "inputs": {"obs[8]": -0.35, "sin(gait)": 0.5}, "threshold": -0.6585, "sharpness": 1.0, "to": {"a0": 2.0, "a3": -2.0}}
+ ]}

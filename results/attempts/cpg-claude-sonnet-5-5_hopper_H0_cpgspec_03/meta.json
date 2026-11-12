@@ -1,0 +1,36 @@
+{
+ "id": "cpg-claude-sonnet-5-5_hopper_H0_cpgspec_03",
+ "task": "hopper",
+ "mode": "cpgspec",
+ "model": "claude-sonnet-5-5",
+ "interface": "claude -p (subscription CLI), fresh empty cwd under /var/tmp, no tools, no MCP",
+ "arm": "H0",
+ "prompt_version": "v3",
+ "prompt_sha256": "10d4821cc1386c11101b9cb731ec7a3cc5b00a5122f41585242e52bf09eb86fe",
+ "template_sha256": {
+  "template_v3.md": "08d450e70f7f768ad6e9e35c844e9b8bf7b151ed4f6f7f0566d848595aa0cbdf",
+  "task_hopper_v3.md": "6d13bbd2880456f9bc928f8f69c7872845171c1d03585eac57f652c5d4f7f9ca",
+  "format_cpgspec_v3.md": "dcb07c204f304582a03f781555e0a545f762cfee97eeb4186aa96ec245143bcc"
+ },
+ "created": "2026-11-10T01:44:06.099237+00:00",
+ "attempt_index": 3,
+ "isolation": "fresh empty dir under /var/tmp; pre-flight: no CLAUDE.md / CLAUDE.local.md / .claude in cwd or any ancestor; batch pre-flight = isolation probe's last line was INSTRUCTION_FILES: none (the account email in the session context is expected; redacted on write)",
+ "claude_flags": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "claude_env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ }
+}

@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:25:04-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 36.37415623664856,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":35222,\"stop_reason\":\"end_turn\",\"session_id\":\"2855f3d9-985b-4f25-89b9-c67fd643feca\",\"total_cost_usd\":0.07366216,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":166,\"cache_read_input_tokens\":3248,\"output_tokens\":3249,\"output_tokens_details\":{\"thinking_tokens\":2494},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3249,\"cache_read_input_tokens\":3248,\"cache_creation_input_tokens\":166,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":166},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3249,\"cacheReadInputTokens\":3248,\"cacheCreationInputTokens\":166,\"webSearchRequests\":0,\"costUSD\":0.07366216,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2494,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"The controller below keeps the hopper standing upright for the full episode. I chose standing over hopping because a hand-tuned hopping gait that I can't test risks falling early. Standing should score close to 1000: 1 per healthy step, minus a tiny action cost.\\n\\nHow it works:\\n- **Stiff joint control:** each joint is pushed back toward a straight pose (angle 0), with damping to stop oscillation.\\n- **Ankle balancing:** the ankle also responds to torso tilt and tilt rate. Torque at the flat foot shifts the whole body back over the foot, which spans roughly -0.13 to +0.26 m around the ankle.\\n- **Drift correction:** a small term on forward velocity keeps the hopper from creeping off balance. Torques are clipped to [-1, 1].\\n\\n```python\\nimport numpy as np\\n\\n# Joint PD gains (action units; actuator gear is 200 Nm per unit)\\nKP = np.array([3.0, 3.0, 2.5])\\nKD = np.array([0.30, 0.25, 0.20])\\n\\n# Whole-body balance feedback applied at the ankle (foot joint)\\nK_TILT = 2.0      # per radian of torso tilt\\nK_TILT_RATE = 0.3 # per rad/s of torso angular velocity\\nK_VX = 0.15       # per m/s of forward drift\\n\\nTARGET = np.array([0.0, 0.0, 0.0])\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    o = np.asarray(obs, dtype=float)\\n    tilt = o[1]\\n    q = o[2:5]\\n    vx = o[5]\\n    tilt_rate = o[7]\\n    qd = o[8:11]\\n\\n    a = -KP * (q - TARGET) - KD * qd\\n\\n    # Ankle strategy: forward lean (tilt > 0) -> negative foot torque pushes body back.\\n    a[2] += -K_TILT * tilt - K_TILT_RATE * tilt_rate - K_VX * vx\\n\\n    # Keep the upper body from folding at the hip while balancing.\\n    a[0] += -0.5 * tilt - 0.05 * tilt_rate\\n\\n    a = np.clip(a, -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\",\"ttft_ms\":28266,\"type\":\"result\",\"duration_ms\":35293,\"uuid\":\"7726de6d-8290-4390-8781-c4dd6cb3e6e7\",\"ttft_stream_ms\":1364,\"time_to_request_ms\":64,\"first_content_frame_ms\":1364,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 166,
+  "cache_read_input_tokens": 3248,
+  "output_tokens": 3249,
+  "output_tokens_details": {
+   "thinking_tokens": 2494
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 166,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3249,
+    "cache_read_input_tokens": 3248,
+    "cache_creation_input_tokens": 166,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 166
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,18 @@
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.5, "phase0": 1.5708}],
+ "couplings": [],
+ "bias": {"a0": 0.04, "a1": -0.14, "a2": 0.015},
+ "units": [
+   {"type": "linear", "name": "hip_attitude_speed_swing",
+    "inputs": {"obs[1]": 0.5, "obs[7]": 0.04, "obs[5]": -0.025, "sin(hop)": 0.04},
+    "range": 1.0, "tol": 0.02, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "knee_spring_thrust",
+    "inputs": {"obs[3]": -0.4, "obs[9]": -0.03, "cos(hop)": 0.22},
+    "range": 1.5, "tol": 0.03, "to": {"a1": 1.0}},
+   {"type": "linear", "name": "ankle_balance_posture_push",
+    "inputs": {"obs[1]": 0.3, "obs[2]": 0.273, "obs[3]": 0.174,
+               "obs[7]": 0.08, "obs[8]": 0.073, "obs[9]": 0.046,
+               "obs[4]": -0.3, "obs[10]": -0.03, "obs[5]": -0.015,
+               "cos(hop)": -0.1},
+    "range": 2.5, "tol": 0.03, "to": {"a2": 1.0}}
+ ]}

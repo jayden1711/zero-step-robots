@@ -1,0 +1,23 @@
+This is the final design, and I expect it to fall short of the 3 m pass mark. It is the round-3 design (the best balanced one, mean d 0.89 m) with one change: a mild joint-angle spring and damping on each thigh, to limit the leg splay that made the torso sink. The spring gain is a guess, since I couldn't test it.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a0": 0.2, "a3": 0.2, "a1": 0.25, "a4": 0.25},
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"sin(R)": 0.6, "obs[2]": -1.0, "obs[11]": -0.03}, "range": 6.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "kneeR", "inputs": {"sin(R)": -0.5, "obs[3]": -1.0, "obs[12]": -0.04}, "range": 6.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "footR", "inputs": {"obs[4]": -0.5, "obs[1]": -2.0, "obs[10]": -0.2}, "range": 4.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "thighL", "inputs": {"sin(L)": 0.6, "obs[5]": -1.0, "obs[14]": -0.03}, "range": 6.0, "tol": 0.05, "to": {"a3": 1.0}},
+  {"type": "linear", "name": "kneeL", "inputs": {"sin(L)": -0.5, "obs[6]": -1.0, "obs[15]": -0.04}, "range": 6.0, "tol": 0.05, "to": {"a4": 1.0}},
+  {"type": "linear", "name": "footL", "inputs": {"obs[7]": -0.5, "obs[1]": -2.0, "obs[10]": -0.2}, "range": 4.0, "tol": 0.05, "to": {"a5": 1.0}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": -4.0, "obs[10]": -0.4}, "range": 6.0, "tol": 0.05, "to": {"a0": 1.0, "a3": 1.0}}
+ ]}
+```

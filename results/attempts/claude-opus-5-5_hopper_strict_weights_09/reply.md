@@ -1,0 +1,5 @@
+Hopper-style system (11 obs, 3 actuators, height/angle health limits). The controller holds all three joints near zero so the body stands as one rigid, vertical piece on its flat foot. Each joint gets its own PD loop through one tanh unit: unit input = −5·q − 0.3·q̇, output weight 1. The gains are chosen to stay well-damped and stable at dt = 0.008 given the joints' inertia. The other 13 units are zeroed. The aim is to survive all 1000 steps, about 1000 reward, rather than to gamble on forward motion.
+
+```json
+{"W1": [[0,0,-5,0,0,0,0,0,-0.3,0,0],[0,0,0,-5,0,0,0,0,0,-0.3,0],[0,0,0,0,-5,0,0,0,0,0,-0.3],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0]], "b1": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], "W2": [[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0]], "b2": [0,0,0]}
+```

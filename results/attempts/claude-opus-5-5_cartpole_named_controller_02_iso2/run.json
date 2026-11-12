@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:55:17-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 37.33743071556091,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":36043,\"stop_reason\":\"end_turn\",\"session_id\":\"7428120e-a17f-4ff3-9ae1-fddc44cd890c\",\"total_cost_usd\":0.08556393999999999,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":2227,\"output_tokens\":3799,\"output_tokens_details\":{\"thinking_tokens\":1623},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3799,\"cache_read_input_tokens\":2227,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3799,\"cacheReadInputTokens\":2227,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.08556393999999999,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":1623,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I designed this controller by linearizing the cart-pole and computing an LQR (linear-quadratic regulator) gain. I couldn't run any of it, so the score is untested.\\n\\n**Model.** The parameters are estimated from the standard `inverted_pendulum.xml`:\\n\\n- Pole: capsule 0.6 m long, radius 0.049, density 1000, so about 5 kg.\\n- Cart: about 10.5 kg.\\n- Motor gear: 100, so the force is 100\u00b7u.\\n\\nLinearizing gives approximately:\\n\\n- \u03b8'' \u2248 32.3\u00b7\u03b8 \u2212 21.3\u00b7u\\n- x'' \u2248 8.5\u00b7u \u2212 3.13\u00b7\u03b8\\n\\n**Sign convention.** Pushing the cart in +x tips the pole toward \u2212\u03b8. So a pole leaning in +\u03b8 is caught with positive force. Following the usual LQR result, all four gains on (x, \u03b8, v, \u03c9) come out positive.\\n\\n**Gain computation.** At import time, the module discretizes the model at dt = 0.04 using a series expansion of the matrix exponential. It then solves the discrete Riccati equation by iteration. If anything goes wrong numerically, it falls back to hand-tuned gains. The output is clipped to [-3, 3].\\n\\n```python\\nimport numpy as np\\n\\n_DT = 0.04\\n\\n\\ndef _compute_gain():\\n    # Linearized cart-pole (estimated from InvertedPendulum-v5 model), u = action\\n    A = np.array([\\n        [0.0, 0.0, 1.0, 0.0],\\n        [0.0, 0.0, 0.0, 1.0],\\n        [0.0, -3.13, 0.0, 0.0],\\n        [0.0, 32.3, 0.0, 0.0],\\n    ])\\n    B = np.array([[0.0], [0.0], [8.5], [-21.3]])\\n    # Discretize via series expansion of the block matrix exponential\\n    n = 4\\n    Mbig = np.zeros((5, 5))\\n    Mbig[:4, :4] = A * _DT\\n    Mbig[:4, 4:] = B * _DT\\n    E = np.eye(5)\\n    term = np.eye(5)\\n    for k in range(1, 30):\\n        term = term @ Mbig / k\\n        E = E + term\\n    Ad = E[:4, :4]\\n    Bd = E[:4, 4:]\\n    Q = np.diag([1.0, 5.0, 0.1, 0.1])\\n    R = np.array([[1.0]])\\n    P = Q.copy()\\n    for _ in range(5000):\\n        BtP = Bd.T @ P\\n        K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad)\\n        Pn = Q + Ad.T @ P @ (Ad - Bd @ K)\\n        if np.max(np.abs(Pn - P)) < 1e-10:\\n            P = Pn\\n            break\\n        P = Pn\\n    BtP = Bd.T @ P\\n    K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad)\\n    # u = -K s; sign so that positive theta -> positive force\\n    return -K.flatten()\\n\\n\\ntry:\\n    _GAIN = _compute_gain()\\n    if (not np.all(np.isfinite(_GAIN))) or _GAIN[1] >= 0:\\n        raise ValueError\\n    _GAIN = -_GAIN  # convert to u = G . s with G mostly positive\\nexcept Exception:\\n    _GAIN = None\\n\\nif _GAIN is None or not np.all(np.isfinite(_GAIN)) or _GAIN[1] <= 0:\\n    _GAIN = np.array([0.3, 3.0, 0.4, 0.4])\\n\\n# Final controller: u = -K s computed above corresponds to u = _GAIN_SIGNED . s\\n_K = None\\n\\n\\ndef _final_gain():\\n    # u = -K s from LQR; recompute directly to avoid sign confusion\\n    try:\\n        A = np.array([\\n            [0.0, 0.0, 1.0, 0.0],\\n            [0.0, 0.0, 0.0, 1.0],\\n            [0.0, -3.13, 0.0, 0.0],\\n            [0.0, 32.3, 0.0, 0.0],\\n        ])\\n        B = np.array([[0.0], [0.0], [8.5], [-21.3]])\\n        Mbig = np.zeros((5, 5))\\n        Mbig[:4, :4] = A * _DT\\n        Mbig[:4, 4:] = B * _DT\\n        E = np.eye(5)\\n        term = np.eye(5)\\n        for k in range(1, 30):\\n            term = term @ Mbig / k\\n            E = E + term\\n        Ad = E[:4, :4]\\n        Bd = E[:4, 4:]\\n        Q = np.diag([1.0, 5.0, 0.1, 0.1])\\n        R = np.array([[1.0]])\\n        P = Q.copy()\\n        for _ in range(5000):\\n            BtP = Bd.T @ P\\n            K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad)\\n            Pn = Q + Ad.T @ P @ (Ad - Bd @ K)\\n            if np.max(np.abs(Pn - P)) < 1e-10:\\n                P = Pn\\n                break\\n            P = Pn\\n        BtP = Bd.T @ P\\n        K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad).flatten()\\n        G = -K  # u = G . s\\n        # closed-loop check\\n        cl = Ad - Bd @ K.reshape(1, 4)\\n        if (np.all(np.isfinite(G)) and G[1] > 0\\n                and np.max(np.abs(np.linalg.eigvals(cl))) < 1.0):\\n            return G\\n    except Exception:\\n        pass\\n    return np.array([0.3, 3.0, 0.4, 0.4])\\n\\n\\n_K = _final_gain()\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    s = np.asarray(obs, dtype=float)\\n    if not np.all(np.isfinite(s)):\\n        return [0.0]\\n    u = float(np.dot(_K, s))\\n    if not np.isfinite(u):\\n        u = 0.0\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\\n\\n**Caveats:**\\n\\n- The model parameters are estimates from the XML, not measured, so the gains may not be optimal.\\n- The module contains a leftover first gain computation (`_compute_gain`) whose result isn't used. Only `_final_gain` sets the active gains. It's harmless but redundant.\",\"ttft_ms\":19410,\"type\":\"result\",\"duration_ms\":36135,\"uuid\":\"fa878355-9e60-4c31-b007-e0f7ff061ab6\",\"ttft_stream_ms\":781,\"time_to_request_ms\":94,\"first_content_frame_ms\":781,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 2227,
+  "output_tokens": 3799,
+  "output_tokens_details": {
+   "thinking_tokens": 1623
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3799,
+    "cache_read_input_tokens": 2227,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,72 @@
+[
+ {
+  "unit": 0,
+  "name": "balance",
+  "type": "linear",
+  "scale": 0.06454972243679029,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 6.0
+ },
+ {
+  "unit": 1,
+  "name": "thigh_r",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 2,
+  "name": "thigh_l",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 3,
+  "name": "knee_r",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 4,
+  "name": "knee_l",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 5,
+  "name": "foot_r",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 6,
+  "name": "foot_l",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "oscillator": "r",
+  "index": 0,
+  "freq_hz": 1.2,
+  "input_columns": [
+   17,
+   18
+  ]
+ },
+ {
+  "oscillator": "l",
+  "index": 1,
+  "freq_hz": 1.2,
+  "input_columns": [
+   19,
+   20
+  ]
+ }
+]

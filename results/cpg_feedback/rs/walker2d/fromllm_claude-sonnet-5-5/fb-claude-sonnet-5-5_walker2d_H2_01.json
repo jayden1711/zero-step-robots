@@ -1,0 +1,140 @@
+{
+ "seed": 2476803183,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.1429413825943675,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.1830771032584936,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 0.16663234493939233,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.16229224450714688,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.04981630259279566,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.06673163476612386,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "R",
+    "freq_hz": 1.0985123258562537,
+    "phase0": 0.10609475448000077
+   },
+   {
+    "name": "L",
+    "freq_hz": 1.409552140685354,
+    "phase0": 3.333023320208706
+   }
+  ],
+  "couplings": [
+   {
+    "from": "R",
+    "to": "L",
+    "weight": 2.1990625710991756,
+    "phase_lag": 3.3746776261159948
+   },
+   {
+    "from": "L",
+    "to": "R",
+    "weight": 2.7353608373376117,
+    "phase_lag": 4.623439920030783
+   }
+  ],
+  "bias": {},
+  "units": [
+   {
+    "type": "linear",
+    "name": "right_leg_rhythm",
+    "inputs": {
+     "sin(R)": 0.803614158230222
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.045006661151406724,
+     "a1": 0.4130356507139241
+    }
+   },
+   {
+    "type": "linear",
+    "name": "left_leg_rhythm",
+    "inputs": {
+     "sin(L)": 0.6922887132947105
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a3": -0.7966594153460401,
+     "a4": 0.3844599482980109
+    }
+   },
+   {
+    "type": "linear",
+    "name": "torso_balance",
+    "inputs": {
+     "obs[1]": 0.5714880316783901,
+     "obs[10]": -0.05527028031640621
+    },
+    "range": 1.5,
+    "tol": 0.05,
+    "to": {
+     "a0": -0.9410803207562592,
+     "a3": -1.5720197159573548
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "walker2d",
+  "variant": "stock",
+  "env_id": "Walker2d-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 92.89487052669524,
+  "sem_return": 0.16779357209830525,
+  "std_return": 1.669524962650576,
+  "median_return": 92.86426292898167,
+  "min_return": 88.30497722538958,
+  "max_return": 97.8734614767752,
+  "mean_length": 75.64,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.1465150921200564,
+  "mean_distance_healthy": 0.164070976366809,
+  "median_distance_healthy": 0.1637600395094363,
+  "min_distance_healthy": 0.1255305283118356,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

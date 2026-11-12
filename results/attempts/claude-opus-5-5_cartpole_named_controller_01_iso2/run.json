@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:54:43-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 33.95214056968689,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":32865,\"stop_reason\":\"end_turn\",\"session_id\":\"af7ef8dd-95e5-4824-9645-bb44abba3846\",\"total_cost_usd\":0.07423834000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":2227,\"output_tokens\":3285,\"output_tokens_details\":{\"thinking_tokens\":1740},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":167,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3285,\"cache_read_input_tokens\":2227,\"cache_creation_input_tokens\":167,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":167},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3285,\"cacheReadInputTokens\":2227,\"cacheCreationInputTokens\":167,\"webSearchRequests\":0,\"costUSD\":0.07423834000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":1740,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This uses a discrete LQR controller. The gains are computed once at import from a linearized model of the MuJoCo cart-pole: cart about 10.5 kg, pole about 5 kg, pole length 0.6 m, actuator gear 100. The model is discretized at the 0.04 s control step. I couldn't run it, so it's untested.\\n\\nSign convention: positive pole angle means the pole leans toward +x, so pushing the cart toward +x catches it. The cart-position term pulls the cart back toward the centre of the rail. If the computation ever fails, the controller falls back to fixed gains.\\n\\n```python\\nimport numpy as np\\n\\nDT = 0.04\\nGEAR = 100.0\\n\\n\\ndef _expm(M, terms=30):\\n    # Matrix exponential via scaling-and-squaring + Taylor series\\n    n = M.shape[0]\\n    norm = np.linalg.norm(M, ord=np.inf)\\n    s = max(0, int(np.ceil(np.log2(norm))) + 1) if norm > 0 else 0\\n    A = M / (2.0 ** s)\\n    E = np.eye(n)\\n    term = np.eye(n)\\n    for k in range(1, terms):\\n        term = term @ A / k\\n        E = E + term\\n    for _ in range(s):\\n        E = E @ E\\n    return E\\n\\n\\ndef _compute_gain():\\n    M = 10.5      # cart mass\\n    m = 5.0       # pole mass\\n    l = 0.3       # hinge -> pole COM\\n    I = m * 0.6 ** 2 / 3.0 + m * 0.049 ** 2 / 4.0  # inertia about hinge\\n    g = 9.81\\n\\n    # [[M+m, m l],[m l, I]] [xdd, thdd] = [F, m g l th]\\n    Mm = np.array([[M + m, m * l], [m * l, I]])\\n    Minv = np.linalg.inv(Mm)\\n    # state s = [x, th, v, w]\\n    A = np.zeros((4, 4))\\n    A[0, 2] = 1.0\\n    A[1, 3] = 1.0\\n    # accelerations from theta term\\n    acc_th = Minv @ np.array([0.0, m * g * l])\\n    A[2, 1] = acc_th[0]\\n    A[3, 1] = acc_th[1]\\n    # small hinge damping\\n    acc_w = Minv @ np.array([0.0, -1.0])\\n    A[2, 3] = acc_w[0]\\n    A[3, 3] = acc_w[1]\\n    acc_u = Minv @ np.array([GEAR, 0.0])\\n    B = np.zeros((4, 1))\\n    B[2, 0] = acc_u[0]\\n    B[3, 0] = acc_u[1]\\n\\n    # Zero-order-hold discretization via augmented exponential\\n    aug = np.zeros((5, 5))\\n    aug[:4, :4] = A * DT\\n    aug[:4, 4:] = B * DT\\n    E = _expm(aug)\\n    Ad = E[:4, :4]\\n    Bd = E[:4, 4:]\\n\\n    Q = np.diag([1.0, 10.0, 0.2, 0.2])\\n    R = np.array([[1.0]])\\n    P = Q.copy()\\n    for _ in range(5000):\\n        BtP = Bd.T @ P\\n        K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad)\\n        Pn = Q + Ad.T @ P @ (Ad - Bd @ K)\\n        if np.max(np.abs(Pn - P)) < 1e-10:\\n            P = Pn\\n            break\\n        P = Pn\\n    BtP = Bd.T @ P\\n    K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad)\\n    K = K.reshape(-1)\\n    if not np.all(np.isfinite(K)):\\n        raise ValueError\\n    # sanity: closed loop stable\\n    eig = np.linalg.eigvals(Ad - Bd @ K.reshape(1, 4))\\n    if np.max(np.abs(eig)) >= 1.0:\\n        raise ValueError\\n    return K\\n\\n\\ntry:\\n    _K = _compute_gain()\\nexcept Exception:\\n    # fallback: u = -K s with K negative => positive feedback gains\\n    _K = -np.array([0.5, 6.0, 0.8, 1.2])\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    s = np.asarray(obs, dtype=float).reshape(-1)[:4]\\n    if not np.all(np.isfinite(s)):\\n        return [0.0]\\n    u = float(-_K @ s)\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\",\"ttft_ms\":21349,\"type\":\"result\",\"duration_ms\":32937,\"uuid\":\"a91d0ea1-a125-4f1c-88e7-08499348076e\",\"ttft_stream_ms\":717,\"time_to_request_ms\":71,\"first_content_frame_ms\":718,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 167,
+  "cache_read_input_tokens": 2227,
+  "output_tokens": 3285,
+  "output_tokens_details": {
+   "thinking_tokens": 1740
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 167,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3285,
+    "cache_read_input_tokens": 2227,
+    "cache_creation_input_tokens": 167,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 167
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

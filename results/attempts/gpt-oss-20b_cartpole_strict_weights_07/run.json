@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T11:54:05-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1007
+ },
+ "seconds": 32.41571235656738,
+ "usage": {
+  "completion_tokens": 2357,
+  "prompt_tokens": 648,
+  "total_tokens": 3005,
+  "prompt_tokens_details": {
+   "cached_tokens": 643
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a deterministic controller for a simulated system with observation vector of length 4. Reward: +1 each step while |obs[1]| <= 0.2. Episode ends when |obs[1]| > 0.2 or any non-finite obs. So essentially we want to keep obs[1] within [-0.2, 0.2] as long as possible, up to 1000 steps.\n\nObservation indices: 0-3 raw numbers, unknown distribution. We have no knowledge of dynamics. We need to design a simple control that keeps second component stable.\n\nWithout knowledge of system dynamics, best we can do is attempt to use the observation directly to produce action that tries to maintain obs[1] near zero. Perhaps use linear control: action = -k * obs[1] (with some weight). Observations clipped to [-3,3]. We could set W2 such that action = -k * h[0] where h[0] maybe tanh of linear combination that includes obs[1]. We could set W1 to just copy obs[1] into one hidden unit and maybe ignore others. But tanh saturates: tanh(x) ~ 1 for large x. We can use a small weight to keep hidden value linearly related to obs[1] within tanh range.\n\nSimplest: use W1: first row [0, alpha, 0, 0] where alpha small, others zero. Then h[0] = tanh(alpha * obs[1]). If alpha small, tanh(alpha * obs[1]) ~ alpha * obs[1]. So h[0] ~ alpha * obs[1]. Then W2: set first element of weight vector to -k/alpha, others zero. Then action ~ -k/alpha * alpha * obs[1] = -k * obs[1]. So we can implement linear control.\n\nPick k such that action keeps obs[1] stable. We don't know system dynamics but we can guess that system is like an inverted pendulum? Maybe obs[1] is angle? Hard to guess. But we can try moderate k=0.5.\n\nAlso need to set bias b1 and b2.\n\nLet's design:\n\nW1: 16x4. We'll set first row [0, 0.5, 0, 0] (alpha=0.5). All other rows zeros. That means hidden units 1-15 will all output tanh(0) = 0. So h[0] = tanh(0.5 * obs[1]). Others zero. Might saturate if obs[1] large. But obs[1] could be beyond [-0.2,0.2] at start maybe slightly. But still small. 0.5*obs[1] <= 0.1 magnitude. tanh ~ same.\n\nWe can also add bias to first hidden unit: b1[0] = 0. So h[0] = tanh(0.5*obs[1]). Others 0.\n\nW2: 1x16: weight[0] = -k/0.5 = -k*2. Choose k=0.5, then weight = -1. So action = -1 * h[0] + b2. Choose b2 = 0. So action = -tanh(0.5*obs[1]). This is bounded [-1,1] roughly.\n\nClip action to [-3,3], so fine.\n\nWe could also include other terms like obs[0],obs[2],obs[3] but maybe irrelevant.\n\nWill this control keep obs[1] stable? This is like negative feedback on tanh of obs[1], might reduce oscillations. Might be enough.\n\nBut we might need larger k to drive more quickly. Could pick k=1. Then weight = -2. action = -2*tanh(0.5*obs[1]) ~ -obs[1] for small values (since tanh(0.5x) ~ 0.5x). Actually tanh(0.5x) ~ 0.5x. So -2*tanh(0.5*obs[1]) ~ -obs[1]. That cancels the state? Might stabilize.\n\nLet's pick k=1. Then weight = -2. That yields action = -2 * tanh(0.5 * obs[1]). For small obs[1], action ~ -obs[1] * (2*0.5)= -obs[1]. Good.\n\nWe should also set b2=0.\n\nThus the controller is: action = -2*tanh(0.5*obs[1]). Clip to [-3,3]. That seems good.\n\nNow fill arrays.\n\nW1: 16 rows, each with 4 numbers.\n\nRow 0: [0.0, 0.5, 0.0, 0.0]\nRows 1-15: all zeros [0.0, 0.0, 0.0, 0.0]\n\nb1: 16 numbers. First 0, others 0.\n\nW2: 1 row with 16 numbers: first -2.0, rest zeros.\n\nb2: [0.0]\n\nSo we output JSON with those arrays. We need to list numbers as decimals.\n\nLet's produce JSON:\n\n{\n  \"W1\": [\n    [0.0, 0.5, 0.0, 0.0],\n    [0.0, 0.0, 0.0, 0.0],\n    ... etc 16 rows\n  ],\n  \"b1\": [0.0, 0.0, ... 16 zeros],\n  \"W2\": [[-2.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]],\n  \"b2\": [0.0]\n}\n\nMake sure we have exactly 16 rows in W1, 16 elements in b1, etc.\n\nLet's write them fully.\n\nW1 rows:\n\n0: [0.0, 0.5, 0.0, 0.0]\n1: [0.0, 0.0, 0.0, 0.0]\n2: [0.0, 0.0, 0.0, 0.0]\n3: [0.0, 0.0, 0.0, 0.0]\n4: [0.0, 0.0, 0.0, 0.0]\n5: [0.0, 0.0, 0.0, 0.0]\n6: [0.0, 0.0, 0.0, 0.0]\n7: [0.0, 0.0, 0.0, 0.0]\n8: [0.0, 0.0, 0.0, 0.0]\n9: [0.0, 0.0, 0.0, 0.0]\n10:[0.0, 0.0, 0.0, 0.0]\n11:[0.0, 0.0, 0.0, 0.0]\n12:[0.0, 0.0, 0.0, 0.0]\n13:[0.0, 0.0, 0.0, 0.0]\n14:[0.0, 0.0, 0.0, 0.0]\n15:[0.0, 0.0, 0.0, 0.0]\n\nb1: 16 zeros.\n\nW2: row of 16: [-2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].\n\nb2: [0.0]\n\nThat's all.\n\nPotential improvements: maybe include other obs components to handle coupling? But unknown. But maybe controlling only obs[1] may be insufficient. But it's likely best to try minimal.\n\nLet's produce final JSON.\n\n",
+ "server_timings": {
+  "cache_n": 643,
+  "prompt_n": 5,
+  "prompt_ms": 57.514,
+  "prompt_per_token_ms": 11.5028,
+  "prompt_per_second": 86.93535487011857,
+  "predicted_n": 2357,
+  "predicted_ms": 32328.734,
+  "predicted_per_token_ms": 13.72187351443124,
+  "predicted_per_second": 72.87634585381538
+ }
+}

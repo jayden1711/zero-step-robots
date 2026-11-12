@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:37:23-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 37.01060342788696,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":34923,\"stop_reason\":\"end_turn\",\"session_id\":\"114eb116-34d9-4f31-8fa3-360408e22cc3\",\"total_cost_usd\":0.08270482,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":2391,\"output_tokens\":3667,\"output_tokens_details\":{\"thinking_tokens\":2340},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3667,\"cache_read_input_tokens\":2391,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3667,\"cacheReadInputTokens\":2391,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.08270482,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2340,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This observation layout matches a planar one-legged hopper (MuJoCo-style). Reading it that way:\\n\\n- `obs[0]` is height.\\n- `obs[1]` is torso pitch.\\n- `obs[2..4]` are the thigh, leg and foot joint angles.\\n- `obs[5..10]` are the velocities, in the same order.\\n\\nHopping forward could score more than standing still, but tuning a gait blind is very risky. A controller that falls early scores far less than one that survives. So this controller aims to survive all 1000 steps, about 1000 reward per episode.\\n\\n**How it works:** it holds each of the 3 joints at angle 0 with a damped spring (PD) control. With all joints rigid and the flat foot on the ground, the body's centre of mass stays over the foot, so it stands still and stays upright. Because the action pushes each joint toward zero, the sign convention of the joint axes does not matter.\\n\\n- Hidden unit *j* computes `tanh(0.5\u00b7q_j + 0.05\u00b7q\u0307_j)`, which is close to linear for small angles.\\n- Output `-4\u00b7h` gives action \u2248 `-2\u00b7q - 0.2\u00b7q\u0307`. With gear 200 that is roughly 400 N\u00b7m/rad stiffness and 40 N\u00b7m\u00b7s/rad damping.\\n- I assumed each joint has about 1 kg\u00b7m\u00b2 of armature, as in MuJoCo's hopper. With that inertia, damping is near critical and the control is stable at the 0.008 s step.\\n- The other 13 hidden units are unused (all zeros).\\n\\n```json\\n{\\n  \\\"W1\\\": [\\n    [0, 0, 0.5, 0, 0, 0, 0, 0, 0.05, 0, 0],\\n    [0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0.05, 0],\\n    [0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0.05],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\\n  ],\\n  \\\"b1\\\": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n  \\\"W2\\\": [\\n    [-4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],\\n    [0, 0, -4, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]\\n  ],\\n  \\\"b2\\\": [0, 0, 0]\\n}\\n```\",\"ttft_ms\":25121,\"type\":\"result\",\"duration_ms\":35167,\"uuid\":\"6aae84b0-2413-423f-bf32-833ee64a8e25\",\"ttft_stream_ms\":886,\"time_to_request_ms\":226,\"first_content_frame_ms\":886,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 2391,
+  "output_tokens": 3667,
+  "output_tokens_details": {
+   "thinking_tokens": 2340
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3667,
+    "cache_read_input_tokens": 2391,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

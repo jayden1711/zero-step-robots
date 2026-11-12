@@ -1,0 +1,24 @@
+This spec is untested, since I can't run the simulation. The signs of the torso and hip feedback come from my reading of the MuJoCo joint axes, so they may need flipping.
+
+- **Gait:** one oscillator at 1.5 Hz drives the two hips in antiphase.
+- **Balance:** a torso-angle and angular-velocity feedback is added to both hips to keep the torso upright.
+- **Knees and feet:** a constant positive knee torque keeps the legs extended, and a PD term on each foot holds it level.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [{"name": "g", "freq_hz": 1.5, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a1": 0.4, "a4": 0.4},
+ "units": [
+  {"type": "linear", "name": "hip_cpg", "inputs": {"sin(g)": 1.0},
+   "range": 1.0, "tol": 0.01, "to": {"a0": 0.6, "a3": -0.6}},
+  {"type": "linear", "name": "torso_balance", "inputs": {"obs[1]": 1.0, "obs[10]": 0.15},
+   "range": 3.0, "tol": 0.02, "to": {"a0": 1.0, "a3": 1.0}},
+  {"type": "linear", "name": "right_foot_pd", "inputs": {"obs[4]": -3.0, "obs[13]": -0.3},
+   "range": 3.0, "tol": 0.02, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "left_foot_pd", "inputs": {"obs[7]": -3.0, "obs[16]": -0.3},
+   "range": 3.0, "tol": 0.02, "to": {"a5": 1.0}},
+  {"type": "linear", "name": "knee_swing", "inputs": {"cos(g)": 1.0},
+   "range": 1.0, "tol": 0.01, "to": {"a1": -0.3, "a4": 0.3}}
+ ]}
+```

@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:55:55-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 32.22681260108948,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":31142,\"stop_reason\":\"end_turn\",\"session_id\":\"156ee882-687f-4963-9e6d-e2742f9d39d1\",\"total_cost_usd\":0.07159394000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":2227,\"output_tokens\":3164,\"output_tokens_details\":{\"thinking_tokens\":2303},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3164,\"cache_read_input_tokens\":2227,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3164,\"cacheReadInputTokens\":2227,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.07159394000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2303,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a linear state-feedback (LQR-style, pole-placement) controller. I couldn't run it, so the gains are derived from estimates, not tested.\\n\\n**Model.** I estimated the physical parameters from the standard `inverted_pendulum.xml`, using MuJoCo's default density of 1000 kg/m\u00b3:\\n\\n- Cart mass \u2248 10.5 kg.\\n- Pole mass \u2248 5 kg, centre of mass 0.3 m above the hinge.\\n- Pole inertia about the hinge \u2248 0.6 kg\u00b7m\u00b2.\\n- Actuator gear = 100, so the force on the cart is 100\u00b7u.\\n\\nLinearising, with positive angle meaning the pole tilts toward +x, gives:\\n\\n- \u1e8d \u2248 8.51\u00b7u \u2212 3.13\u00b7\u03b8\\n- \u03b8\u0308 \u2248 32.3\u00b7\u03b8 \u2212 21.28\u00b7u\\n\\n**Gains.** With u = kx\u00b7x + k\u03b8\u00b7\u03b8 + kv\u00b7\u1e8b + k\u03c9\u00b7\u03b8\u0307, the closed-loop characteristic polynomial is:\\n\\ns\u2074 + (21.28k\u03c9 \u2212 8.51kv)s\u00b3 + (21.28k\u03b8 \u2212 8.51kx \u2212 32.3)s\u00b2 + 208.3kv\u00b7s + 208.3kx\\n\\nI placed the poles at {\u22123, \u22123, \u22128, \u22128}, which gives kx \u2248 2.77, k\u03b8 \u2248 10.57, kv \u2248 2.54, k\u03c9 \u2248 2.05.\\n\\n- **Step size:** the fastest pole (\u22128) times the 0.04 s step is about 0.32, comfortably slow enough for the discrete steps.\\n- **Actuator limits:** the commands stay far below the \u00b13 limit for the tiny initial perturbations.\\n- **Damping:** the joint damping in the model only adds extra stability.\\n- **Signs:** all gains are positive. Pushing toward the side the pole leans keeps it upright. The positive cart-position gain gives the correct \\\"push away first\\\" behaviour that brings the cart back to centre.\\n\\n```python\\nimport numpy as np\\n\\n# State feedback gains from pole placement on the linearised cart-pole model\\n# (closed-loop poles at -3, -3, -8, -8).\\nK = np.array([2.77, 10.57, 2.54, 2.05])  # [x, theta, x_dot, theta_dot]\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    s = np.asarray(obs, dtype=float)\\n    if not np.all(np.isfinite(s)):\\n        return [0.0]\\n    u = float(np.dot(K, s))\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\",\"ttft_ms\":24151,\"type\":\"result\",\"duration_ms\":31241,\"uuid\":\"f7872cb6-cdf5-4a24-b6e7-adb50ed7d6d8\",\"ttft_stream_ms\":850,\"time_to_request_ms\":98,\"first_content_frame_ms\":850,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 2227,
+  "output_tokens": 3164,
+  "output_tokens_details": {
+   "thinking_tokens": 2303
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3164,
+    "cache_read_input_tokens": 2227,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-09T16:50:57-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 307.9548273086548,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":307082,\"stop_reason\":\"end_turn\",\"session_id\":\"fb7feeb9-71a2-4009-93ed-19fa0f13f4de\",\"total_cost_usd\":0.5851230000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":4175,\"output_tokens\":29146,\"output_tokens_details\":{\"thinking_tokens\":27150},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":29146,\"cache_read_input_tokens\":4175,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":29146,\"cacheReadInputTokens\":4175,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.5851230000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":27150,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a hand-designed hopping controller. I couldn't simulate it, so the gains come from rough estimates of the model's masses, the joint armature and the 200 Nm actuator gear. The parts of the design are:\\n\\n**One oscillator, `hop`, at 2.5 Hz, sets the gait rhythm.**\\n- **Knee (`a1`):** gets `0.1 + 0.3\u00b7sin \u03c8`. Its peak torque is 80 Nm. The knee pushes into its straight limit during the push half of the cycle and flexes slightly in the other half.\\n- **Ankle push-off (`a2`):** a gated push driven by `sin(\u03c8 \u2212 0.5)`, so it comes slightly after the knee extension. It gives about \u22120.4 (toe press) in the push window and roughly 0 elsewhere.\\n- **Leg swing:** two paired reflex units act as a hip controller on the absolute leg angle (`obs[1]+obs[2]`). The pair is switched on only around `sin \u03c8 \u2248 \u22121`, the expected flight phase, and gives roughly zero output otherwise.\\n  - The target foot placement shifts forward with speed (Raibert-style): `\u22120.08 + 0.175\u00b7v` rad.\\n  - So the foot lands behind the body when the robot is slow, which makes it speed up, and further forward when it is fast, which makes it brake.\\n\\n**Balance feedback, running all the time:**\\n- **Torso:** the hip torque follows `a0 = 1.5\u00b7(obs[1] + 0.13\u00b7obs[7]) + bias`, which holds the torso at a slight forward lean. Since every joint rotates about \u2212y, a positive hip torque in stance pitches the torso forward, so this sign corrects a backward lean.\\n- **Speed through lean:** a term of `\u22120.12\u00b7v` on `a0` with a matching bias sets the torso target to about \u22120.1 rad when stopped and \u22120.04 rad at 0.8 m/s. Going faster than that makes the torso lean back.\\n- **Emergency torso reflexes:** strong hip corrections kick in when `|obs[1]|` passes 0.12 rad. Their constant offsets cancel each other.\\n- **Ankle, foot levelling:** the foot is kept level with the ground (absolute angle 0). This has little effect while the foot is flat in stance, and it lines the foot up for landing while in the air.\\n- **Ankle, body lean:** the ankle responds to the shank's lean. Leaning back gives a toe-up torque that tips the body forward. Leaning forward late in stance gives a toe press, which corrects the lean and also adds push-off.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.5, \\\"phase0\\\": 3.6}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": 0.156, \\\"a1\\\": 0.1, \\\"a2\\\": -0.2},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_pd\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[7]\\\": 0.13},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.5}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"speed_lean\\\", \\\"inputs\\\": {\\\"obs[5]\\\": 1.0},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": -0.12}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_level\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[2]\\\": 1.0, \\\"obs[3]\\\": 1.0, \\\"obs[4]\\\": 1.0, \\\"obs[7]\\\": 0.03, \\\"obs[8]\\\": 0.03, \\\"obs[9]\\\": 0.03, \\\"obs[10]\\\": 0.03},\\n    \\\"range\\\": 1.2, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": -0.5}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[2]\\\": 1.0, \\\"obs[3]\\\": 1.0, \\\"obs[7]\\\": 0.2, \\\"obs[8]\\\": 0.2, \\\"obs[9]\\\": 0.2},\\n    \\\"range\\\": 1.2, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 0.3}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_rhythm\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 0.3}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"ankle_pushoff\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 0.878, \\\"cos(hop)\\\": -0.479},\\n    \\\"threshold\\\": 0.3, \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a2\\\": -0.2}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swing_gate_pos\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -1.0, \\\"obs[2]\\\": -1.0, \\\"obs[5]\\\": 0.175, \\\"sin(hop)\\\": -0.8},\\n    \\\"threshold\\\": 0.88, \\\"sharpness\\\": 3.3, \\\"to\\\": {\\\"a0\\\": 0.3}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swing_gate_neg\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[2]\\\": 1.0, \\\"obs[5]\\\": -0.175, \\\"sin(hop)\\\": -0.8},\\n    \\\"threshold\\\": 0.72, \\\"sharpness\\\": 3.3, \\\"to\\\": {\\\"a0\\\": -0.3}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"torso_back_guard\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0},\\n    \\\"threshold\\\": 0.12, \\\"sharpness\\\": 15.0, \\\"to\\\": {\\\"a0\\\": 0.25}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"torso_fwd_guard\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -1.0},\\n    \\\"threshold\\\": 0.12, \\\"sharpness\\\": 15.0, \\\"to\\\": {\\\"a0\\\": -0.25}}\\n ]}\\n```\",\"ttft_ms\":291201,\"type\":\"result\",\"duration_ms\":307110,\"uuid\":\"72a2c926-c1fa-4a00-ad44-fd6a534ef620\",\"ttft_stream_ms\":1481,\"time_to_request_ms\":27,\"first_content_frame_ms\":1481,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 4175,
+  "output_tokens": 29146,
+  "output_tokens_details": {
+   "thinking_tokens": 27150
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 29146,
+    "cache_read_input_tokens": 4175,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

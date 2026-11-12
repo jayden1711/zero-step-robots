@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T20:49:59-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 360.246639251709,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":359504,\"stop_reason\":\"end_turn\",\"session_id\":\"0d786860-6240-4a2c-a982-e8bf4b7e5f48\",\"total_cost_usd\":0.6997982,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":168,\"cache_read_input_tokens\":4231,\"output_tokens\":34880,\"output_tokens_details\":{\"thinking_tokens\":33064},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":168,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":34880,\"cache_read_input_tokens\":4231,\"cache_creation_input_tokens\":168,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":168},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":34880,\"cacheReadInputTokens\":4231,\"cacheCreationInputTokens\":168,\"webSearchRequests\":0,\"costUSD\":0.6997982,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":33064,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a single-oscillator antiphase walking controller. The design rests on my reading of the Walker2d model; I couldn't run anything to check it.\\n\\n**Joint convention.** All joints rotate about the \u2212y axis, so a positive angle swings a hanging limb forward (+x) and tips the torso backward.\\n- The thigh range is [\u2212150\u00b0, 0], so the hip can only extend backward from vertical.\\n- The knee range is the same, which is ordinary human-like knee bending.\\n- The foot is a plate that extends forward from the ankle. A positive foot angle means toes up.\\n\\n**Rhythm.** One oscillator `g` at 0.9 Hz drives both legs. The left leg uses the negated cos and sin terms, which is exactly a \u03c0 phase shift, so no coupling is needed. Forward velocity speeds up the phase slightly (0.8 rad/s per m/s), so the robot steps faster when it moves faster.\\n\\n**One unit per joint.** Each unit is a PD controller in the joint's own frame, with a target taken from the oscillator.\\n- **Thigh:** target = \u22120.2 + 0.22\u00b7cos \u03c6. Stance runs from \u03c6 = 0 to \u03c0, with the thigh sweeping backward. Swing runs from \u03c0 to 2\u03c0, with the thigh coming forward. Gains are Kp = 2 and Kd = 0.12.\\n- **Knee:** target = \u22120.45 \u2212 0.45\u00b7cos(\u03c6 \u2212 4.24). It is straight in mid-stance and bends to \u22120.9 early in the swing for ground clearance. Gains are Kp = 2 and Kd = 0.1.\\n- **Ankle:** a soft PD (Kp = 0.8) that roughly follows a flat-foot roll during stance, with toes slightly up during swing.\\n\\n**Balance.** Both thigh units also add 1.0\u00b7(torso angle \u2212 0.05) + 0.05\u00b7(torso angular velocity). On the stance leg, a positive hip torque pitches the torso forward, so this keeps the torso upright.\\n\\n**Speed regulation.** Two mechanisms act around a target speed of 0.8 m/s:\\n- **Torso lean:** the torso reference angle rises with speed. A more backward lean moves swing-foot placement forward, which brakes the robot.\\n- **Ankle torque:** when the robot is too slow, the ankles apply a toes-up torque. This moves the centre of pressure toward the heel, so the body falls forward. When the robot is too fast, the ankles push toes down to brake.\\n\\n**Start.** The initial phase is 0.75\u03c0. This begins the gait as a split stance: the right leg is late in stance and the left leg is about to land in front, so the first step forward comes almost immediately.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"g\\\", \\\"freq_hz\\\": 0.9, \\\"phase0\\\": 2.356, \\\"feedback\\\": {\\\"obs[8]\\\": 0.8}}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.29, \\\"a1\\\": -0.9, \\\"a2\\\": 0.24, \\\"a3\\\": -0.29, \\\"a4\\\": -0.9, \\\"a5\\\": 0.24},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"right_thigh_pd_balance\\\",\\n    \\\"inputs\\\": {\\\"obs[2]\\\": -2.0, \\\"obs[11]\\\": -0.12, \\\"cos(g)\\\": 0.44, \\\"obs[1]\\\": 1.0, \\\"obs[10]\\\": 0.05, \\\"obs[8]\\\": -0.2},\\n    \\\"range\\\": 2.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"left_thigh_pd_balance\\\",\\n    \\\"inputs\\\": {\\\"obs[5]\\\": -2.0, \\\"obs[14]\\\": -0.12, \\\"cos(g)\\\": -0.44, \\\"obs[1]\\\": 1.0, \\\"obs[10]\\\": 0.05, \\\"obs[8]\\\": -0.2},\\n    \\\"range\\\": 2.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a3\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"right_knee_pd\\\",\\n    \\\"inputs\\\": {\\\"obs[3]\\\": -2.0, \\\"obs[12]\\\": -0.1, \\\"cos(g)\\\": 0.408, \\\"sin(g)\\\": 0.802},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"left_knee_pd\\\",\\n    \\\"inputs\\\": {\\\"obs[6]\\\": -2.0, \\\"obs[15]\\\": -0.1, \\\"cos(g)\\\": -0.408, \\\"sin(g)\\\": -0.802},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"right_foot_pd_speed\\\",\\n    \\\"inputs\\\": {\\\"obs[4]\\\": -0.8, \\\"obs[13]\\\": -0.03, \\\"cos(g)\\\": -0.12, \\\"sin(g)\\\": -0.08, \\\"obs[8]\\\": -0.3},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"left_foot_pd_speed\\\",\\n    \\\"inputs\\\": {\\\"obs[7]\\\": -0.8, \\\"obs[16]\\\": -0.03, \\\"cos(g)\\\": 0.12, \\\"sin(g)\\\": 0.08, \\\"obs[8]\\\": -0.3},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a5\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":345816,\"type\":\"result\",\"duration_ms\":359527,\"uuid\":\"a8e9c39e-d784-48bd-b3e8-347e5967cfe6\",\"ttft_stream_ms\":1389,\"time_to_request_ms\":20,\"first_content_frame_ms\":1389,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 168,
+  "cache_read_input_tokens": 4231,
+  "output_tokens": 34880,
+  "output_tokens_details": {
+   "thinking_tokens": 33064
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 168,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 34880,
+    "cache_read_input_tokens": 4231,
+    "cache_creation_input_tokens": 168,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 168
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

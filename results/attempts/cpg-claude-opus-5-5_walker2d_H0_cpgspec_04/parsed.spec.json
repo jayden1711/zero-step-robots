@@ -1,0 +1,17 @@
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [{"name": "gait", "freq_hz": 0.76, "phase0": -2.0, "feedback": {"obs[8]": 1.0}}],
+ "units": [
+  {"type": "reflex", "name": "R_swing_A", "inputs": {"obs[1]": -4.2, "obs[2]": -3.0, "obs[5]": -1.2, "obs[8]": 0.45, "obs[10]": -0.3, "obs[11]": -0.3, "cos(gait)": -1.0707, "sin(gait)": 0.9019}, "threshold": -1.7, "sharpness": 1.0, "to": {"a0": 0.35}},
+  {"type": "reflex", "name": "R_swing_B", "inputs": {"obs[1]": -4.2, "obs[2]": -3.0, "obs[5]": -1.2, "obs[8]": 0.45, "obs[10]": -0.3, "obs[11]": -0.3, "cos(gait)": 1.0707, "sin(gait)": -0.9019}, "threshold": 1.1, "sharpness": 1.0, "to": {"a0": 0.35}},
+  {"type": "reflex", "name": "L_swing_A", "inputs": {"obs[1]": -4.2, "obs[5]": -3.0, "obs[2]": -1.2, "obs[8]": 0.45, "obs[10]": -0.3, "obs[14]": -0.3, "cos(gait)": 1.0707, "sin(gait)": -0.9019}, "threshold": -1.7, "sharpness": 1.0, "to": {"a3": 0.35}},
+  {"type": "reflex", "name": "L_swing_B", "inputs": {"obs[1]": -4.2, "obs[5]": -3.0, "obs[2]": -1.2, "obs[8]": 0.45, "obs[10]": -0.3, "obs[14]": -0.3, "cos(gait)": -1.0707, "sin(gait)": 0.9019}, "threshold": 1.1, "sharpness": 1.0, "to": {"a3": 0.35}},
+  {"type": "reflex", "name": "R_stance_torso_A", "inputs": {"obs[1]": 3.0, "obs[10]": 0.12, "cos(gait)": 0.7648, "sin(gait)": -0.6442}, "threshold": 0.2, "sharpness": 1.0, "to": {"a0": 0.5}},
+  {"type": "reflex", "name": "R_stance_torso_B", "inputs": {"obs[1]": 3.0, "obs[10]": 0.12, "cos(gait)": -0.7648, "sin(gait)": 0.6442}, "threshold": 2.2, "sharpness": 1.0, "to": {"a0": 0.5}},
+  {"type": "reflex", "name": "L_stance_torso_A", "inputs": {"obs[1]": 3.0, "obs[10]": 0.12, "cos(gait)": -0.7648, "sin(gait)": 0.6442}, "threshold": 0.2, "sharpness": 1.0, "to": {"a3": 0.5}},
+  {"type": "reflex", "name": "L_stance_torso_B", "inputs": {"obs[1]": 3.0, "obs[10]": 0.12, "cos(gait)": 0.7648, "sin(gait)": -0.6442}, "threshold": 2.2, "sharpness": 1.0, "to": {"a3": 0.5}},
+  {"type": "reflex", "name": "torso_always", "inputs": {"obs[1]": 3.0, "obs[10]": 0.12}, "threshold": 1.2, "sharpness": 1.0, "to": {"a0": 0.25, "a3": 0.25}},
+  {"type": "reflex", "name": "R_knee", "inputs": {"obs[3]": -4.0, "obs[12]": -0.24, "cos(gait)": -1.989, "sin(gait)": 2.507}, "threshold": -0.4, "sharpness": 1.0, "to": {"a1": 1.0}},
+  {"type": "reflex", "name": "L_knee", "inputs": {"obs[6]": -4.0, "obs[15]": -0.24, "cos(gait)": 1.989, "sin(gait)": -2.507}, "threshold": -0.4, "sharpness": 1.0, "to": {"a4": 1.0}},
+  {"type": "reflex", "name": "R_ankle", "inputs": {"obs[1]": -1.5, "obs[2]": -1.5, "obs[3]": -1.5, "obs[4]": -1.5, "obs[10]": -0.03, "obs[11]": -0.03, "obs[12]": -0.03, "obs[13]": -0.03, "obs[8]": -0.15}, "threshold": -0.15, "sharpness": 1.0, "to": {"a2": 0.8}},
+  {"type": "reflex", "name": "L_ankle", "inputs": {"obs[1]": -1.5, "obs[5]": -1.5, "obs[6]": -1.5, "obs[7]": -1.5, "obs[10]": -0.03, "obs[14]": -0.03, "obs[15]": -0.03, "obs[16]": -0.03, "obs[8]": -0.15}, "threshold": -0.15, "sharpness": 1.0, "to": {"a5": 0.8}}
+ ]}

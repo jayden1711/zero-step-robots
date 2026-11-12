@@ -1,0 +1,20 @@
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [{"name": "g", "freq_hz": 1.2, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.05, "a3": 0.05},
+ "units": [
+  {"type": "linear", "name": "torso_balance", "inputs": {"obs[1]": -2.0, "obs[10]": -0.3},
+   "range": 5.0, "tol": 0.05, "to": {"a0": 1.0, "a3": 1.0}},
+  {"type": "linear", "name": "r_knee_hold", "inputs": {"obs[3]": -1.5, "obs[12]": -0.1},
+   "range": 3.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "l_knee_hold", "inputs": {"obs[6]": -1.5, "obs[15]": -0.1},
+   "range": 3.0, "tol": 0.05, "to": {"a4": 1.0}},
+  {"type": "linear", "name": "r_ankle_hold", "inputs": {"obs[4]": -1.0, "obs[13]": -0.1},
+   "range": 2.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "l_ankle_hold", "inputs": {"obs[7]": -1.0, "obs[16]": -0.1},
+   "range": 2.0, "tol": 0.05, "to": {"a5": 1.0}},
+  {"type": "linear", "name": "hip_drive", "inputs": {"sin(g)": 1.0},
+   "range": 1.0, "tol": 0.02, "to": {"a0": 0.5, "a3": -0.5}},
+  {"type": "linear", "name": "knee_drive", "inputs": {"cos(g)": 1.0},
+   "range": 1.0, "tol": 0.02, "to": {"a1": 0.4, "a4": -0.4}}
+ ]}

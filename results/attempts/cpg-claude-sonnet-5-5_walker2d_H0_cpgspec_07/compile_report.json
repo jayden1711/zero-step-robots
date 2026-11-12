@@ -1,0 +1,55 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_pd",
+  "type": "linear",
+  "scale": 0.06123724356957945,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 1,
+  "name": "r_foot_pd",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 2,
+  "name": "l_foot_pd",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 3,
+  "name": "hip_cpg",
+  "type": "linear",
+  "scale": 0.1632993161855452,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 4,
+  "name": "r_knee_swing",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 5,
+  "name": "l_knee_swing",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "g",
+  "index": 0,
+  "freq_hz": 1.2,
+  "input_columns": [
+   17,
+   18
+  ]
+ }
+]

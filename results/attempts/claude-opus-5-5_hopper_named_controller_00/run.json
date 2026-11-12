@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:23:04-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 33.473971366882324,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":32354,\"stop_reason\":\"end_turn\",\"session_id\":\"9ca8ee38-495e-49be-8ed6-53249b290c6b\",\"total_cost_usd\":0.08086209999999999,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":2159,\"cache_read_input_tokens\":1255,\"output_tokens\":2799,\"output_tokens_details\":{\"thinking_tokens\":1898},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":2159,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2799,\"cache_read_input_tokens\":1255,\"cache_creation_input_tokens\":2159,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":2159},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":2799,\"cacheReadInputTokens\":1255,\"cacheCreationInputTokens\":2159,\"webSearchRequests\":0,\"costUSD\":0.08086209999999999,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":1898,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller holds the hopper upright on its foot instead of trying to hop.\\n\\nI can't test anything, and a hand-tuned hopping gait written blind would probably fall early in many episodes. A fall ends the episode, so it loses most of the +1 per step survival reward. Standing safely for all 1000 steps should score about 1000 in every episode, with almost no control cost.\\n\\nHow it works:\\n- **Stiff joints.** A PD controller holds the thigh, leg and foot joints at 0, so the robot behaves like one rigid body standing on its foot. The initial centre of mass (x \u2248 0) sits over the foot (about x \u2208 [-0.13, 0.26]), so the robot is statically stable.\\n- **Gains.** Each joint has a motor gear of 200, so an action gain of 3 gives about 600 Nm/rad of stiffness. A damping gain of 0.25 gives about 50 Nms/rad, which is close to critical damping for the joint inertia. The resulting stiffness is slow enough to stay stable at the 0.008 s control step.\\n- **Small posture correction.** The torso angle is kept well inside \u00b10.2 rad.\\n- **Body-tilt correction.** A small, saturated correction pushes the body's overall tilt back toward 0. I can't confirm the sign of this correction blind, so it is kept small enough that a wrong sign won't overpower the rigid stance.\\n\\n```python\\nimport numpy as np\\n\\n# Joint-space PD gains (action units; actuator gear is 200)\\nKP = np.array([3.0, 3.0, 2.5])\\nKD = np.array([0.25, 0.25, 0.2])\\n\\n# Small whole-body tilt correction, kept weak and saturated for robustness\\nK_TILT = 0.5\\nK_TILT_RATE = 0.05\\nTILT_LIMIT = 0.15\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    o = np.asarray(obs, dtype=float)\\n    torso_ang = o[1]\\n    q = o[2:5]\\n    torso_w = o[7]\\n    qd = o[8:11]\\n\\n    # Hold all joints straight (rigid stance over the foot)\\n    a = -KP * q - KD * qd\\n\\n    # Gentle tilt correction via the thigh joint: rotate the torso back toward\\n    # upright relative to the leg; saturated so it cannot dominate the stance.\\n    tilt = float(np.clip(K_TILT * torso_ang + K_TILT_RATE * torso_w,\\n                         -TILT_LIMIT, TILT_LIMIT))\\n    a[0] += tilt\\n\\n    a = np.clip(a, -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\",\"ttft_ms\":24060,\"type\":\"result\",\"duration_ms\":32442,\"uuid\":\"b029ce4e-70ba-4a34-a5c0-e84d8519cb59\",\"ttft_stream_ms\":1158,\"time_to_request_ms\":79,\"first_content_frame_ms\":1159,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 2159,
+  "cache_read_input_tokens": 1255,
+  "output_tokens": 2799,
+  "output_tokens_details": {
+   "thinking_tokens": 1898
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 2159,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2799,
+    "cache_read_input_tokens": 1255,
+    "cache_creation_input_tokens": 2159,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 2159
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

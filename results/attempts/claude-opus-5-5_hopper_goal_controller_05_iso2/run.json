@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:41:42-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 129.9560809135437,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":128877,\"stop_reason\":\"end_turn\",\"session_id\":\"d6ddf53e-28e9-4d8a-b492-bdea6867493c\",\"total_cost_usd\":0.25805296000000005,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":168,\"cache_read_input_tokens\":2308,\"output_tokens\":11639,\"output_tokens_details\":{\"thinking_tokens\":10673},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":168,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":11639,\"cache_read_input_tokens\":2308,\"cache_creation_input_tokens\":168,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":168},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":11639,\"cacheReadInputTokens\":2308,\"cacheCreationInputTokens\":168,\"webSearchRequests\":0,\"costUSD\":0.25805296000000005,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":10673,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like a one-legged hopper. I didn't attempt a hopping gait: a blind gait has a high chance of falling early and losing up to ~1000 points. Instead the controller does two things:\\n\\n1. **Stand stably for most of the episode (~1000 points).** With the joints held straight, the body's center of mass sits over the foot. So it is statically stable:\\n   - The hip and knee use PD control to hold their joint angles at 0.\\n   - The ankle uses PD control to keep the leg's absolute angle (torso + hip + knee angles) vertical.\\n   - All the torque signs come straight from the joint geometry (\\\"push against the error\\\"), so they don't depend on which way the axes point.\\n2. **Dive forward at the end (~+100 points).** In the last ~70 steps the ankle tips the rigid leg forward, and the hip keeps the torso upright. The body then falls forward about 0.8 m before the episode ends. Each metre forward is worth about 125 points.\\n   - Which ankle direction counts as \\\"forward\\\" depends on the axis convention. So the controller checks the measured forward velocity `obs[5]` a few steps into the dive and flips direction if it is moving backward.\\n\\n```python\\nimport numpy as np\\n\\n_step = 0\\n_dive_sign = 1.0\\n_checked = False\\n\\nDIVE_START = 928\\nCHECK_STEP = DIVE_START + 10\\n\\n\\ndef reset():\\n    global _step, _dive_sign, _checked\\n    _step = 0\\n    _dive_sign = 1.0\\n    _checked = False\\n\\n\\ndef _clip(x):\\n    return float(np.clip(x, -1.0, 1.0))\\n\\n\\ndef act(obs):\\n    global _step, _dive_sign, _checked\\n    o = np.asarray(obs, dtype=float)\\n    th, q1, q2, q3 = o[1], o[2], o[3], o[4]\\n    thd, q1d, q2d, q3d = o[7], o[8], o[9], o[10]\\n    _step += 1\\n\\n    # leg absolute angle (torso + hip + knee)\\n    psi = th + q1 + q2\\n    psid = thd + q1d + q2d\\n\\n    # knee: hold straight\\n    a_knee = -3.0 * q2 - 0.3 * q2d\\n\\n    if _step < DIVE_START:\\n        # standing: rigid body balanced over flat foot\\n        a_hip = -3.0 * q1 - 0.3 * q1d\\n        a_foot = 1.5 * psi + 0.25 * psid\\n    else:\\n        # forward dive: keep torso upright, tip leg forward with the ankle\\n        if not _checked and _step >= CHECK_STEP:\\n            _checked = True\\n            if o[5] < -0.02:\\n                _dive_sign = -_dive_sign\\n        a_hip = 3.0 * th + 0.3 * thd\\n        a_foot = 0.8 * _dive_sign\\n\\n    return [_clip(a_hip), _clip(a_knee), _clip(a_foot)]\\n```\",\"ttft_ms\":120708,\"type\":\"result\",\"duration_ms\":128946,\"uuid\":\"de574e96-bb7e-4e93-9495-3c6f2c1f1e3e\",\"ttft_stream_ms\":703,\"time_to_request_ms\":66,\"first_content_frame_ms\":703,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 168,
+  "cache_read_input_tokens": 2308,
+  "output_tokens": 11639,
+  "output_tokens_details": {
+   "thinking_tokens": 10673
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 168,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 11639,
+    "cache_read_input_tokens": 2308,
+    "cache_creation_input_tokens": 168,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 168
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

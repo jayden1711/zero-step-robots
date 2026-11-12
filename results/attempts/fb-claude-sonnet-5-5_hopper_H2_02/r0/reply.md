@@ -1,0 +1,18 @@
+This is a first-guess design, untuned: a single 2 Hz oscillator drives the three joints, with torso-angle and angular-velocity feedback on the thigh. A small positive thigh bias leans the torso forward, and a small leg bias helps hold the body up.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.0, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.1, "a1": 0.2},
+ "units": [
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 1.0, "obs[7]": 0.2},
+   "range": 2.5, "tol": 0.05, "to": {"a0": -4.0}},
+  {"type": "linear", "name": "thigh_swing", "inputs": {"sin(hop)": 1.0},
+   "range": 1.0, "tol": 0.02, "to": {"a0": 0.4}},
+  {"type": "linear", "name": "leg_push", "inputs": {"cos(hop)": 1.0},
+   "range": 1.0, "tol": 0.02, "to": {"a1": 0.7}},
+  {"type": "linear", "name": "foot_push", "inputs": {"cos(hop)": 1.0},
+   "range": 1.0, "tol": 0.02, "to": {"a2": 0.3}}
+ ]}
+```

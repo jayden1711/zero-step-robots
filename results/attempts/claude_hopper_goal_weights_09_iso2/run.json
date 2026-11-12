@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:21:32-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 21.136468410491943,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":20044,\"stop_reason\":\"end_turn\",\"session_id\":\"f02bd6f1-8c66-4594-ad90-18d20f5325df\",\"total_cost_usd\":0.05442712,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":5476,\"output_tokens\":2364,\"output_tokens_details\":{\"thinking_tokens\":1522},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2364,\"cache_read_input_tokens\":5476,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2364,\"cacheReadInputTokens\":5476,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.05442712,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1522,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a guess, not a tested controller. I couldn't run anything, so I assumed the layout matches a standard planar hopper (obs[1] is torso pitch, obs[2:5] are joint angles, obs[7:11] are angular velocities, and joint torques follow the usual sign convention). Each of the three actions is a PD controller that keeps its joint at zero, plus a torso-pitch correction on the hip and foot. This is meant to keep the system upright for the full 1000 steps with low action cost. It makes no attempt to run forward.\\n\\n```json\\n{\\\"W1\\\":[\\n[0,0,-0.2,0,0,0,0,-0.4,-0.02,0,0],\\n[0,-0.4,0,0,0,0,0,0,0,0,0],\\n[0,0,0,-0.2,0,0,0,0,0,-0.02,0],\\n[0,-1.2,0,0,-0.2,0,0,-0.12,0,0,-0.02],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0]],\\n\\\"b1\\\":[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n\\\"W2\\\":[\\n[5,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0]],\\n\\\"b2\\\":[0,0,0]}\\n```\\n\\nUnit 1 in the hidden layer also feeds the hip action, so the hip gets some torso-pitch correction on top of its own joint PD. If the pitch sign convention is reversed, this will fall faster than a zero-action controller.\",\"ttft_ms\":15065,\"type\":\"result\",\"duration_ms\":20140,\"uuid\":\"26af284c-799f-4797-bbe9-224228f4a8b8\",\"ttft_stream_ms\":897,\"time_to_request_ms\":94,\"first_content_frame_ms\":898,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 5476,
+  "output_tokens": 2364,
+  "output_tokens_details": {
+   "thinking_tokens": 1522
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2364,
+    "cache_read_input_tokens": 5476,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

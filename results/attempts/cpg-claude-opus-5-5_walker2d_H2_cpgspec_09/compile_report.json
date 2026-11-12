@@ -1,0 +1,83 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_R",
+  "type": "linear",
+  "scale": 0.09682458365518543,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 1,
+  "name": "hip_L",
+  "type": "linear",
+  "scale": 0.09682458365518543,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 2,
+  "name": "knee_R_pd",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 3,
+  "name": "knee_L_pd",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 4,
+  "name": "knee_R_swing",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 5,
+  "name": "knee_L_swing",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 6,
+  "name": "foot_R_level",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 7,
+  "name": "foot_L_level",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 8,
+  "name": "pushoff_R",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 9,
+  "name": "pushoff_L",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "g",
+  "index": 0,
+  "freq_hz": 0.65,
+  "input_columns": [
+   17,
+   18
+  ]
+ }
+]

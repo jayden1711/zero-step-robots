@@ -1,0 +1,60 @@
+{
+ "target": "cpg",
+ "obs_dim": 11,
+ "act_dim": 3,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "o",
+   "freq_hz": 1.4090729541026905,
+   "phase0": 0.0
+  }
+ ],
+ "couplings": [],
+ "bias": {
+  "a0": 0.22477160255663334,
+  "a1": 0.24041431159610482,
+  "a2": 1.2173407808718975
+ },
+ "units": [
+  {
+   "type": "reflex",
+   "name": "j0",
+   "inputs": {
+    "cos(o)": 0.32265263556384005,
+    "sin(o)": -0.021851147118002318
+   },
+   "threshold": 0.0,
+   "sharpness": 1.0,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "j1",
+   "inputs": {
+    "cos(o)": 0.2045121564735829,
+    "sin(o)": -0.4293731895365952
+   },
+   "threshold": 0.0,
+   "sharpness": 1.0,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "j2",
+   "inputs": {
+    "cos(o)": 0.481874190315831,
+    "sin(o)": -0.9167135472516952
+   },
+   "threshold": 0.0,
+   "sharpness": 1.0,
+   "to": {
+    "a2": 1.0
+   }
+  }
+ ]
+}

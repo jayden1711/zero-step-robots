@@ -1,0 +1,152 @@
+{
+ "seed": 3956053343,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.12011153489168906,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.16320684468756044,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.12447728989055751,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.12054140551505137,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.13152179841986694,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.19434336702636043,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "R",
+    "freq_hz": 1.0,
+    "phase0": 0.0
+   },
+   {
+    "name": "L",
+    "freq_hz": 1.0,
+    "phase0": 3.14159
+   }
+  ],
+  "couplings": [
+   {
+    "from": "R",
+    "to": "L",
+    "weight": 1.5,
+    "phase_lag": 3.14159
+   },
+   {
+    "from": "L",
+    "to": "R",
+    "weight": 1.5,
+    "phase_lag": 3.14159
+   }
+  ],
+  "bias": {},
+  "units": [
+   {
+    "type": "linear",
+    "name": "thighR",
+    "inputs": {
+     "sin(R)": 0.6,
+     "obs[1]": -0.5,
+     "obs[10]": -0.1
+    },
+    "range": 2.5,
+    "tol": 0.02,
+    "to": {
+     "a0": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "thighL",
+    "inputs": {
+     "sin(L)": 0.6,
+     "obs[1]": -0.5,
+     "obs[10]": -0.1
+    },
+    "range": 2.5,
+    "tol": 0.02,
+    "to": {
+     "a3": 1.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "kneeR",
+    "inputs": {
+     "sin(R)": 1.0
+    },
+    "threshold": 0.0,
+    "sharpness": 5.0,
+    "to": {
+     "a1": -0.6
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "kneeL",
+    "inputs": {
+     "sin(L)": 1.0
+    },
+    "threshold": 0.0,
+    "sharpness": 5.0,
+    "to": {
+     "a4": -0.6
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "walker2d",
+  "variant": "stock",
+  "env_id": "Walker2d-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 111.0406944264807,
+  "sem_return": 1.0254218137434346,
+  "std_return": 10.202818224098017,
+  "median_return": 113.04072842204086,
+  "min_return": 84.19625742671134,
+  "max_return": 122.81607288688929,
+  "mean_length": 93.69,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.14778694156440136,
+  "mean_distance_healthy": 0.12706613615786358,
+  "median_distance_healthy": 0.1378562638082355,
+  "min_distance_healthy": -0.024175712344006985,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

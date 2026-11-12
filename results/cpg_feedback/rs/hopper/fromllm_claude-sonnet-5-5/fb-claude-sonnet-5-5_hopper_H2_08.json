@@ -1,0 +1,122 @@
+{
+ "seed": 3669284922,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.04036749918888323,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 0.01810029944875496,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 0.04468834996066443,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.015167115875547813,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.07264190030111047,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": 0.04167165387055615,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 2.0797274723511694,
+    "phase0": 0.10384536773946529
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": 0.24957620900440322
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "thigh_balance_swing",
+    "inputs": {
+     "obs[1]": -5.648632288203998,
+     "obs[7]": -0.24422570102417296,
+     "cos(hop)": 0.9284211577271422
+    },
+    "range": 5.0,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.9590741823351054
+    }
+   },
+   {
+    "type": "linear",
+    "name": "leg_push",
+    "inputs": {
+     "sin(hop)": 0.8876365483789707
+    },
+    "range": 1.0,
+    "tol": 0.01,
+    "to": {
+     "a1": 0.9659170944986948
+    }
+   },
+   {
+    "type": "linear",
+    "name": "foot_push",
+    "inputs": {
+     "cos(hop)": 0.5939128824429107
+    },
+    "range": 1.0,
+    "tol": 0.01,
+    "to": {
+     "a2": 0.7830752404435761
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 51.25639785979709,
+  "sem_return": 0.03240815176260665,
+  "std_return": 0.32245703863638375,
+  "median_return": 51.27535908236584,
+  "min_return": 50.3097602165115,
+  "max_return": 51.89531690232408,
+  "mean_length": 48.28,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.03211113813890922,
+  "mean_distance_healthy": 0.04569233333036751,
+  "median_distance_healthy": 0.04673001477925153,
+  "min_distance_healthy": 0.036753349567554314,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

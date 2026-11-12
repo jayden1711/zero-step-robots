@@ -22,6 +22,7 @@ class Task:
 TASKS = {
     "cartpole": Task("cartpole", "InvertedPendulum-v5", 4, 1, (-3.0,), (3.0,)),
     "hopper": Task("hopper", "Hopper-v5", 11, 3, (-1.0,) * 3, (1.0,) * 3),
+    "walker2d": Task("walker2d", "Walker2d-v5", 17, 6, (-1.0,) * 6, (1.0,) * 6),
 }
 
 

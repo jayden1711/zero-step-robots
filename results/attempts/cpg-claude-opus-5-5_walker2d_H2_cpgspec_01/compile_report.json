@@ -1,0 +1,100 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_swing_R_plus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 1,
+  "name": "hip_swing_R_minus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 2,
+  "name": "torso_stance_R_plus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 3,
+  "name": "torso_stance_R_minus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 4,
+  "name": "knee_R",
+  "type": "linear",
+  "scale": 0.09682458365518543,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 5,
+  "name": "foot_R",
+  "type": "linear",
+  "scale": 0.15491933384829668,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.5
+ },
+ {
+  "unit": 6,
+  "name": "hip_swing_L_plus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 7,
+  "name": "hip_swing_L_minus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 8,
+  "name": "torso_stance_L_plus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 9,
+  "name": "torso_stance_L_minus",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 10,
+  "name": "knee_L",
+  "type": "linear",
+  "scale": 0.09682458365518543,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 11,
+  "name": "foot_L",
+  "type": "linear",
+  "scale": 0.15491933384829668,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.5
+ },
+ {
+  "oscillator": "R",
+  "index": 0,
+  "freq_hz": 0.9,
+  "input_columns": [
+   17,
+   18
+  ]
+ },
+ {
+  "oscillator": "L",
+  "index": 1,
+  "freq_hz": 0.9,
+  "input_columns": [
+   19,
+   20
+  ]
+ }
+]

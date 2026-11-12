@@ -110,3 +110,85 @@ Models: subscription CLIs and local models only, no API keys.
   compile on both tasks; no LLM spec attempts yet.
 - **Criticism-proofing:** `CRITIQUES.md` lists the objections and the evidence or limitation for each. Every number in a
   future post must trace to a file under `results/` and a `make` target.
+
+
+## Addendum 2026-11-09: raised target (owner decision)
+
+Source: the owner's hard-target audit (approved 2026-11-09, about 00:45 CST, relayed by the organizer). Standing owner rule: a target must be
+hard enough that a skeptical expert would be impressed, simple baselines must fail it meaningfully, the task must force the interesting
+behavior, and there must be a learning signal (partial credit or a curriculum).
+
+**Ordering.** This addendum is committed before any attempt toward the target below. No run toward it starts before this commit (its hash is
+recorded in `~/projects/worklane-notes/addenda-2026-11-09.md`). Every earlier arm and its result stays reported exactly as it was:
+- pilot;
+- round 2;
+- strict, named and goal arms;
+- the isolated rerun;
+- the circuit-compiler first compiles;
+- return-based tables;
+- the 1 m goal-arm success rule.
+
+### Target and success bar
+- **Hopper, scored on distance.** `Hopper-v5` (pinned version, 1000-step episodes, the existing 100 scoring episodes). The score is the
+  **mean forward distance**, not return.
+  - An attempt **passes at >= 3 m**.
+  - This closes the stand-still game: a controller that collects the healthy reward without moving scores 0 m.
+- **Walker2d**, added under the same rule: `Walker2d-v5` (the version is pinned in `requirements.txt` and `THIRD_PARTY.md` at the code
+  commit that adds it). It uses the same episode length and scoring-episode count, and an attempt passes at a mean forward distance
+  of >= 3 m.
+- **Arm result.** An arm (model x task x mode x hint level) **meets the target** when **at least 5 of its 10 attempts pass**. The best
+  attempt is reported separately and never stands in for the arm.
+- Return is still reported next to distance in every table.
+
+### Necessity table (produced and committed to `results/` before any claim on this target)
+- **Rows, on both tasks, same scoring episodes:**
+  - the zero-weights (do-nothing) policy;
+  - a random policy;
+  - the highest-return stand-still attempt from the earlier hopper arms (the healthy-reward exploit);
+  - a fall-forward controller (a single fixed lunge);
+  - an open-loop sinusoid gait whose amplitude, frequency and phase are tuned on dev seeds only.
+- **Columns:** mean, median and min forward distance, return, and full-length episode fraction.
+- **Rule:** each simple baseline must fail the 3 m bar meaningfully, with a mean below 1.5 m (half the bar).
+- PPO, trained on the default reward at the existing budget, is reported as an upper reference, not as a baseline that must fail.
+- If the open-loop gait passes 3 m, that is reported and the bar is raised by a further dated addendum before any claim is made.
+
+### Learning signal
+- **Partial credit = mean forward distance** (continuous, negative allowed). It is reported for every attempt, so near-misses are
+  visible.
+- **Curriculum through circuit-spec gait hints** (`docs/circuit-spec.md`, `circuitc/`). The hint levels are fixed text, frozen with a
+  SHA-256 in `prompts/` before the first attempt:
+  - **H0**: no hint (the goal prompt with the distance objective);
+  - **H1**: the circuit-spec template with a named oscillator / phase structure for the gait;
+  - **H2**: H1 plus admissible ranges for frequency and joint amplitudes.
+- Every arm runs at each level in that order. The result is the lowest level at which the arm meets the target, plus the partial-credit
+  curve over the levels.
+
+### What changes and what stays
+- **Changes:**
+  - hopper scoring for this target (distance, not return);
+  - Walker2d-v5 is added, with its actor shape for weights mode taken from the env;
+  - the hint-level prompts;
+  - the necessity table.
+- **Stays:**
+  - isolation (fresh empty dir under `/var/tmp` with the pre-flight check);
+  - models and attempt counts;
+  - sampling as before;
+  - the scoring harness and rlimits;
+  - controllers through `sim-run`, local models through `gpu-run`;
+  - the contamination labelling;
+  - CRITIQUES tracking.
+
+## Addendum 2026-11-09 (b): CPG track (owner decision)
+Pre-registration in [docs/prereg-2026-11-09-cpg.md](docs/prereg-2026-11-09-cpg.md), committed before any code, prompt,
+baseline or attempt of the track. The LLM writes an oscillator / CPG network through `circuitc` (format `cpg-v1`);
+target: Hopper-v5, then Walker2d-v5, at least 3 m forward without falling; hint levels H2 -> H1 -> H0; timebox ends 2026-11-23.
+Result (2026-11-09): all 120 pre-registered Claude attempts ran; the target was not met (see CRITIQUES.md, CPG track;
+numbers in `results/cpg_report.md`).
+
+## Addendum 2026-11-10: CPG feedback arm (owner decision)
+Pre-registration in [docs/prereg-2026-11-10-cpg-feedback.md](docs/prereg-2026-11-10-cpg-feedback.md), committed before any
+code, prompt, baseline or attempt of the arm: the model revises its cpg-v1 design 5 times from a fixed dev-seed rollout
+summary; round-5 design scored on held-out seeds; baselines: the no-feedback arm and random-search proposers with the same
+budget. The no-feedback result stays as reported.
+Result (2026-11-10): all 240 pre-registered calls ran; the arm-level target was not met on either task, but 2 of 10 Opus
+hopper attempts pass the 3 m bar (see CRITIQUES.md, CPG feedback arm; numbers in `results/cpg_feedback_report.md`).

@@ -1,0 +1,36 @@
+{
+ "id": "claude_cartpole_named_controller_01_iso2",
+ "task": "cartpole",
+ "mode": "controller",
+ "model": "claude-sonnet-5-5",
+ "interface": "claude -p (subscription CLI), fresh empty cwd under /var/tmp, no tools, no MCP",
+ "arm": "named",
+ "prompt_version": "v1",
+ "prompt_sha256": "2effbfe8d24504bb7d76ef445a01c7d20c65b9dd79d176e775ac8300f3bb0bf6",
+ "template_sha256": {
+  "template_v1.md": "480102edd7115d88bf2ee4445f13f539a96745c2ac34fbc101240f04a93ec82d",
+  "task_cartpole_v1.md": "ac9a4a5cb1c6ec40beefdc520d533151174fb5da91521886b7a70a7690a601e5",
+  "format_controller_v1.md": "c9f5a7c783540dcd2b23f4198cccf7a6d1795dc49019cfa72a05116d5e203328"
+ },
+ "created": "2026-11-07T01:12:33.986879+00:00",
+ "attempt_index": 1,
+ "isolation": "fresh empty dir under /var/tmp; pre-flight: no CLAUDE.md / CLAUDE.local.md / .claude in cwd or any ancestor; batch pre-flight = isolation probe reported no instruction file and no email",
+ "claude_flags": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "claude_env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ }
+}

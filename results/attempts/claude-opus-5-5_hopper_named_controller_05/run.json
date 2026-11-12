@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:27:10-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 58.852130651474,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":57639,\"stop_reason\":\"end_turn\",\"session_id\":\"1d07a032-8da7-477d-8f55-3e490767f09f\",\"total_cost_usd\":0.11777216,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":166,\"cache_read_input_tokens\":3248,\"output_tokens\":5254,\"output_tokens_details\":{\"thinking_tokens\":4084},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":5254,\"cache_read_input_tokens\":3248,\"cache_creation_input_tokens\":166,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":166},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":5254,\"cacheReadInputTokens\":3248,\"cacheCreationInputTokens\":166,\"webSearchRequests\":0,\"costUSD\":0.11777216,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":4084,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a conservative balance controller. It does not try to hop. A blind-tuned hopping gait usually falls within a few dozen steps and scores about 50\u2013200. Staying healthy for all 1000 steps scores about 1000 per episode. I couldn't run it, so the gains below come from rough physics estimates, not tuning.\\n\\n**How it works**\\n\\n- **Hip and knee:** Stiff PD control holds the thigh and leg joints at 0, the straight-leg pose they start in. Both joint ranges end at 0, so the joint limit braces one side and the PD controller braces the other. The body then behaves like one rigid inverted pendulum standing on the flat foot.\\n- **Ankle:** PD control on the whole-body lean, with lean = torso + thigh + leg angle. The joint axes point along \u2212y, so a positive angle means leaning backward. A positive foot torque pushes the body forward, which is why the foot action has the same sign as the lean.\\n- **Gain estimates:** The total mass is about 15.8 kg with the centre of mass about 0.7 m up. Gravity therefore needs about 108 Nm per radian, which is 0.54 in action units with gear 200. I chose Kp = 2.0, which gives a stiffness margin of roughly 4\u00d7. Kd = 0.5 is about critical damping for a body inertia around the ankle of roughly 9 kg\u00b7m\u00b2.\\n- **Foot limit:** The foot torque is capped at \u00b10.15. A larger ankle torque would lift the toe or heel off the ground.\\n\\n```python\\nimport numpy as np\\n\\n# Joint PD gains (action units; actuator gear = 200)\\nKP_JOINT = 5.0\\nKD_JOINT = 0.25\\n\\n# Ankle balance gains on whole-body lean (positive lean = leaning back)\\nKP_LEAN = 2.0\\nKD_LEAN = 0.5\\nFOOT_LIMIT = 0.15\\n\\nTHIGH_TARGET = 0.0\\nLEG_TARGET = 0.0\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    o = np.asarray(obs, dtype=float)\\n    torso, thigh, leg = o[1], o[2], o[3]\\n    torso_w, thigh_w, leg_w = o[7], o[8], o[9]\\n\\n    # Keep hip and knee rigid and straight\\n    a_thigh = -KP_JOINT * (thigh - THIGH_TARGET) - KD_JOINT * thigh_w\\n    a_leg = -KP_JOINT * (leg - LEG_TARGET) - KD_JOINT * leg_w\\n\\n    # Ankle strategy: balance the rigid body over the flat foot\\n    lean = torso + thigh + leg\\n    lean_w = torso_w + thigh_w + leg_w\\n    a_foot = KP_LEAN * lean + KD_LEAN * lean_w\\n    a_foot = float(np.clip(a_foot, -FOOT_LIMIT, FOOT_LIMIT))\\n\\n    a = np.clip([a_thigh, a_leg, a_foot], -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\\n\\nIf it works as intended, each episode should run the full 1000 steps and score just under 1000. The forward-velocity term is close to zero and the action penalty is negligible. The main risk is the ankle sign. If my reading of the joint axes is wrong, the hopper will tip within the first second, and flipping the sign of `KP_LEAN` and `KD_LEAN` would fix it.\",\"ttft_ms\":47397,\"type\":\"result\",\"duration_ms\":57727,\"uuid\":\"4446ad4d-ba73-4eae-ae33-997fe361a2fa\",\"ttft_stream_ms\":1290,\"time_to_request_ms\":79,\"first_content_frame_ms\":1290,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 166,
+  "cache_read_input_tokens": 3248,
+  "output_tokens": 5254,
+  "output_tokens_details": {
+   "thinking_tokens": 4084
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 166,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 5254,
+    "cache_read_input_tokens": 3248,
+    "cache_creation_input_tokens": 166,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 166
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

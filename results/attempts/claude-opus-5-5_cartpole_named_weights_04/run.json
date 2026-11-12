@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:43:49-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 39.804829120635986,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":38070,\"stop_reason\":\"end_turn\",\"session_id\":\"da01d998-8113-445f-98c4-c30101c8fcbd\",\"total_cost_usd\":0.08853789999999999,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":166,\"cache_read_input_tokens\":3165,\"output_tokens\":3926,\"output_tokens_details\":{\"thinking_tokens\":2763},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3926,\"cache_read_input_tokens\":3165,\"cache_creation_input_tokens\":166,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":166},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3926,\"cacheReadInputTokens\":3165,\"cacheCreationInputTokens\":166,\"webSearchRequests\":0,\"costUSD\":0.08853789999999999,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2763,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I treated the network as a linear state-feedback controller. One tanh unit runs in its near-linear range and the other 15 units are zeroed out. I couldn't run anything, so this is untested, and the gains come from rough estimates rather than the exact model.\\n\\n**How I got the gains**\\n\\n1. **Sign convention.** The pole hinge rotates about the y-axis, so I took positive angle to mean the pole leans toward +x. A positive force pushes the cart toward +x. If this sign is wrong, the controller will fail immediately.\\n2. **Approximate model.** From the default MuJoCo geometry I estimated:\\n   - cart mass about 10.5 kg and pole mass about 5 kg\\n   - motor gear of 100, so the action is scaled to newtons\\n   - linearised dynamics:\\n     - pole: \u03b8\u0308 \u2248 32.3\u00b7\u03b8 \u2212 21.3\u00b7u\\n     - cart: \u1e8d \u2248 8.5\u00b7u \u2212 3.1\u00b7\u03b8\\n3. **Pole placement.** I put the closed-loop poles at s = \u22121.5, \u22121.5, \u22126 and \u22126.\\n   - That gives u \u2248 0.388\u00b7x + 0.647\u00b7\u1e8b + 5.16\u00b7\u03b8 + 0.962\u00b7\u03b8\u0307.\\n   - All four gains are positive. The positive gain on cart position is expected: to move the cart left, it first pushes right so the pole tips left.\\n   - The fastest pole times the step length is 6 \u00d7 0.04 = 0.24, which should be small enough for the discrete steps to stay stable.\\n4. **Fitting it into the network.**\\n   - Hidden unit 0 gets 0.05 times the gains, so its input stays small and tanh is almost linear.\\n   - The output weight for that unit is 20, which undoes the 0.05 scaling.\\n   - The other units and all biases are zero.\\n   - The angle gain (5.16) is well above the minimum needed to beat gravity (about 1.5), so the controller should tolerate some error in my mass estimates.\\n\\n```json\\n{\\\"W1\\\": [[0.0194, 0.258, 0.03235, 0.0481], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]], \\\"b1\\\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], \\\"W2\\\": [[20.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]], \\\"b2\\\": [0.0]}\\n```\",\"ttft_ms\":29300,\"type\":\"result\",\"duration_ms\":38179,\"uuid\":\"ec30e1f6-2023-4e2d-b2e7-5a51c5631010\",\"ttft_stream_ms\":1658,\"time_to_request_ms\":111,\"first_content_frame_ms\":1659,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 166,
+  "cache_read_input_tokens": 3165,
+  "output_tokens": 3926,
+  "output_tokens_details": {
+   "thinking_tokens": 2763
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 166,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3926,
+    "cache_read_input_tokens": 3165,
+    "cache_creation_input_tokens": 166,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 166
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

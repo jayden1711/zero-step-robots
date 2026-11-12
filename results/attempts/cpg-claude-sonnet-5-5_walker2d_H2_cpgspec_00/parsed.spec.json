@@ -1,0 +1,18 @@
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159265}
+ ],
+ "couplings": [
+  {"from": "L", "to": "R", "weight": 3.0, "phase_lag": 3.14159265},
+  {"from": "R", "to": "L", "weight": 3.0, "phase_lag": 3.14159265}
+ ],
+ "bias": {},
+ "units": [
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": -1.0, "obs[10]": -0.2},
+   "range": 3.0, "tol": 0.05, "to": {"a0": 1.0, "a3": 1.0}},
+  {"type": "linear", "name": "right_rhythm", "inputs": {"sin(R)": 1.0},
+   "range": 1.5, "tol": 0.05, "to": {"a0": 0.6, "a1": -0.5}},
+  {"type": "linear", "name": "left_rhythm", "inputs": {"sin(L)": 1.0},
+   "range": 1.5, "tol": 0.05, "to": {"a3": 0.6, "a4": -0.5}}
+ ]}

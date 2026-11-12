@@ -1,0 +1,44 @@
+[
+ {
+  "unit": 0,
+  "name": "balance",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 1,
+  "name": "right_rhythm",
+  "type": "linear",
+  "scale": 0.25819888974716115,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 2,
+  "name": "left_rhythm",
+  "type": "linear",
+  "scale": 0.25819888974716115,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "oscillator": "R",
+  "index": 0,
+  "freq_hz": 1.0,
+  "input_columns": [
+   17,
+   18
+  ]
+ },
+ {
+  "oscillator": "L",
+  "index": 1,
+  "freq_hz": 1.0,
+  "input_columns": [
+   19,
+   20
+  ]
+ }
+]

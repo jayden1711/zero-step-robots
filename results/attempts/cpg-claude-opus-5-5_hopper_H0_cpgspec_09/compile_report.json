@@ -1,0 +1,59 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_servo_hip",
+  "type": "linear",
+  "scale": 0.3872983346207417,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 1,
+  "name": "knee_lock",
+  "type": "linear",
+  "scale": 0.3872983346207417,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 2,
+  "name": "ankle_balance",
+  "type": "linear",
+  "scale": 0.19999999999999998,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 3,
+  "name": "hop_pulse",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "anchor",
+  "index": 0,
+  "freq_hz": 0.001,
+  "input_columns": [
+   11,
+   12
+  ]
+ },
+ {
+  "oscillator": "ramp",
+  "index": 1,
+  "freq_hz": 0.001,
+  "input_columns": [
+   13,
+   14
+  ]
+ },
+ {
+  "oscillator": "cpg",
+  "index": 2,
+  "freq_hz": 2.5,
+  "input_columns": [
+   15,
+   16
+  ]
+ }
+]

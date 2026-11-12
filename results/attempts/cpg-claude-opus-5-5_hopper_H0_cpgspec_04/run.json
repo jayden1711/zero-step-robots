@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-09T18:29:26-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 494.2652750015259,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":493422,\"stop_reason\":\"end_turn\",\"session_id\":\"45211c5a-5d3f-4cf4-b589-e1f9497e8a16\",\"total_cost_usd\":0.9462659999999999,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":3930,\"output_tokens\":47206,\"output_tokens_details\":{\"thinking_tokens\":45657},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":47206,\"cache_read_input_tokens\":3930,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":47206,\"cacheReadInputTokens\":3930,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.9462659999999999,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":45657,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller is untested, as the setup requires, so it may not reach the 3 m threshold. It is a hand-derived Raibert-style toe-hopper built on the Hopper's joint limits (thigh and knee can only go to \u2264 0) and its long, heavy foot.\\n\\n**How it works:**\\n\\n- **Clock:** a single 2 Hz oscillator `P` sets the hop rhythm. It starts at 3.3 rad so the robot settles for about 0.15 s before the first push.\\n- **Push-off (ankle):** while cos P > 0.5, a reflex applies up to \u22120.8 of plantar-flexion torque. This rolls the foot onto its toe, lifts the robot into a hop and adds a backward pitch impulse.\\n- **Ankle posture (always on):**\\n  - PD that keeps the foot level relative to the ground. It has no effect in stance, where the foot is already flat, and levels the foot in flight.\\n  - Mild stiffness on the shank lean.\\n  - A speed term 0.15\u00b7(0.8 \u2212 v) that leans the body forward when it is slow.\\n- **Hip, flight window (phase near 1.2 rad):** gated PD on the hip angle toward q1d = 0.2\u00b7v \u2212 0.21. This places the foot forward when fast and back when slow, which is the Raibert foot-placement rule.\\n- **Hip, stance window (phase near 3.9 rad):** gated stiff torso servo toward \u03b8 = \u22120.04.\\n- **Gating:** each window is made from a pair of reflex units, G\u00b7[tanh(gate + \u03b5\u00b7e) \u2212 tanh(gate)]. This gives a phase-windowed linear gain, and the two units cancel exactly outside the window.\\n- **Hip, always on:** a weak torso servo for safety.\\n- **Knee:** stiff PD near \u22120.15 rad for shock absorption.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"P\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 3.3}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.08, \\\"a1\\\": -0.3, \\\"a2\\\": -0.25},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_base\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -2.0, \\\"obs[7]\\\": -0.15},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"hip_flight_gated\\\", \\\"inputs\\\": {\\\"obs[5]\\\": 0.125, \\\"obs[2]\\\": -0.625, \\\"obs[8]\\\": -0.0375, \\\"cos(P)\\\": 0.543, \\\"sin(P)\\\": 1.398},\\n    \\\"threshold\\\": 1.63125, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": 4.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"hip_flight_cancel\\\", \\\"inputs\\\": {\\\"cos(P)\\\": 0.543, \\\"sin(P)\\\": 1.398},\\n    \\\"threshold\\\": 1.5, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": -4.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"torso_stance_gated\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -1.25, \\\"obs[7]\\\": -0.0875, \\\"cos(P)\\\": -0.726, \\\"sin(P)\\\": -0.688},\\n    \\\"threshold\\\": 1.05, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": 4.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"torso_stance_cancel\\\", \\\"inputs\\\": {\\\"cos(P)\\\": -0.726, \\\"sin(P)\\\": -0.688},\\n    \\\"threshold\\\": 1.0, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": -4.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_pd\\\", \\\"inputs\\\": {\\\"obs[3]\\\": -2.0, \\\"obs[9]\\\": -0.15},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_pd_speed\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.2, \\\"obs[2]\\\": -1.2, \\\"obs[3]\\\": -1.2, \\\"obs[4]\\\": -1.8, \\\"obs[10]\\\": -0.08, \\\"obs[5]\\\": -0.15},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"toe_pushoff\\\", \\\"inputs\\\": {\\\"cos(P)\\\": 1.0},\\n    \\\"threshold\\\": 0.5, \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a2\\\": -0.4}}\\n ]}\\n```\",\"ttft_ms\":481628,\"type\":\"result\",\"duration_ms\":493459,\"uuid\":\"8fcec6e7-31bb-4881-bcba-4f388a4814ff\",\"ttft_stream_ms\":1243,\"time_to_request_ms\":31,\"first_content_frame_ms\":1244,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 3930,
+  "output_tokens": 47206,
+  "output_tokens_details": {
+   "thinking_tokens": 45657
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 47206,
+    "cache_read_input_tokens": 3930,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,35 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_attitude_speed_swing",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 1,
+  "name": "knee_spring_thrust",
+  "type": "linear",
+  "scale": 0.19999999999999998,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 2,
+  "name": "ankle_balance_posture_push",
+  "type": "linear",
+  "scale": 0.12,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 2.5
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.5,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

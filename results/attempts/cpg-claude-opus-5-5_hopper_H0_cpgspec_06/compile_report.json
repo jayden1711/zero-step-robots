@@ -1,0 +1,59 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_torso_pd",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 1,
+  "name": "knee_pd_ramped",
+  "type": "linear",
+  "scale": 0.1632993161855452,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 2,
+  "name": "ankle_pd_speed_ramped",
+  "type": "linear",
+  "scale": 0.15,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 3,
+  "name": "gated_hop_drive",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "Z",
+  "index": 0,
+  "freq_hz": 0.0,
+  "input_columns": [
+   11,
+   12
+  ]
+ },
+ {
+  "oscillator": "R",
+  "index": 1,
+  "freq_hz": 0.1,
+  "input_columns": [
+   13,
+   14
+  ]
+ },
+ {
+  "oscillator": "C",
+  "index": 2,
+  "freq_hz": 2.2,
+  "input_columns": [
+   15,
+   16
+  ]
+ }
+]

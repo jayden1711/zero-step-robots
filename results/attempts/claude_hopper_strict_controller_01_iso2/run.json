@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:15:09-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 13.662937641143799,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":12474,\"stop_reason\":\"end_turn\",\"session_id\":\"53c90db9-e12d-4cfd-99ec-500dd4c1d291\",\"total_cost_usd\":0.03308206,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":5353,\"output_tokens\":1395,\"output_tokens_details\":{\"thinking_tokens\":987},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1395,\"cache_read_input_tokens\":5353,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1395,\"cacheReadInputTokens\":5353,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.03308206,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":987,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is an untested guess. The observation layout matches a planar hopper, so I assumed these indices:\\n\\n- `obs[0]` is torso height.\\n- `obs[1]` is torso pitch.\\n- `obs[7]` is torso angular velocity.\\n- `obs[5]` is forward velocity.\\n\\nThe controller is a PD loop on torso pitch. It drives the foot (and, more weakly, the hip) to counter a forward lean. It adds a small term on forward speed and keeps the knee lightly stiff. I could not verify the torque signs, so the signs rest on my reasoning about reaction torques.\\n\\n```python\\nimport numpy as np\\n\\ndef reset():\\n    pass\\n\\ndef act(obs):\\n    ang = obs[1]\\n    w = obs[7]\\n    vx = obs[5]\\n    leg_ang = obs[3]\\n    leg_w = obs[9]\\n\\n    foot = 6.0 * ang + 0.6 * w + 0.15 * vx\\n    thigh = 2.5 * ang + 0.3 * w + 0.1 * vx\\n    leg = -1.0 * leg_ang - 0.05 * leg_w\\n\\n    a = np.clip([thigh, leg, foot], -1.0, 1.0)\\n    return [float(x) for x in a]\\n```\",\"ttft_ms\":9655,\"type\":\"result\",\"duration_ms\":12539,\"uuid\":\"b7c0afda-93d6-487f-a293-f5bfd85ff405\",\"ttft_stream_ms\":980,\"time_to_request_ms\":65,\"first_content_frame_ms\":980,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 5353,
+  "output_tokens": 1395,
+  "output_tokens_details": {
+   "thinking_tokens": 987
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1395,
+    "cache_read_input_tokens": 5353,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

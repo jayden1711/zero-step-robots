@@ -1,0 +1,129 @@
+{
+ "target": "cpg",
+ "obs_dim": 17,
+ "act_dim": 6,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "R",
+   "freq_hz": 1.0,
+   "phase0": 0.0
+  },
+  {
+   "name": "L",
+   "freq_hz": 1.0,
+   "phase0": 3.14159
+  }
+ ],
+ "couplings": [
+  {
+   "from": "R",
+   "to": "L",
+   "weight": 2.0,
+   "phase_lag": 3.14159
+  },
+  {
+   "from": "L",
+   "to": "R",
+   "weight": 2.0,
+   "phase_lag": 3.14159
+  }
+ ],
+ "bias": {
+  "a0": 0.15,
+  "a3": 0.15,
+  "a1": 0.1,
+  "a4": 0.1
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "R_thigh_rhythm",
+   "inputs": {
+    "cos(R)": 1.0
+   },
+   "range": 1.0,
+   "tol": 0.02,
+   "to": {
+    "a0": -0.5
+   }
+  },
+  {
+   "type": "linear",
+   "name": "R_knee_rhythm",
+   "inputs": {
+    "cos(R)": 0.5,
+    "sin(R)": -0.25
+   },
+   "range": 0.6,
+   "tol": 0.02,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "L_thigh_rhythm",
+   "inputs": {
+    "cos(L)": 1.0
+   },
+   "range": 1.0,
+   "tol": 0.02,
+   "to": {
+    "a3": -0.5
+   }
+  },
+  {
+   "type": "linear",
+   "name": "L_knee_rhythm",
+   "inputs": {
+    "cos(L)": 0.5,
+    "sin(L)": -0.25
+   },
+   "range": 0.6,
+   "tol": 0.02,
+   "to": {
+    "a4": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "torso_balance_speed",
+   "inputs": {
+    "obs[1]": 1.5,
+    "obs[10]": 0.3,
+    "obs[8]": 0.15
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a0": -1.0,
+    "a3": -1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "R_foot_hold",
+   "inputs": {
+    "obs[4]": 1.0
+   },
+   "range": 1.0,
+   "tol": 0.05,
+   "to": {
+    "a2": -1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "L_foot_hold",
+   "inputs": {
+    "obs[7]": 1.0
+   },
+   "range": 1.0,
+   "tol": 0.05,
+   "to": {
+    "a5": -1.0
+   }
+  }
+ ]
+}

@@ -1,0 +1,28 @@
+Round 1 still fell backward: the torso angle went to about -0.8 rad and the walker sat down. I'm strengthening the torso feedback on both thighs and shrinking the rhythmic thigh swing, so balance dominates over stepping. I'm also stiffening the ankles a little and keeping the knee settings.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 1.5, "phase_lag": 3.14159},
+  {"from": "L", "to": "R", "weight": 1.5, "phase_lag": 3.14159}
+ ],
+ "bias": {"a0": 0.15, "a3": 0.15, "a1": 0.3, "a4": 0.3},
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"sin(R)": 0.3, "obs[1]": -3.0, "obs[10]": -0.4},
+   "range": 6.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "thighL", "inputs": {"sin(L)": 0.3, "obs[1]": -3.0, "obs[10]": -0.4},
+   "range": 6.0, "tol": 0.05, "to": {"a3": 1.0}},
+  {"type": "reflex", "name": "kneeR", "inputs": {"sin(R)": 1.0}, "threshold": 0.0,
+   "sharpness": 3.0, "to": {"a1": -0.5}},
+  {"type": "reflex", "name": "kneeL", "inputs": {"sin(L)": 1.0}, "threshold": 0.0,
+   "sharpness": 3.0, "to": {"a4": -0.5}},
+  {"type": "linear", "name": "footR", "inputs": {"obs[4]": -1.0, "obs[13]": -0.08},
+   "range": 2.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "footL", "inputs": {"obs[7]": -1.0, "obs[16]": -0.08},
+   "range": 2.0, "tol": 0.05, "to": {"a5": 1.0}}
+ ]}
+```

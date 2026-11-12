@@ -1,0 +1,98 @@
+{
+ "target": "cpg",
+ "obs_dim": 11,
+ "act_dim": 3,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "hop",
+   "freq_hz": 2.2,
+   "phase0": 0.0
+  }
+ ],
+ "couplings": [],
+ "bias": {
+  "a0": -0.25,
+  "a1": -0.3
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "torso_balance",
+   "inputs": {
+    "obs[1]": -7.0,
+    "obs[7]": -0.8,
+    "obs[5]": -0.1
+   },
+   "range": 4.0,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "thigh_posture",
+   "inputs": {
+    "obs[2]": -1.5,
+    "obs[8]": -0.1
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "leg_posture",
+   "inputs": {
+    "obs[3]": -1.5,
+    "obs[9]": -0.1
+   },
+   "range": 4.0,
+   "tol": 0.05,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_posture",
+   "inputs": {
+    "obs[4]": -2.0,
+    "obs[10]": -0.1
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "push_thrust",
+   "inputs": {
+    "sin(hop)": 1.0
+   },
+   "threshold": 0.0,
+   "sharpness": 2.0,
+   "to": {
+    "a1": 0.5,
+    "a2": 0.25
+   }
+  },
+  {
+   "type": "linear",
+   "name": "swing_rhythm",
+   "inputs": {
+    "cos(hop)": 1.0
+   },
+   "range": 1.0,
+   "tol": 0.01,
+   "to": {
+    "a0": 0.25
+   }
+  }
+ ]
+}

@@ -1,0 +1,35 @@
+[
+ {
+  "unit": 0,
+  "name": "balance",
+  "type": "linear",
+  "scale": 0.06454972243679029,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 6.0
+ },
+ {
+  "unit": 1,
+  "name": "leg_rhythm",
+  "type": "linear",
+  "scale": 0.2041241452319315,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.2
+ },
+ {
+  "unit": 2,
+  "name": "thigh_rhythm",
+  "type": "linear",
+  "scale": 0.2041241452319315,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.2
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.0,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

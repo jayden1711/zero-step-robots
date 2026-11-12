@@ -1,0 +1,71 @@
+[
+ {
+  "unit": 0,
+  "name": "right_hip_pd_balance",
+  "type": "linear",
+  "scale": 0.04898979485566356,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 5.0
+ },
+ {
+  "unit": 1,
+  "name": "right_knee_pd",
+  "type": "linear",
+  "scale": 0.04898979485566356,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 5.0
+ },
+ {
+  "unit": 2,
+  "name": "right_foot_flat_pd",
+  "type": "linear",
+  "scale": 0.1224744871391589,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 3,
+  "name": "left_hip_pd_balance",
+  "type": "linear",
+  "scale": 0.04898979485566356,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 5.0
+ },
+ {
+  "unit": 4,
+  "name": "left_knee_pd",
+  "type": "linear",
+  "scale": 0.04898979485566356,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 5.0
+ },
+ {
+  "unit": 5,
+  "name": "left_foot_flat_pd",
+  "type": "linear",
+  "scale": 0.1224744871391589,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 6,
+  "name": "right_pushoff",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 7,
+  "name": "left_pushoff",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "osc",
+  "index": 0,
+  "freq_hz": 1.0,
+  "input_columns": [
+   17,
+   18
+  ]
+ }
+]

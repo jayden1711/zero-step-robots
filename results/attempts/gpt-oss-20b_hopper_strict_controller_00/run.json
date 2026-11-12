@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:44:20-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1000
+ },
+ "seconds": 16.55689835548401,
+ "usage": {
+  "completion_tokens": 1347,
+  "prompt_tokens": 690,
+  "total_tokens": 2037,
+  "prompt_tokens_details": {
+   "cached_tokens": 60
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a controller for a unknown system. Observation: 11 numbers. Indices 5 to 10 clipped to [-10, 10]. The reward per step is 1 (while healthy) + v - 0.001 * sum(actions^2) after clipping. v is change in unobserved x coordinate over step divided by step time. obs[5] is related instantaneous rate of change, but not identical. The system healthy: obs[0] > 0.7; |obs[1]| < 0.2; and obs[2:] strictly inside (-100, 100) before clipping of indices 5-10. So we must maintain these.\n\nGoal: maximize reward; basically we want to keep healthy for as long as possible (max 1000 steps). Also reward per step includes v, which presumably is positive if we move forward in x. So we want to increase v but also avoid large actions that cost 0.001 per squared action.\n\nWe don't know dynamics; but we can attempt a simple heuristic: use obs[5] (rate of change) as proxy for velocity, try to keep it in some target range that ensures healthy state? Maybe we need to keep obs[0] > 0.7 (some height?). obs[1] small.\n\nWe could adopt a PD controller that uses obs[1] to reduce it to zero. Use obs[0] to maintain above threshold. But we don't know what actions affect these variables. Since we cannot see system, we need something generic.\n\nMaybe we can just output zero actions. That ensures minimal cost and maybe the system remains stable? But we need to keep obs[0]>0.7 and |obs[1]|<0.2. If initial state may violate these? initial state has random perturbations up to 0.005 only. So obs[0] presumably is close to some base >0.7, obs[1] close to 0. So zero actions might keep healthy for many steps if the system is stable. But reward includes v; v may be zero if no action. So we get reward ~1 per step. We could get 1000 reward per episode if healthy for 1000 steps.\n\nBut is the system stable with no action? Unknown. Could drift out of bounds quickly. We might need small action to keep healthy.\n\nWe need to consider that v might be positive if action moves forward. But we don't know mapping. So maybe we should simply set action to small positive values? But risk of instability.\n\nBetter approach: use a simple linear policy that outputs actions based on obs[1] and obs[5] to keep stable. Maybe set a[0] = -k1 * obs[1] + k2 * obs[5], a[1] = -k3 * obs[2] (if obs[2] maybe horizontal position?), a[2] = -k4 * obs[3] or something.\n\nBut we don't know semantics. Observations indices 0-10 unknown.\n\nObservations 2-4 maybe angles? 5-10 are clipped rates.\n\nThe system may be a balancing robot or something.\n\nWe can try a simple approach: keep all actions zero. It's safe and might keep healthy. But we also want to maximize reward; we want to keep for as long as possible, but maybe staying healthy for 1000 steps yields 1000 reward, which is good. But maybe there is a way to get more reward by moving forward and getting positive v each step. But if we don't know v sign, we might risk failure.\n\nWe could try to estimate v from obs[5]. If obs[5] is instantaneous rate of change, maybe it's the velocity of the unobserved x coordinate? Possibly. If so, we might use obs[5] to generate action to increase velocity, e.g., a = c * obs[5]. But we don't know mapping. Might lead to runaway.\n\nBetter to be conservative.\n\nThus maybe just zero action.\n\nBut we also have 3 action components. We can set them all zero.\n\nLet's consider the reward per step: 1 + v - 0.001*sum(a^2). If v=0 and a=0, reward = 1. So 1000 steps -> 1000 reward.\n\nIf we do something that increases v, we could get >1 reward per step, but risk instability.\n\nWe could try to do small action to maintain healthy but also get some v. Eg. a = 0.01 * obs[5] or something.\n\nBut unknown.\n\nSince we cannot test, we need to pick something likely safe.\n\nObservations 0 and 1: we need to maintain them. If we use small action, we might keep them stable.\n\nMaybe we can design a simple proportional controller on obs[0] and obs[1] to keep them within thresholds. Suppose obs[0] is height, want >0.7. If obs[0] is slightly above threshold, no action needed. But we can't compute derivative.\n\nWe could set action[0] = -k * (obs[0] - 0.8) to keep at 0.8. But we don't know mapping.\n\nBut we don't know action dimensions mapping to obs. We could assume first action influences obs[0]. But no guarantee.\n\nThus zero action is simplest.\n\nLet's do that.\n\nWe will provide act function returning [0.0, 0.0, 0.0].\n\nAdd optional reset() that does nothing.\n\nWe might add some small noise to actions to increase v? But risk.\n\nI think zero is safe. Let's produce module.",
+ "server_timings": {
+  "cache_n": 60,
+  "prompt_n": 630,
+  "prompt_ms": 437.3,
+  "prompt_per_token_ms": 0.6941269841269841,
+  "prompt_per_second": 1440.6585867825293,
+  "predicted_n": 1347,
+  "predicted_ms": 16093.629,
+  "predicted_per_token_ms": 11.956633729569095,
+  "predicted_per_second": 83.63558026595493
+ }
+}

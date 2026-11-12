@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:42:18-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 49.20350980758667,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":48059,\"stop_reason\":\"end_turn\",\"session_id\":\"b0868fbd-94a0-464c-912d-8e0472d003b6\",\"total_cost_usd\":0.10403272000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":168,\"cache_read_input_tokens\":2516,\"output_tokens\":4636,\"output_tokens_details\":{\"thinking_tokens\":3545},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":168,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4636,\"cache_read_input_tokens\":2516,\"cache_creation_input_tokens\":168,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":168},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4636,\"cacheReadInputTokens\":2516,\"cacheCreationInputTokens\":168,\"webSearchRequests\":0,\"costUSD\":0.10403272000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3545,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller tries to make the hopper stand still and balanced for the full 1000 steps, which earns about 1 point per step (roughly 1000 per episode). It does not try to hop forward. Designing a hopping gait by hand with no way to test it risks early falls, so standing was the safer choice. I have not run it, so the score is unverified.\\n\\n**How it works:** 8 of the 16 hidden units are used, each reading one observation. The input weights are small, so each tanh stays in its near-linear range and passes its value through almost unchanged. The output layer then forms a PD (spring-and-damper) controller:\\n\\n- **Joint holding:** each joint (thigh, leg, foot) is held at angle 0 with a torque of about \u22122\u00b7angle \u2212 0.05\u00b7angular velocity, in action units. This keeps the body nearly rigid. The centre of mass then sits above the foot, which reaches from x = \u22120.13 to 0.26, so the body stays up on its own.\\n- **Torso balance:** feedback on the torso angle and its angular velocity goes to the hip (\u22120.5\u00b7\u03b8) and the ankle (\u22121\u00b7\u03b8). These torques push the body back toward upright before it reaches the 0.2 rad tilt limit.\\n- **Stability of the gains:** the gains are kept moderate (about 400 Nm/rad stiffness, about 10 Nms/rad damping). This keeps the controller stable with the 0.008 s control step.\\n- **Action cost:** the actions stay small, so the action-cost penalty is negligible.\\n\\n```json\\n{\\n\\\"W1\\\": [\\n[0,1,0,0,0,0,0,0,0,0,0],\\n[0,0,1,0,0,0,0,0,0,0,0],\\n[0,0,0,1,0,0,0,0,0,0,0],\\n[0,0,0,0,1,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0.2,0,0,0],\\n[0,0,0,0,0,0,0,0,0.2,0,0],\\n[0,0,0,0,0,0,0,0,0,0.2,0],\\n[0,0,0,0,0,0,0,0,0,0,0.2],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0]\\n],\\n\\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n\\\"W2\\\": [\\n[-0.5,-2.0,0,0,-0.25,-0.25,0,0,0,0,0,0,0,0,0,0],\\n[0,0,-2.0,0,0,0,-0.25,0,0,0,0,0,0,0,0,0],\\n[-1.0,0,0,-2.0,-0.25,0,0,-0.25,0,0,0,0,0,0,0,0]\\n],\\n\\\"b2\\\": [0,0,0]\\n}\\n```\",\"ttft_ms\":38991,\"type\":\"result\",\"duration_ms\":48126,\"uuid\":\"7dbb28ec-0056-41eb-8687-9882a6aa60f6\",\"ttft_stream_ms\":754,\"time_to_request_ms\":64,\"first_content_frame_ms\":754,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 168,
+  "cache_read_input_tokens": 2516,
+  "output_tokens": 4636,
+  "output_tokens_details": {
+   "thinking_tokens": 3545
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 168,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4636,
+    "cache_read_input_tokens": 2516,
+    "cache_creation_input_tokens": 168,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 168
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

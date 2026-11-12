@@ -1,0 +1,41 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_posture_pd",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 1,
+  "name": "knee_pd_rhythm",
+  "type": "linear",
+  "scale": 0.06123724356957945,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 2,
+  "name": "ankle_flat_foot_and_speed",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 3,
+  "name": "ankle_pushoff_pulse",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.5,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

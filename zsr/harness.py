@@ -14,6 +14,8 @@ import numpy as np
 from .policy import load_weights
 from .tasks import DEFAULT_EPISODES, EVAL_SEED0, TASKS, make_env
 
+CLEAN_M = 3.0  # docs/prereg-2026-11-09-cpg.md section 3: clean episode = >= 3 m to the last healthy step
+
 
 class ControllerError(RuntimeError):
     pass
@@ -50,6 +52,7 @@ def run_episode(env, policy, seed: int) -> dict:
     obs, _ = env.reset(seed=seed)
     policy.reset()
     x0 = float(env.unwrapped.data.qpos[0])
+    x_healthy = x0  # root x after the last step that left the system healthy (the falling step is excluded)
     ret, steps, fault = 0.0, 0, None
     while True:
         try:
@@ -60,10 +63,12 @@ def run_episode(env, policy, seed: int) -> dict:
         obs, r, term, trunc, _ = env.step(action.astype(np.float32))
         ret += float(r)
         steps += 1
+        if not term:
+            x_healthy = float(env.unwrapped.data.qpos[0])
         if term or trunc:
             break
     return {"seed": seed, "return": ret, "length": steps, "terminated_early": bool(steps < env.spec.max_episode_steps),
-            "distance": float(env.unwrapped.data.qpos[0]) - x0, "fault": fault}
+            "distance": float(env.unwrapped.data.qpos[0]) - x0, "distance_healthy": x_healthy - x0, "fault": fault}
 
 
 def evaluate(task: str, policy, n_episodes: int = DEFAULT_EPISODES, seed0: int = EVAL_SEED0, variant: str = None) -> dict:
@@ -89,6 +94,12 @@ def evaluate(task: str, policy, n_episodes: int = DEFAULT_EPISODES, seed0: int =
         "mean_length": float(lens.mean()),
         "frac_full_length": float((lens >= t.max_steps).mean()),
         "mean_distance": float(np.mean([e["distance"] for e in eps])),
+        "mean_distance_healthy": float(np.mean([e["distance_healthy"] for e in eps])),
+        "median_distance_healthy": float(np.median([e["distance_healthy"] for e in eps])),
+        "min_distance_healthy": float(np.min([e["distance_healthy"] for e in eps])),
+        "n_clean_3m": int(sum(e["distance_healthy"] >= CLEAN_M for e in eps)),
+        "passes_3m": bool(np.mean([e["distance_healthy"] for e in eps]) >= CLEAN_M
+                          and sum(e["distance_healthy"] >= CLEAN_M for e in eps) * 2 >= n_episodes),
         "n_faults": sum(e["fault"] is not None for e in eps),
         "first_fault": next((e["fault"] for e in eps if e["fault"]), None),
         "episodes": eps,
@@ -110,16 +121,21 @@ def main(argv=None):
     g = ap.add_mutually_exclusive_group(required=True)
     g.add_argument("--weights", help="JSON weight file")
     g.add_argument("--controller", help="Python file defining act(obs)")
+    g.add_argument("--cpg", help="cpg-v1 JSON weight file (zsr/cpg.py)")
     ap.add_argument("--episodes", type=int, default=DEFAULT_EPISODES)
     ap.add_argument("--variant", help="modified-physics variant from zsr/variants.py (default: stock)")
     ap.add_argument("--out", help="write the full result JSON here")
     a = ap.parse_args(argv)
     t0 = time.time()
-    src = a.weights or a.controller
+    src = a.weights or a.controller or a.cpg
     if a.controller:
         limit_resources()
     try:
-        pol = load_weights(a.task, a.weights) if a.weights else PythonController(a.task, a.controller)
+        if a.cpg:
+            from .cpg import load_cpg
+            pol = load_cpg(a.task, a.cpg)
+        else:
+            pol = load_weights(a.task, a.weights) if a.weights else PythonController(a.task, a.controller)
     except Exception as e:
         res = {"task": a.task, "load_error": f"{type(e).__name__}: {e}"}
     else:

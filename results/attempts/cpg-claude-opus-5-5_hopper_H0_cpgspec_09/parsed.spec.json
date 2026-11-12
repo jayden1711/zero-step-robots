@@ -1,0 +1,26 @@
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [
+   {"name": "anchor", "freq_hz": 0.001, "phase0": 0.0},
+   {"name": "ramp", "freq_hz": 0.001, "phase0": 0.0},
+   {"name": "cpg", "freq_hz": 2.5, "phase0": 3.14159}
+ ],
+ "couplings": [
+   {"from": "anchor", "to": "ramp", "weight": 1.5, "phase_lag": -1.5708}
+ ],
+ "bias": {"a0": 0.05, "a1": 0.2, "a2": -0.2},
+ "units": [
+   {"type": "linear", "name": "torso_servo_hip",
+    "inputs": {"obs[1]": 1.0, "obs[7]": 0.12},
+    "range": 1.0, "tol": 0.05, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "knee_lock",
+    "inputs": {"obs[3]": -1.5, "obs[9]": -0.1},
+    "range": 1.0, "tol": 0.05, "to": {"a1": 1.0}},
+   {"type": "linear", "name": "ankle_balance",
+    "inputs": {"obs[1]": 0.4, "obs[2]": 0.4, "obs[3]": 0.4, "obs[4]": -0.6,
+               "obs[7]": 0.06, "obs[8]": 0.06, "obs[9]": 0.06, "obs[10]": -0.06,
+               "obs[5]": -0.1, "sin(ramp)": 0.18},
+    "range": 1.5, "tol": 0.03, "to": {"a2": 1.0}},
+   {"type": "reflex", "name": "hop_pulse",
+    "inputs": {"cos(cpg)": 1.0, "sin(ramp)": 1.0, "obs[1]": -1.5, "obs[2]": -1.5, "obs[3]": -1.5},
+    "threshold": 2.1, "sharpness": 10.0, "to": {"a2": -0.2}}
+ ]}

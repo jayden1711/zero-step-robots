@@ -1,0 +1,59 @@
+# Round 5 (final): keep round 4's forward gait, and stop the thighs collapsing backward
+
+## What round 4 shows
+
+- **The direction is right.** For the first time the robot moved forward, about +0.5 m in every episode.
+- **It collapsed after about 2.5 s ("height too low").** The thighs reached −1.2 rad, the knees −0.86 rad, and the thigh actions were saturated about 70% of the time.
+- **Likely cause: the speed term was too strong.** In the last second the robot sped up (about 0.7 m/s) and leaned forward. The terms −1.2·obs[8] and −3·obs[1] then pushed *both* thighs fully backward. That includes the swing leg, which needed to step forward to catch the body. Its foot never got ahead of the body, and the robot folded down.
+
+## Changes, kept small around round 4
+
+1. **The speed gain drops from −1.2 to −0.6.** The torso target becomes 0.08 − 0.2·v.
+2. **The thigh tracking is stiffer,** with gain 1.5 and damping 0.15, so the oscillator rhythm still drives the swing leg forward when the balance terms grow. The target is unchanged at −0.28 + 0.2·sin φ, so the bias is −0.42 + 0.24 = −0.18. The range is raised to 6 so the unit stays linear.
+3. **Anti-collapse reflex.** When the torso height falls below about 1.12 m, both knees get a strong straightening torque. A +0.4 bias cancels this reflex's resting output, so it does nothing at normal height.
+4. **Weaker swing knee flexion,** −1.1 instead of −1.3, to reduce sinking.
+5. **Ankles and oscillators are unchanged** from round 4. They produced the forward progress.
+
+This design is untested. Each change targets the specific round-4 failure, and the rest of round 4 is kept as it was.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+   {"name": "R", "freq_hz": 1.0, "phase0": 2.2},
+   {"name": "L", "freq_hz": 1.0, "phase0": -0.94}
+ ],
+ "couplings": [
+   {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159},
+   {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a0": -0.18, "a3": -0.18, "a2": 0.32, "a5": 0.32, "a1": 0.4, "a4": 0.4},
+ "units": [
+   {"type": "linear", "name": "R_thigh_track_balance_speed",
+    "inputs": {"sin(R)": 0.3, "obs[2]": -1.5, "obs[11]": -0.15, "obs[1]": -3.0, "obs[10]": -0.3, "obs[8]": -0.6},
+    "range": 6.0, "tol": 0.05, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "R_knee_pd",
+    "inputs": {"obs[3]": -1.6, "obs[12]": -0.1},
+    "range": 3.0, "tol": 0.05, "to": {"a1": 1.0}},
+   {"type": "reflex", "name": "R_knee_swing_flex",
+    "inputs": {"cos(R)": 0.955, "sin(R)": -0.296}, "threshold": 0.54, "sharpness": 6.0,
+    "to": {"a1": -1.1}},
+   {"type": "linear", "name": "R_ankle_pd_speed",
+    "inputs": {"obs[4]": -1.2, "obs[13]": -0.1, "obs[8]": -0.3},
+    "range": 3.0, "tol": 0.05, "to": {"a2": 1.0}},
+   {"type": "linear", "name": "L_thigh_track_balance_speed",
+    "inputs": {"sin(L)": 0.3, "obs[5]": -1.5, "obs[14]": -0.15, "obs[1]": -3.0, "obs[10]": -0.3, "obs[8]": -0.6},
+    "range": 6.0, "tol": 0.05, "to": {"a3": 1.0}},
+   {"type": "linear", "name": "L_knee_pd",
+    "inputs": {"obs[6]": -1.6, "obs[15]": -0.1},
+    "range": 3.0, "tol": 0.05, "to": {"a4": 1.0}},
+   {"type": "reflex", "name": "L_knee_swing_flex",
+    "inputs": {"cos(L)": 0.955, "sin(L)": -0.296}, "threshold": 0.54, "sharpness": 6.0,
+    "to": {"a4": -1.1}},
+   {"type": "linear", "name": "L_ankle_pd_speed",
+    "inputs": {"obs[7]": -1.2, "obs[16]": -0.1, "obs[8]": -0.3},
+    "range": 3.0, "tol": 0.05, "to": {"a5": 1.0}},
+   {"type": "reflex", "name": "low_height_knee_extend",
+    "inputs": {"obs[0]": -1.0}, "threshold": -1.12, "sharpness": 25.0,
+    "to": {"a1": 0.4, "a4": 0.4}}
+ ]}
+```

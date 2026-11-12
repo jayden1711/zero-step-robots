@@ -1,0 +1,11 @@
+This controller tries to stand still and balanced for all 1000 steps. That earns about 1 per step, so roughly 1000 per episode. It does not try to hop forward: a hand-written gait with no way to test it is much more likely to fall early and lose most of that.
+
+**How it works.** Three hidden units each act as one feedback controller. Their inputs are scaled so they stay in the near-linear part of tanh. The other 13 units are all zeros.
+
+- **Hip (thigh torque).** Keeps the torso upright: torque = 1.0·(torso angle) + 0.06·(torso angular velocity). A positive hip torque turns the torso negative, so the torso is pushed back toward 0. This holds whichever direction MuJoCo's −y hinge axes make positive.
+- **Knee (leg torque).** Holds the leg straight: torque = −1.0·(leg angle) − 0.05·(leg angular velocity). A straight leg sits at the joint limit and carries the weight along its length.
+- **Ankle (foot torque).** Balances the whole body over the foot. The leg's angle in the world is φ = torso angle + thigh angle + leg angle. Torque = 3·φ + 0.5·(rate of change of φ). This is enough to beat gravity's toppling torque (about 90 Nm/rad against 600 Nm/rad from the 200× gear) and is close to critically damped. It stays small enough that the foot shouldn't tip for small disturbances.
+
+```json
+{"W1": [[0, 0.5, 0, 0, 0, 0, 0, 0.03, 0, 0, 0], [0, 0, 0, -0.5, 0, 0, 0, 0, 0, -0.025, 0], [0, 0.6, 0.6, 0.6, 0, 0, 0, 0.1, 0.1, 0.1, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "b1": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "W2": [[2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 2.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 0, 5.0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]], "b2": [0, 0, 0]}
+```

@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:43:27-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1007
+ },
+ "seconds": 19.769198417663574,
+ "usage": {
+  "completion_tokens": 1532,
+  "prompt_tokens": 636,
+  "total_tokens": 2168,
+  "prompt_tokens_details": {
+   "cached_tokens": 631
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a controller for inverted pendulum. Classic control problem. A simple PD controller on the pole angle and cart position to keep pole upright. Could use linear quadratic regulator (LQR). But we cannot compute matrices offline? We can precompute LQR gains offline for the system parameters. But we can approximate with simple PD. Use state feedback: u = -k_p * theta - k_d * theta_dot - k_x * x - k_v * x_dot. We'll choose constants by some reasoning.\n\nInverted pendulum dynamics: cart mass m, pole mass Mp, length L, gravity g=9.8. We need to approximate. But we can choose simple coefficients. For example: k_theta = 20, k_theta_dot = 2, k_x = 1, k_v = 0.5. But must ensure within action range [-3,3].\n\nBetter to choose small gains: maybe k_theta=8, k_theta_dot=1.5, k_x=1, k_v=0.5. This may keep within [-3,3].\n\nAlternatively we can use LQR computed offline: for cart-pole typical parameters: mass cart 0.5 kg, mass pole 0.2 kg, length 0.3 m, gravity 9.8. Gains might be around [ -1.0, -3.0, -0.5, -2.0] for state vector [x, x_dot, theta, theta_dot] but we want action. But we can just use a simple PD.\n\nLet's design: u = - (k1 * theta + k2 * theta_dot + k3 * x + k4 * x_dot). We must clamp to [-3, 3].\n\nSet k1=10, k2=1.5, k3=0.5, k4=0.1. Let's test: worst-case theta ~0.2, theta_dot ~some 10 rad/s? But small. But x can be large up to maybe 3 m? The cart may go outside? But environment may clip? The cart position not bounded? The cart may drift, but the angle constraint will kill. But we need to keep cart near zero to keep angle small. So k3 high to push cart back.\n\nLet's use k1=15, k2=2, k3=0.5, k4=0.05. This might produce force up to maybe 15*0.2=3, plus other terms may add. Might exceed 3. We can clamp. The action will be clipped to [-3,3].\n\nAlso maybe use tanh to keep within bounds. But easier to just clip.\n\nThus act(obs): x, theta, x_dot, theta_dot = obs; compute u. Return [u]. But need to clamp.\n\nAlso define reset() as empty.\n\nBetter to also add small anti-windup? Not needed.\n\nAlso we might add bias term to correct for static offset due to gravity? Not needed.\n\nBut we may need to include a small term to counter gravity: because pole tends to fall due to gravity. The control should apply force to keep it upright. The PD on theta and theta_dot may handle.\n\nBut we might also add bias to maintain zero position.\n\nOk.\n\nWe can also use a simple integral of angle to reduce steady-state offset. But integral state not available. But we can keep internal state for integral of theta, but we need to reset at episode start. That may help. But maybe not necessary.\n\nOk, propose:\n\nmodule-level variable integral_theta = 0.0\n\ndef act(obs):\n    global integral_theta\n    x, theta, x_dot, theta_dot = obs\n    integral_theta += theta * 0.04 # dt\n    u = -k1*theta - k2*theta_dot - k3*x - k4*x_dot + k5*integral_theta\n    return [np.clip(u, -3, 3)]\n\nk5 maybe small 0.05.\n\nDefine reset(): integral_theta=0.0\n\nBut integral_theta may accumulate and saturate causing large bias. So we may clip integral or keep small dt. We'll use small k5.\n\nLet's implement with numpy. Use np.clip.\n\nNow we need to be careful about type. obs is list, we convert to float.\n\nEdge: we need to import numpy as np.\n\nReturn list of floats, shape (1,). Ok.\n\nWe might also define act returning a Python list, not np array. So we cast to list.\n\nOk.\n\nWrite module:\n\nimport numpy as np\n\nk1=15.0\nk2=2.0\nk3=0.5\nk4=0.1\nk5=0.05\n\nintegral_theta=0.0\n\ndef reset():\n    global integral_theta\n    integral_theta=0.0\n\ndef act(obs):\n    global integral_theta\n    x, theta, x_dot, theta_dot = obs\n    integral_theta += theta * 0.04\n    u = -k1*theta - k2*theta_dot - k3*x - k4*x_dot + k5*integral_theta\n    u = np.clip(u, -3, 3)\n    return [float(u)]\n\nThis is deterministic. Should yield reward. Let's ensure action within range. Ok.\n\nLet's produce code.",
+ "server_timings": {
+  "cache_n": 631,
+  "prompt_n": 5,
+  "prompt_ms": 49.255,
+  "prompt_per_token_ms": 9.851,
+  "prompt_per_second": 101.51253679829459,
+  "predicted_n": 1532,
+  "predicted_ms": 19682.637,
+  "predicted_per_token_ms": 12.856065969954278,
+  "predicted_per_second": 77.78429282621023
+ }
+}

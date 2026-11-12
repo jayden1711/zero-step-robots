@@ -1,0 +1,59 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_balance",
+  "type": "linear",
+  "scale": 0.1224744871391589,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 1,
+  "name": "hip_rhythm",
+  "type": "linear",
+  "scale": 0.5773502691896258,
+  "rel_error_bound": 0.01,
+  "valid_for_abs_input_below": 0.3
+ },
+ {
+  "unit": 2,
+  "name": "knee_pd",
+  "type": "linear",
+  "scale": 0.06998542122237651,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.5
+ },
+ {
+  "unit": 3,
+  "name": "knee_rhythm",
+  "type": "linear",
+  "scale": 0.3849001794597505,
+  "rel_error_bound": 0.01,
+  "valid_for_abs_input_below": 0.45
+ },
+ {
+  "unit": 4,
+  "name": "ankle_pd",
+  "type": "linear",
+  "scale": 0.1632993161855452,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 5,
+  "name": "ankle_rhythm",
+  "type": "linear",
+  "scale": 0.6928203230275509,
+  "rel_error_bound": 0.01,
+  "valid_for_abs_input_below": 0.25
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.5,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

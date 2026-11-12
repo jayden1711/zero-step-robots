@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:36:14-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1002
+ },
+ "seconds": 11.837122917175293,
+ "usage": {
+  "completion_tokens": 949,
+  "prompt_tokens": 580,
+  "total_tokens": 1529,
+  "prompt_tokens_details": {
+   "cached_tokens": 575
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a controller that keeps obs[1] within [-0.2,0.2]. Observations are 4 numbers; likely first two correspond to position and velocity? Not known. But we know reward when |obs[1]| <=0.2. So we need to keep second element in range. The action is single number clipped to [-3,3]. We can treat action as force to adjust something to keep obs[1] small. Without knowledge of dynamics, we guess it's some kind of inverted pendulum or cart-pole. Maybe obs[1] is pole angle? We need to keep angle small. Action probably is force to cart. We can use a PD controller on obs[1]. Let x1=obs[0], v1=obs[1]? Might be position? But we care about obs[1] anyway. So we can use a simple proportional controller: a = -k * obs[1] - k2 * obs[3] maybe. But we don't know obs[3]. But we can use only obs[1] to reduce. Use k=5. Clip to [-3,3]. That may keep within bound.\n\nBut we need to handle initial random perturbation up to 0.01. So small. So a = -obs[1]*5 should keep small.\n\nLet's propose: a = -obs[1]*10, clipped. If obs[1] is 0.2, then action -2.0; might keep small.\n\nAlso maybe obs[1] is velocity; we want it to zero. Then a = -obs[1]*k. Could set k=10.\n\nAlso maybe we need to keep obs[0] or others within bounds? Episode ends if any obs is non-finite; but not if outside some threshold. So we just keep finite.\n\nOk produce simple PD using obs[1] and obs[3] if available.\n\nImplement act that uses current observation; no state needed. But we may want to keep a previous observation to compute derivative? But we can just use obs[1] and obs[3] as velocity. Let's choose a = -10*obs[1] - 5*obs[3]. Clip.\n\nWe also implement reset that does nothing.\n\nLet's produce module.",
+ "server_timings": {
+  "cache_n": 575,
+  "prompt_n": 5,
+  "prompt_ms": 65.265,
+  "prompt_per_token_ms": 13.053,
+  "prompt_per_second": 76.61074082586379,
+  "predicted_n": 949,
+  "predicted_ms": 11745.525,
+  "predicted_per_token_ms": 12.389794303797467,
+  "predicted_per_second": 80.71159015880517
+ }
+}

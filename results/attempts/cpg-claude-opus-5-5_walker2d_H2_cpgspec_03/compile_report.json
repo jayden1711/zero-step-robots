@@ -1,0 +1,88 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_balance",
+  "type": "linear",
+  "scale": 0.09797958971132711,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 2.5
+ },
+ {
+  "unit": 1,
+  "name": "R_thigh_pd",
+  "type": "linear",
+  "scale": 0.06998542122237651,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.5
+ },
+ {
+  "unit": 2,
+  "name": "L_thigh_pd",
+  "type": "linear",
+  "scale": 0.06998542122237651,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.5
+ },
+ {
+  "unit": 3,
+  "name": "R_knee_swing",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 4,
+  "name": "L_knee_swing",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 5,
+  "name": "R_knee_pd",
+  "type": "linear",
+  "scale": 0.06123724356957945,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 6,
+  "name": "L_knee_pd",
+  "type": "linear",
+  "scale": 0.06123724356957945,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 7,
+  "name": "R_foot_flat",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 8,
+  "name": "L_foot_flat",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "oscillator": "R",
+  "index": 0,
+  "freq_hz": 0.8,
+  "input_columns": [
+   17,
+   18
+  ]
+ },
+ {
+  "oscillator": "L",
+  "index": 1,
+  "freq_hz": 0.8,
+  "input_columns": [
+   19,
+   20
+  ]
+ }
+]

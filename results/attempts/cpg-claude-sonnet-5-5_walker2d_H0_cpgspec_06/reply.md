@@ -1,0 +1,22 @@
+This is an untested guess, since I can't run anything here. It combines a torso-pitch stabiliser on both hips with a 2 Hz alternating-leg oscillator. The knees flex during each leg's swing phase, and the feet get a small damping term.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [{"name": "g", "freq_hz": 2.0, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a1": 0.3, "a4": 0.3},
+ "units": [
+  {"type": "linear", "name": "torso_pd", "inputs": {"obs[1]": 1.0, "obs[10]": 0.1},
+   "range": 1.5, "tol": 0.05, "to": {"a0": 3.0, "a3": 3.0}},
+  {"type": "linear", "name": "hip_swing", "inputs": {"sin(g)": 1.0},
+   "range": 1.2, "tol": 0.02, "to": {"a0": 0.5, "a3": -0.5}},
+  {"type": "reflex", "name": "rknee", "inputs": {"cos(g)": 1.0}, "threshold": 0.0,
+   "sharpness": 3.0, "to": {"a1": -0.3}},
+  {"type": "reflex", "name": "lknee", "inputs": {"cos(g)": -1.0}, "threshold": 0.0,
+   "sharpness": 3.0, "to": {"a4": -0.3}},
+  {"type": "linear", "name": "rfoot", "inputs": {"obs[4]": 1.0, "obs[15]": 0.05},
+   "range": 1.5, "tol": 0.05, "to": {"a2": -1.0}},
+  {"type": "linear", "name": "lfoot", "inputs": {"obs[7]": 1.0, "obs[16]": 0.05},
+   "range": 1.5, "tol": 0.05, "to": {"a5": -1.0}}
+ ]}
+```

@@ -139,9 +139,11 @@ def run_cells(args):
         if not ok:
             raise SystemExit(f"isolation probe FAILED for {args.model}, refusing the batch: {why}")
     arms = args.arms.split(",")
-    for task, arm in CELLS + [("hopper", "goal")]:
-        if arm not in arms:
-            continue
+    if args.mode == "cpgspec":  # CPG track: cells in the order given (prereg: H2, H1, H0), per task in --tasks
+        cells = [(t, lv) for t in args.tasks.split(",") for lv in arms]
+    else:
+        cells = [c for c in CELLS + [("hopper", "goal")] if c[1] in arms]
+    for task, arm in cells:
         for i in range(args.n):
             aid = f"{args.tag}_{task}_{arm}_{args.mode}_{i:02d}{args.suffix}"
             d = res / "attempts" / aid
@@ -167,8 +169,9 @@ def run_cells(args):
             run = {"started": time.strftime("%Y-%m-%dT%H:%M:%S%z")}
             try:
                 if args.cmd == "claude":
-                    cmd, p, dt = call_claude(prompt, args.model)
+                    cmd, p, dt = call_claude(prompt, args.model, timeout=args.timeout)
                     run.update(cli_version=claude_version(), command=cmd, returncode=p.returncode, seconds=dt,
+                               timeout_s=args.timeout,
                                stderr=p.stderr[-2000:], raw_stdout=p.stdout)
                     try:
                         j = json.loads(p.stdout)
@@ -223,12 +226,14 @@ def main():
     ap.add_argument("--results", required=True)
     ap.add_argument("--n", type=int, default=10)
     ap.add_argument("--model", default="claude-sonnet-5-5")
-    ap.add_argument("--mode", choices=("weights", "controller"), default="weights")
+    ap.add_argument("--mode", choices=("weights", "controller", "cpgspec"), default="weights")
+    ap.add_argument("--tasks", default="hopper", help="cpgspec only: comma list of hopper,walker2d")
     ap.add_argument("--tag", help="attempt id prefix; default: 'claude' for claude-sonnet-5-5 (pilot naming), else the model id")
-    ap.add_argument("--arms", default="strict,named", help="comma list from strict,named,goal (goal = hopper only)")
+    ap.add_argument("--arms", default="strict,named", help="comma list from strict,named,goal (goal = hopper only); cpgspec: H2,H1,H0")
     ap.add_argument("--suffix", default="", help="appended to attempt ids, e.g. _iso2 for the isolated rerun")
     ap.add_argument("--name", help="local model key: gpt-oss-20b | qwen3-coder-30b")
     ap.add_argument("--port", type=int, default=8089)
+    ap.add_argument("--timeout", type=int, default=900, help="claude -p timeout per call, seconds (recorded in run.json)")
     ap.add_argument("--max-seconds", type=float, default=0, help="stop starting new attempts after this long (resumable chunks)")
     args = ap.parse_args()
     if args.cmd == "claude":

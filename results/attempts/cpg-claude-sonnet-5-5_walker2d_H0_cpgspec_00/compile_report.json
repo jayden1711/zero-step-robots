@@ -1,0 +1,33 @@
+[
+ {
+  "unit": 0,
+  "name": "hip",
+  "type": "linear",
+  "scale": 0.14433756729740646,
+  "rel_error_bound": 0.01,
+  "valid_for_abs_input_below": 1.2
+ },
+ {
+  "unit": 1,
+  "name": "knee",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 2,
+  "name": "ankle",
+  "type": "linear",
+  "scale": 0.0816496580927726,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "oscillator": "g",
+  "index": 0,
+  "freq_hz": 1.6,
+  "input_columns": [
+   17,
+   18
+  ]
+ }
+]

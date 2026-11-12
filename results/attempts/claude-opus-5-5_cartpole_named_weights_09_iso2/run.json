@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:31:54-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 33.02841138839722,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":31969,\"stop_reason\":\"end_turn\",\"session_id\":\"ff8b14e5-2c02-4972-8112-ab278edffe8a\",\"total_cost_usd\":0.0711854,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":2330,\"output_tokens\":3144,\"output_tokens_details\":{\"thinking_tokens\":2100},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3144,\"cache_read_input_tokens\":2330,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3144,\"cacheReadInputTokens\":2330,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.0711854,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2100,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"The controller is a linear stabilizing feedback law built into one tanh unit. I couldn't run it, so the gains come from a rough physics estimate and are not tested.\\n\\n**Sign convention.** A positive pole angle means the pole leans toward +x. A positive force pushes the cart toward +x, which catches the pole.\\n\\n**Rough model.** I estimated the model parameters from the MuJoCo model; these are approximate.\\n- Pole: about 5 kg, length 0.6 m.\\n- Cart: about 10 kg.\\n- Actuator gear: 100.\\n\\nWith these values the dynamics are roughly \u03b8'' \u2248 24.5\u00b7\u03b8 \u2212 20\u00b7u, and the cart acceleration is about 8\u00b7u.\\n\\n**Pole loop.** With u = 2.5\u00b7\u03b8 + 0.5\u00b7\u03b8\u0307, the pole loop settles at about 5 rad/s and is well damped. That speed is comfortably within what the 0.04 s step can handle.\\n\\n**Cart loop.** Small gains of the same sign, 0.1\u00b7x + 0.2\u00b7\u1e8b, give a slow loop at about 0.9 rad/s that recentres the cart. This is the usual non-minimum-phase pattern for a cart-pole controller.\\n\\n**Network layout.**\\n- One hidden unit computes tanh(0.1\u00b7z), where z is the full linear law.\\n- Its output weight is 10.\\n- At the maximum force, the tanh argument is only about 0.3, so the unit stays almost linear.\\n- All other units and biases are zero.\\n\\n```json\\n{\\n  \\\"W1\\\": [\\n    [0.01, 0.25, 0.02, 0.05],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0],\\n    [0.0, 0.0, 0.0, 0.0]\\n  ],\\n  \\\"b1\\\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],\\n  \\\"W2\\\": [[10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]],\\n  \\\"b2\\\": [0.0]\\n}\\n```\",\"ttft_ms\":23730,\"type\":\"result\",\"duration_ms\":32060,\"uuid\":\"c14ce512-d937-41b4-ac36-941265af3f6e\",\"ttft_stream_ms\":781,\"time_to_request_ms\":89,\"first_content_frame_ms\":782,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 2330,
+  "output_tokens": 3144,
+  "output_tokens_details": {
+   "thinking_tokens": 2100
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3144,
+    "cache_read_input_tokens": 2330,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}
