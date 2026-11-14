@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T15:24:29-0600",
+ "prompt_sha256": "775d4b04dbaa5760b0c941c3fca99cff8a2fc569678ffd1691183c69834169a1",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 211.42928957939148,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":210644,\"stop_reason\":\"end_turn\",\"session_id\":\"d88f80a7-e03e-4610-82eb-daef6f5362dc\",\"total_cost_usd\":0.487968,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":11359,\"cache_read_input_tokens\":1440,\"output_tokens\":19840,\"output_tokens_details\":{\"thinking_tokens\":18225},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":11359,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":19840,\"cache_read_input_tokens\":1440,\"cache_creation_input_tokens\":11359,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":11359},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":19840,\"cacheReadInputTokens\":1440,\"cacheCreationInputTokens\":11359,\"webSearchRequests\":0,\"costUSD\":0.487968,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":18225,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Round 2 fell backward again, and I think the main cause was not posture but a numerical instability in the damping.\\n\\n**Diagnosis**\\n- **The damping is too strong for the time step.** Each hip received about 0.5 \u00d7 100 Nm per rad/s of damping on the torso: 0.4 from obs[10] plus 0.1 from the thigh velocity. That acts on a torso that weighs about 3.7 kg, with inertia about the hip of about 0.2 kg\u00b7m\u00b2. With 8 ms steps this gives c\u00b7dt/I \u2248 3. The damping term overshoots every step and the hip torque flips between +1 and \u22121.\\n- **This matches the data.**\\n  - The thigh actions were saturated 91% of the time.\\n  - The thigh units were saturated 46% of the time.\\n  - The torso still tipped back slowly, over about 0.8 s. That is the speed of gravity acting with near-zero average hip torque. A steady \u00b1100 Nm hip torque would have moved it within milliseconds.\\n- **The backward bias has a second cause: the heel.** Each foot extends forward from the ankle, so the heel is at the ankle. Leaning the torso back puts the centre of mass behind the heel. I'm moving the torso target back to upright (0). The gait will then fall forward over a stance leg that sweeps from under the hip to behind it, which also gives a positive d.\\n\\n**Changes**\\n- **Damping lowered.** Thigh Kd is 0.05 and the obs[10] gain is 0.05, about 0.1 per hip in total. The two hips together give roughly critical damping and stay well inside the stable range for an 8 ms step. The knee and foot damping stay modest; the foot's goes down to 0.03.\\n- **Thigh.** The target is \u22120.2 + 0.25\u00b7cos \u03c6 with Kp = 1.0, plus \u22121.0\u00b7obs[1] (target lean 0). The stance leg sweeps from under the hip to about 0.45 rad behind it.\\n- **Knee.** The target is \u22120.15 + 0.55\u00b7sin \u03c6 with Kp = 1.5.\\n  - In stance it is clipped straight.\\n  - In swing it flexes to about \u22120.7.\\n- **Unchanged:** the oscillators and the coupling.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [\\n   {\\\"name\\\": \\\"R\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 0.0},\\n   {\\\"name\\\": \\\"L\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 3.14159}\\n ],\\n \\\"couplings\\\": [\\n   {\\\"from\\\": \\\"R\\\", \\\"to\\\": \\\"L\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159},\\n   {\\\"from\\\": \\\"L\\\", \\\"to\\\": \\\"R\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159}\\n ],\\n \\\"bias\\\": {\\\"a0\\\": -0.2, \\\"a1\\\": -0.225, \\\"a2\\\": 0.0, \\\"a3\\\": -0.2, \\\"a4\\\": -0.225, \\\"a5\\\": 0.0},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"R_thigh\\\",\\n    \\\"inputs\\\": {\\\"obs[2]\\\": -1.0, \\\"obs[11]\\\": -0.05, \\\"cos(R)\\\": 0.25, \\\"obs[1]\\\": -1.0, \\\"obs[10]\\\": -0.05},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"R_knee\\\",\\n    \\\"inputs\\\": {\\\"obs[3]\\\": -1.5, \\\"obs[12]\\\": -0.1, \\\"sin(R)\\\": 0.825},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"R_foot\\\",\\n    \\\"inputs\\\": {\\\"obs[4]\\\": -1.0, \\\"obs[13]\\\": -0.03},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"L_thigh\\\",\\n    \\\"inputs\\\": {\\\"obs[5]\\\": -1.0, \\\"obs[14]\\\": -0.05, \\\"cos(L)\\\": 0.25, \\\"obs[1]\\\": -1.0, \\\"obs[10]\\\": -0.05},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a3\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"L_knee\\\",\\n    \\\"inputs\\\": {\\\"obs[6]\\\": -1.5, \\\"obs[15]\\\": -0.1, \\\"sin(L)\\\": 0.825},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"L_foot\\\",\\n    \\\"inputs\\\": {\\\"obs[7]\\\": -1.0, \\\"obs[16]\\\": -0.03},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a5\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":197604,\"type\":\"result\",\"duration_ms\":210681,\"uuid\":\"1812be58-9f63-4c73-8b87-6329b4b3cc60\",\"ttft_stream_ms\":614,\"time_to_request_ms\":34,\"first_content_frame_ms\":614,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 11359,
+  "cache_read_input_tokens": 1440,
+  "output_tokens": 19840,
+  "output_tokens_details": {
+   "thinking_tokens": 18225
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 11359,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 19840,
+    "cache_read_input_tokens": 1440,
+    "cache_creation_input_tokens": 11359,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 11359
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

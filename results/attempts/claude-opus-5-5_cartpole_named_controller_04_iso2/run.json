@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:56:27-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 35.972498655319214,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":34678,\"stop_reason\":\"end_turn\",\"session_id\":\"9603520d-ab3a-459d-a9e1-26c55ca06fdf\",\"total_cost_usd\":0.08100994,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":2227,\"output_tokens\":3592,\"output_tokens_details\":{\"thinking_tokens\":2054},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3592,\"cache_read_input_tokens\":2227,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3592,\"cacheReadInputTokens\":2227,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.08100994,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2054,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller uses a discrete-time LQR built from a linearised model of the MuJoCo cart-pole. I haven't run it, so the gains are unverified.\\n\\n**Model.** The parameters come from the model file (`inverted_pendulum.xml`):\\n- Cart: a capsule of radius 0.1 and length 0.2, giving about 10.5 kg.\\n- Pole: a capsule of radius 0.049 and length 0.6, giving about 5.0 kg, with its centre of mass about 0.3 m above the hinge.\\n- Motor gear is 100, so an action of \u00b13 is \u00b1300 N.\\n- Joint damping is 1.\\n\\nA positive pole angle means the pole tips toward +x, so pushing the cart toward +x corrects it.\\n\\n**Controller.** At import, the module:\\n1. builds the linearised equations of motion,\\n2. converts them to discrete time for the 0.04 s step,\\n3. solves the Riccati equation by iteration to get the feedback gains.\\n\\nThe cost weights penalise the pole angle most heavily, while still keeping the cart near the centre of the rail. If the numeric solve fails or gives an implausible result, it falls back to hand-chosen gains.\\n\\n```python\\nimport numpy as np\\n\\nDT = 0.04\\n\\n\\ndef _expm(M):\\n    # scaling-and-squaring Taylor matrix exponential\\n    n = np.linalg.norm(M, 1)\\n    s = max(0, int(np.ceil(np.log2(n + 1e-12))) + 1) if n > 0.5 else 0\\n    A = M / (2.0 ** s)\\n    E = np.eye(M.shape[0])\\n    term = np.eye(M.shape[0])\\n    for k in range(1, 30):\\n        term = term @ A / k\\n        E = E + term\\n    for _ in range(s):\\n        E = E @ E\\n    return E\\n\\n\\ndef _compute_gain():\\n    m_cart = 10.47\\n    m_pole = 5.02\\n    l = 0.30            # pole COM distance from hinge\\n    I = 0.62            # pole inertia about hinge\\n    g = 9.81\\n    gear = 100.0\\n    damp = 1.0\\n\\n    Mm = np.array([[m_cart + m_pole, m_pole * l],\\n                   [m_pole * l, I]])\\n    G = np.array([[0.0, 0.0],\\n                  [0.0, m_pole * g * l]])\\n    D = np.array([[damp, 0.0],\\n                  [0.0, damp]])\\n    Bf = np.array([[gear], [0.0]])\\n\\n    Minv = np.linalg.inv(Mm)\\n    # state: [x, th, xd, thd]\\n    A = np.zeros((4, 4))\\n    A[0, 2] = 1.0\\n    A[1, 3] = 1.0\\n    A[2:, :2] = Minv @ G\\n    A[2:, 2:] = -Minv @ D\\n    B = np.zeros((4, 1))\\n    B[2:, :] = Minv @ Bf\\n\\n    aug = np.zeros((5, 5))\\n    aug[:4, :4] = A\\n    aug[:4, 4:] = B\\n    E = _expm(aug * DT)\\n    Ad = E[:4, :4]\\n    Bd = E[:4, 4:]\\n\\n    Q = np.diag([1.0, 10.0, 0.2, 0.2])\\n    R = np.array([[1.0]])\\n\\n    P = Q.copy()\\n    for _ in range(5000):\\n        S = R + Bd.T @ P @ Bd\\n        K = np.linalg.solve(S, Bd.T @ P @ Ad)\\n        Pn = Q + Ad.T @ P @ (Ad - Bd @ K)\\n        if np.max(np.abs(Pn - P)) < 1e-10 * (1 + np.max(np.abs(P))):\\n            P = Pn\\n            break\\n        P = Pn\\n    S = R + Bd.T @ P @ Bd\\n    K = np.linalg.solve(S, Bd.T @ P @ Ad)\\n    return K.reshape(-1)\\n\\n\\ntry:\\n    _K = _compute_gain()\\n    if not np.all(np.isfinite(_K)) or _K[1] >= 0:\\n        raise ValueError\\nexcept Exception:\\n    # fallback: u = -K s with K = [-x, -th, -xd, -thd] gains\\n    _K = np.array([-0.5, -8.0, -0.8, -1.0])\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    s = np.asarray(obs, dtype=float)\\n    if not np.all(np.isfinite(s)):\\n        return [0.0]\\n    u = float(-_K @ s)\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\",\"ttft_ms\":23084,\"type\":\"result\",\"duration_ms\":34780,\"uuid\":\"8f158d0e-a4b5-459a-92ab-6e26c3a381cd\",\"ttft_stream_ms\":892,\"time_to_request_ms\":107,\"first_content_frame_ms\":892,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 2227,
+  "output_tokens": 3592,
+  "output_tokens_details": {
+   "thinking_tokens": 2054
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3592,
+    "cache_read_input_tokens": 2227,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

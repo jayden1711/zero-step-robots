@@ -1,0 +1,43 @@
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 0.14 | 0.76 | height too low
+1 | -0.03 | 0.70 | torso angle out of range
+2 | 0.16 | 0.75 | height too low
+3 | 0.17 | 0.76 | height too low
+4 | 0.10 | 0.74 | height too low
+5 | 0.11 | 0.74 | height too low
+6 | 0.15 | 0.76 | height too low
+7 | 0.11 | 0.74 | height too low
+8 | 0.15 | 0.76 | height too low
+9 | 0.14 | 0.76 | height too low
+
+Over the 10 episodes: mean d 0.12 m, min -0.03, max 0.17; mean time survived 0.75 s; mean forward speed 0.16 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+right thigh | -1.783 | 0.030 | 0.61 | 0.26
+right leg | -2.730 | 0.003 | 0.54 | 0.00
+right foot | -0.862 | 0.166 | 0.00 | 0.00
+left thigh | -0.993 | 0.110 | 0.34 | 0.14
+left leg | -2.753 | 0.014 | 0.54 | 0.00
+left foot | -0.900 | 0.395 | 0.00 | 0.00
+torso angle min -0.997, max -0.005 rad; torso height min 0.81, max 1.25 m
+right foot: on the ground 0.12 of the steps, 2 touchdowns
+left foot: on the ground 0.51 of the steps, 5 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | right foot contact | left foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | no | 0.00, 3.14
+0.10 | -0.06 | 1.18 | -0.344 | no | yes | 0.65, 3.80
+0.20 | -0.13 | 1.14 | -0.812 | no | yes | 1.26, 4.40
+0.30 | -0.15 | 1.15 | -0.944 | no | yes | 1.91, 5.05
+0.40 | -0.13 | 1.21 | -0.818 | no | no | 2.51, 5.65
+0.50 | -0.12 | 1.16 | -0.723 | no | yes | 3.17, 0.03
+0.60 | -0.08 | 1.11 | -0.500 | no | no | 3.77, 0.63
+0.70 | 0.02 | 0.84 | -0.997 | yes | no | 4.42, 1.28
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+thighR: 0.00
+thighL: 0.00

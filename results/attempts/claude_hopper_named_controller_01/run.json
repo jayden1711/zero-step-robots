@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:30:32-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 18.484922885894775,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":17520,\"stop_reason\":\"end_turn\",\"session_id\":\"e7184e26-e072-4059-b971-725dfdb2ecf8\",\"total_cost_usd\":0.04374766000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":135,\"cache_read_input_tokens\":6313,\"output_tokens\":1871,\"output_tokens_details\":{\"thinking_tokens\":1391},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":135,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1871,\"cache_read_input_tokens\":6313,\"cache_creation_input_tokens\":135,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":135},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1871,\"cacheReadInputTokens\":6313,\"cacheCreationInputTokens\":135,\"webSearchRequests\":0,\"costUSD\":0.04374766000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1391,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I couldn't run anything, so this is an untested controller. It uses PD feedback to keep the torso upright, with the leg held extended to maintain height.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    z, th, q1, q2, q3, vx, vz, w, dq1, dq2, dq3 = [float(v) for v in obs]\\n\\n    # Lean target: damp horizontal drift slightly, allow a small forward bias.\\n    th_err = th + 0.05 * vx - 0.02\\n\\n    # Thigh: reaction torque on the torso corrects pitch.\\n    a0 = 4.0 * th_err + 0.5 * w\\n\\n    # Leg: keep extended, push harder when sagging.\\n    a1 = 0.3 + 2.0 * (1.2 - z) - 0.05 * dq2\\n\\n    # Foot: ankle assists balance and stays near neutral.\\n    a2 = 2.0 * th_err + 0.3 * w - 0.5 * q3 - 0.05 * dq3\\n\\n    return [float(np.clip(a0, -1, 1)),\\n            float(np.clip(a1, -1, 1)),\\n            float(np.clip(a2, -1, 1))]\\n```\\n\\nThe torque signs come from reasoning about joint reaction forces, not from simulation, so a sign error would make it fall quickly. If it does, flipping the sign of the `th_err` terms in `a0` and `a2` is the first thing to try.\",\"ttft_ms\":14436,\"type\":\"result\",\"duration_ms\":17572,\"uuid\":\"ab3ab583-8548-4b0a-9fd9-9a348db4c75c\",\"ttft_stream_ms\":1083,\"time_to_request_ms\":53,\"first_content_frame_ms\":1084,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 135,
+  "cache_read_input_tokens": 6313,
+  "output_tokens": 1871,
+  "output_tokens_details": {
+   "thinking_tokens": 1391
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 135,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1871,
+    "cache_read_input_tokens": 6313,
+    "cache_creation_input_tokens": 135,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 135
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

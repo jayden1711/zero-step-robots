@@ -1,0 +1,151 @@
+{
+ "seed": 3599118950,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 1.1069229588620901,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 0.9826612907737161,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 1.5516739161732949,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.002859347409715905,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": 0.6107624744086423,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.008756460785404782,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 2.629596991011123,
+    "phase0": 0.023846006636334727
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": 0.012681315510191762
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "torso_balance",
+    "inputs": {
+     "obs[1]": 0.6232958966664701,
+     "obs[7]": 0.33060431709633553,
+     "obs[5]": -0.04073449396982608
+    },
+    "range": 1.5,
+    "tol": 0.02,
+    "to": {
+     "a0": -3.250580948451029
+    }
+   },
+   {
+    "type": "linear",
+    "name": "hop_rhythm",
+    "inputs": {
+     "sin(hop)": 1.345084312237344
+    },
+    "range": 1.2,
+    "tol": 0.01,
+    "to": {
+     "a0": -0.529240671924663,
+     "a1": 0.3157241269345445,
+     "a2": 0.5923048425475795
+    }
+   },
+   {
+    "type": "linear",
+    "name": "leg_pd",
+    "inputs": {
+     "obs[3]": 1.1316498025124473,
+     "obs[9]": 0.1134450861871649
+    },
+    "range": 3.0,
+    "tol": 0.02,
+    "to": {
+     "a1": -0.29705526677821226
+    }
+   },
+   {
+    "type": "linear",
+    "name": "foot_pd",
+    "inputs": {
+     "obs[4]": 0.29246275658907095,
+     "obs[10]": 0.22770105890213133
+    },
+    "range": 2.0,
+    "tol": 0.02,
+    "to": {
+     "a2": -0.3761575904480834
+    }
+   },
+   {
+    "type": "linear",
+    "name": "thigh_posture",
+    "inputs": {
+     "obs[2]": 0.9971591301951545,
+     "obs[8]": 0.0014963559752591005
+    },
+    "range": 3.0,
+    "tol": 0.02,
+    "to": {
+     "a0": -0.22874161334226478
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 400.6671361319214,
+  "sem_return": 0.24814049900511428,
+  "std_return": 2.4689667914745645,
+  "median_return": 401.1089932250179,
+  "min_return": 393.7242410672664,
+  "max_return": 405.4571312946492,
+  "mean_length": 205.41,
+  "frac_full_length": 0.0,
+  "mean_distance": 1.570519665336988,
+  "mean_distance_healthy": 1.555345015217516,
+  "median_distance_healthy": 1.5563453699875862,
+  "min_distance_healthy": 1.5261674365314546,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

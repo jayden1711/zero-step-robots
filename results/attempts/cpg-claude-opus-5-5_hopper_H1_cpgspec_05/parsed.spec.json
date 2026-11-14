@@ -1,0 +1,15 @@
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.2, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.075, "a1": -0.525, "a2": 0.66},
+ "units": [
+   {"type": "linear", "name": "hip_torso_balance_and_lean",
+    "inputs": {"obs[1]": -1.5, "obs[7]": -0.13, "obs[5]": -0.075, "obs[2]": -0.3},
+    "range": 2.5, "tol": 0.02, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "knee_pd_rhythm",
+    "inputs": {"cos(hop)": 0.45, "obs[3]": -1.5, "obs[9]": -0.1},
+    "range": 3.5, "tol": 0.02, "to": {"a1": 1.0}},
+   {"type": "linear", "name": "ankle_pd_rhythm_speed",
+    "inputs": {"cos(hop)": -0.3, "obs[5]": -0.3, "obs[4]": -1.2, "obs[10]": -0.08},
+    "range": 3.0, "tol": 0.02, "to": {"a2": 1.0}}
+ ]}

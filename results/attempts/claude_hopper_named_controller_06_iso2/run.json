@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:19:26-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 16.696152687072754,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":15615,\"stop_reason\":\"end_turn\",\"session_id\":\"e4cbc9c5-114e-45a4-b3e9-de26d9eeeb84\",\"total_cost_usd\":0.04086676,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":136,\"cache_read_input_tokens\":5478,\"output_tokens\":1748,\"output_tokens_details\":{\"thinking_tokens\":1457},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":136,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1748,\"cache_read_input_tokens\":5478,\"cache_creation_input_tokens\":136,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":136},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1748,\"cacheReadInputTokens\":5478,\"cacheCreationInputTokens\":136,\"webSearchRequests\":0,\"costUSD\":0.04086676,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1457,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a conservative standing controller. I haven't run it, and I haven't verified that the sign convention below is correct. It uses the ankle torque as a PD controller on torso angle to keep the hopper upright for all 1000 steps, which should earn about 1000 reward from the alive bonus. It doesn't try to hop forward, because I can't test a hopping gait and a fall would terminate the episode.\\n\\nThe thigh and leg joints start at their straight-leg limits, so they are left at zero torque. The sign of the ankle gain comes from my reading of the joint axes, which is the main risk.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    theta = obs[1]\\n    omega = obs[7]\\n    foot = 3.0 * theta + 0.3 * omega\\n    foot = max(-1.0, min(1.0, foot))\\n    return [0.0, 0.0, foot]\\n```\",\"ttft_ms\":13636,\"type\":\"result\",\"duration_ms\":15685,\"uuid\":\"b619923f-a442-4968-80b0-65b10f00b31a\",\"ttft_stream_ms\":884,\"time_to_request_ms\":69,\"first_content_frame_ms\":884,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 136,
+  "cache_read_input_tokens": 5478,
+  "output_tokens": 1748,
+  "output_tokens_details": {
+   "thinking_tokens": 1457
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 136,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1748,
+    "cache_read_input_tokens": 5478,
+    "cache_creation_input_tokens": 136,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 136
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

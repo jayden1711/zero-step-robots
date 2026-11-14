@@ -1,0 +1,81 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_pd",
+  "type": "linear",
+  "scale": 0.3872983346207417,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 1,
+  "name": "speed_lean",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 2,
+  "name": "foot_level",
+  "type": "linear",
+  "scale": 0.32274861218395146,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.2
+ },
+ {
+  "unit": 3,
+  "name": "ankle_balance",
+  "type": "linear",
+  "scale": 0.32274861218395146,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.2
+ },
+ {
+  "unit": 4,
+  "name": "knee_rhythm",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 5,
+  "name": "ankle_pushoff",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 6,
+  "name": "swing_gate_pos",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 7,
+  "name": "swing_gate_neg",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 8,
+  "name": "torso_back_guard",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 9,
+  "name": "torso_fwd_guard",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.5,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

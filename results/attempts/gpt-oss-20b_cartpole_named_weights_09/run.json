@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T12:01:35-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1009
+ },
+ "seconds": 31.127456188201904,
+ "usage": {
+  "completion_tokens": 2400,
+  "prompt_tokens": 704,
+  "total_tokens": 3104,
+  "prompt_tokens_details": {
+   "cached_tokens": 699
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to output a JSON object with keys W1, b1, W2, b2. 97 numbers total. Provide weights for a controller that should control an inverted pendulum. We need to guess values that produce decent performance. It's like a simple linear tanh network. We need to approximate a stabilizing controller. We can't test but can approximate known solutions.\n\nWe could design a linear feedback that stabilizes the inverted pendulum: action = -k1*position - k2*angle - k3*velocity - k4*angular_velocity.\n\nWe can embed that into the network by setting W2 * tanh(W1 @ obs + b1). But tanh introduces nonlinearity. But we can approximate linear controller by small weights so tanh argument small, tanh ~ linear.\n\nSimpler: set W1 small, e.g., 0.1 * identity to map obs to hidden, tanh ~ identity for small values, then W2 linear mapping. We can then set W2 to implement linear PD controller.\n\nGoal: For inverted pendulum, typical linear controller: action = -k_p*theta - k_d*theta_dot - k_x*x - k_v*vx.\n\nWe need approximate values. Known from cartpole, typical gains: kx ~ 1.0, kdx ~ 0.5, kp ~ 5.0, kdp ~ 1.0? But we need to be cautious with ranges: action clipped [-3,3], but we can set linear mapping such that typical output is within range.\n\nLet's propose weights:\n\n- W1: 16x4, small values. We can set first 4 hidden units to directly encode obs; others zero. But tanh will limit. Alternatively, we can set W1 to identity for 4 units, and others zero. For hidden units 0-3: W1[i][j] = 0.1 if i=j else 0; for i>=4: all zeros. b1: all zeros.\n\n- W2: 1x16: For hidden units 0-3 we set mapping to action: weights to produce linear combination. For hidden units 4-15 we set zero.\n\nSo action = tanh(0.1*obs) approx 0.1*obs (since small). Then W2 * h = sum_i w2_i * h_i. So action approx sum_i w2_i * 0.1*obs_i = sum_i (0.1*w2_i)*obs_i.\n\nThus we can set effective linear gains k_i = 0.1*w2_i. So w2_i = 10*k_i.\n\nLet's choose k_x (cart position) = -1.0 (we want to bring cart to zero if pole leaning left?), k_v (cart velocity) = -0.5, k_theta = -20, k_theta_dot = -5. These are typical for inverted pendulum? Maybe too high.\n\nBut action range [-3,3], typical for many tasks. Let's compute output: Suppose obs: position 0.1, angle 0.1 rad, velocity 0.05, ang_vel 0.05. Then k_x*pos = -0.1, k_v*vel = -0.025, k_theta*ang = -2.0, k_theta_dot*angdot = -0.25. Sum ~ -2.375. Good within [-3,3]. So set w2_i accordingly: w2_0 = 10*k_x = -10; w2_1 = 10*k_v = -5; w2_2 = 10*k_theta = -200; w2_3 = 10*k_theta_dot = -50. The rest zeros.\n\nBut tanh(0.1*obs) is approximately obs*0.1. But tanh saturates near 1 for values > ~2. So for large obs, hidden unit saturates to 1, resulting linear mapping saturates. That may limit large corrections. But that's okay.\n\nSet b1 zeros, b2 zero.\n\nBut we need to produce 16 hidden units. We'll set W1 first 4 rows: row0: 0.1 0 0 0; row1: 0 0.1 0 0; row2: 0 0 0.1 0; row3: 0 0 0 0.1; rows4-15: all zeros. b1 all zeros.\n\nNow W2: 1x16: first 4 weights as above, rest zeros.\n\nb2 = 0.\n\nWe need to clip action to [-3,3]. We'll rely on environment clip.\n\nBut we need to output JSON numbers.\n\nLet's produce W1 as list of 16 lists, each with 4 numbers. We'll use decimal format.\n\nThus:\n\nW1 = [\n [0.1, 0.0, 0.0, 0.0],\n [0.0, 0.1, 0.0, 0.0],\n [0.0, 0.0, 0.1, 0.0],\n [0.0, 0.0, 0.0, 0.1],\n [0.0, 0.0, 0.0, 0.0],  # 12 more rows\n ...\n]\n\nMake 12 zero rows.\n\nb1: 16 zeros.\n\nW2: 1x16: [-10.0, -5.0, -200.0, -50.0] + 12 zeros.\n\nb2: [0.0].\n\nLet's produce JSON. Need to ensure correct formatting: JSON array of numbers.\n\nWe'll output JSON with numbers like 0.1, -10.0, etc.\n\nLet's write all 16 rows.\n\nRows 4-15 all zeros. That's 12 rows.\n\nLet's produce row numbers:\n\nRow 0: [0.1, 0.0, 0.0, 0.0]\nRow 1: [0.0, 0.1, 0.0, 0.0]\nRow 2: [0.0, 0.0, 0.1, 0.0]\nRow 3: [0.0, 0.0, 0.0, 0.1]\nRow 4: [0.0, 0.0, 0.0, 0.0]\nRow 5: [0.0, 0.0, 0.0, 0.0]\nRow 6: [0.0, 0.0, 0.0, 0.0]\nRow 7: [0.0, 0.0, 0.0, 0.0]\nRow 8: [0.0, 0.0, 0.0, 0.0]\nRow 9: [0.0, 0.0, 0.0, 0.0]\nRow10:[0.0, 0.0, 0.0, 0.0]\nRow11:[0.0, 0.0, 0.0, 0.0]\nRow12:[0.0, 0.0, 0.0, 0.0]\nRow13:[0.0, 0.0, 0.0, 0.0]\nRow14:[0.0, 0.0, 0.0, 0.0]\nRow15:[0.0, 0.0, 0.0, 0.0]\n\nb1: [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\n\nW2: [-10.0, -5.0, -200.0, -50.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]\n\nb2: [0.0]\n\nNow produce JSON.\n\nWe need to ensure keys order: W1, b1, W2, b2. Provide as JSON block.\n\nLet's generate final answer.",
+ "server_timings": {
+  "cache_n": 699,
+  "prompt_n": 5,
+  "prompt_ms": 44.895,
+  "prompt_per_token_ms": 8.979000000000001,
+  "prompt_per_second": 111.37097672346586,
+  "predicted_n": 2400,
+  "predicted_ms": 31031.699,
+  "predicted_per_token_ms": 12.935264276781993,
+  "predicted_per_second": 77.30804555689973
+ }
+}

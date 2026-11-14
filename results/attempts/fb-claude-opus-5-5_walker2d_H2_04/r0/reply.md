@@ -1,0 +1,47 @@
+Round 0 is a conservative antiphase gait. Each joint tracks a phase-dependent target through a PD term, which is linear in obs and in the oscillator cos/sin. The thighs also carry torso-balance feedback.
+
+**Structure**
+- **Oscillators:** R and L, 0.8 Hz, coupled both ways with lag π. They start at π/2 and 3π/2, so the right leg starts in mid-stance and the left in mid-swing.
+- **Thigh (a0, a3):**
+  - Target is −0.35 + 0.35·cos φ. The thigh is forward (0) at touchdown (φ = 0) and back (−0.7) at liftoff (φ = π).
+  - The PD term is Kp = 2, Kd = 0.2.
+  - Balance adds −1.0·(obs[1] − 0.2) − 0.3·obs[10], holding a slight forward lean of 0.2 rad.
+  - The bias is 2·(−0.35) + 1.0·0.2 = −0.5.
+- **Knee (a1, a4):**
+  - Target is −0.5 + 0.6·sin(φ + 0.8) = −0.5 + 0.418 sin φ + 0.430 cos φ.
+  - This keeps the knee near straight through stance, peaks the flexion just after liftoff, and re-extends it before touchdown.
+  - The PD term is Kp = 3, Kd = 0.15, with bias 3·(−0.5) = −1.5.
+- **Foot (a2, a5):** a PD term holds it flat at 0.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+   {"name": "R", "freq_hz": 0.8, "phase0": 1.5708},
+   {"name": "L", "freq_hz": 0.8, "phase0": 4.7124}
+ ],
+ "couplings": [
+   {"from": "R", "to": "L", "weight": 3.0, "phase_lag": 3.14159},
+   {"from": "L", "to": "R", "weight": 3.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a0": -0.5, "a1": -1.5, "a3": -0.5, "a4": -1.5},
+ "units": [
+   {"type": "linear", "name": "R_thigh_pd_balance",
+    "inputs": {"cos(R)": 0.7, "obs[2]": -2.0, "obs[11]": -0.2, "obs[1]": -1.0, "obs[10]": -0.3},
+    "range": 3.0, "tol": 0.05, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "L_thigh_pd_balance",
+    "inputs": {"cos(L)": 0.7, "obs[5]": -2.0, "obs[14]": -0.2, "obs[1]": -1.0, "obs[10]": -0.3},
+    "range": 3.0, "tol": 0.05, "to": {"a3": 1.0}},
+   {"type": "linear", "name": "R_knee_pd",
+    "inputs": {"sin(R)": 1.254, "cos(R)": 1.29, "obs[3]": -3.0, "obs[12]": -0.15},
+    "range": 3.0, "tol": 0.05, "to": {"a1": 1.0}},
+   {"type": "linear", "name": "L_knee_pd",
+    "inputs": {"sin(L)": 1.254, "cos(L)": 1.29, "obs[6]": -3.0, "obs[15]": -0.15},
+    "range": 3.0, "tol": 0.05, "to": {"a4": 1.0}},
+   {"type": "linear", "name": "R_foot_pd",
+    "inputs": {"obs[4]": -1.0, "obs[13]": -0.1},
+    "range": 1.5, "tol": 0.05, "to": {"a2": 1.0}},
+   {"type": "linear", "name": "L_foot_pd",
+    "inputs": {"obs[7]": -1.0, "obs[16]": -0.1},
+    "range": 1.5, "tol": 0.05, "to": {"a5": 1.0}}
+ ]}
+```

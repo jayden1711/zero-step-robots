@@ -1,0 +1,21 @@
+This spec is untested, since I can't run anything here. It sets up two antiphase oscillators at 1.2 Hz, one per leg. Each leg's thigh torque follows its oscillator's sin, and its knee flexes during the swing half of the cycle. The torso angle and angular velocity feed back to both thighs to keep the torso upright.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.2, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.2, "phase0": 3.14159265}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 5.0, "phase_lag": 3.14159265},
+  {"from": "L", "to": "R", "weight": 5.0, "phase_lag": 3.14159265}
+ ],
+ "bias": {},
+ "units": [
+  {"type": "linear", "name": "thigh_R", "inputs": {"sin(R)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a0": 0.5}},
+  {"type": "linear", "name": "thigh_L", "inputs": {"sin(L)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a3": 0.5}},
+  {"type": "reflex", "name": "knee_R", "inputs": {"sin(R)": 1.0}, "threshold": 0.0, "sharpness": 5.0, "to": {"a1": -0.4}},
+  {"type": "reflex", "name": "knee_L", "inputs": {"sin(L)": 1.0}, "threshold": 0.0, "sharpness": 5.0, "to": {"a4": -0.4}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 1.0, "obs[10]": 0.15}, "range": 1.5, "tol": 0.05, "to": {"a0": 2.0, "a3": 2.0}}
+ ]}
+```

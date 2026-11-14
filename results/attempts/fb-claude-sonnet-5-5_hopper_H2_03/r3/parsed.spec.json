@@ -1,0 +1,82 @@
+{
+ "target": "cpg",
+ "obs_dim": 11,
+ "act_dim": 3,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "hop",
+   "freq_hz": 2.0,
+   "phase0": 0.0
+  }
+ ],
+ "couplings": [],
+ "bias": {
+  "a0": 0.1,
+  "a1": -0.05
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "balance",
+   "inputs": {
+    "obs[1]": -8.0,
+    "obs[7]": -0.8
+   },
+   "range": 10.0,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_balance",
+   "inputs": {
+    "obs[1]": -3.0,
+    "obs[7]": -0.3
+   },
+   "range": 5.0,
+   "tol": 0.05,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "push_off",
+   "inputs": {
+    "cos(hop)": 1.0
+   },
+   "threshold": 0.5,
+   "sharpness": 3.0,
+   "to": {
+    "a1": 0.25
+   }
+  },
+  {
+   "type": "linear",
+   "name": "leg_rhythm",
+   "inputs": {
+    "sin(hop)": 1.0
+   },
+   "range": 1.2,
+   "tol": 0.05,
+   "to": {
+    "a1": 0.1
+   }
+  },
+  {
+   "type": "linear",
+   "name": "thigh_rhythm",
+   "inputs": {
+    "cos(hop)": 1.0
+   },
+   "range": 1.2,
+   "tol": 0.05,
+   "to": {
+    "a0": 0.1
+   }
+  }
+ ]
+}

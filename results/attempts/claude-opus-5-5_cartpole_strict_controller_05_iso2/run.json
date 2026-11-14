@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:51:10-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 33.65014052391052,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":32716,\"stop_reason\":\"end_turn\",\"session_id\":\"3f09186b-ed5f-467d-bc1d-cf225ea04081\",\"total_cost_usd\":0.07597568,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":2144,\"output_tokens\":3364,\"output_tokens_details\":{\"thinking_tokens\":2713},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3364,\"cache_read_input_tokens\":2144,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3364,\"cacheReadInputTokens\":2144,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.07597568,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2713,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like the classic cart-pole balancing task. I assumed the observation is `[cart position, pole angle, cart velocity, pole angular velocity]`, with the pole angle at index 1 since that is the one that ends the episode. I also estimated the physical parameters from typical values: cart about 10.5 kg, pole about 5 kg and 0.6 m long, and an actuator gain of about 100 N per unit of action. Nothing here was run or tested.\\n\\nWith those estimates, the linearised dynamics are roughly:\\n\\n- \u03b8\u0308 \u2248 32.3\u00b7\u03b8 \u2212 21.3\u00b7u\\n- \u1e8d \u2248 8.51\u00b7u \u2212 3.13\u00b7\u03b8\\n\\nWith feedback u = a\u00b7x + b\u00b7\u03b8 + c\u00b7\u1e8b + d\u00b7\u03b8\u0307, the closed-loop characteristic polynomial works out to:\\n\\np\u2074 + (21.3d \u2212 8.51c)p\u00b3 + (21.3b \u2212 8.51a \u2212 32.3)p\u00b2 + 208.2c\u00b7p + 208.2a\\n\\nI placed all four poles at \u22125. That gives a \u2248 3.0, b \u2248 9.76, c \u2248 2.40 and d \u2248 1.90. A pole at \u22125 moves only about 0.2 per 0.04 s step, so this sampling rate should be fine.\\n\\nIf my guesses about the parameters or sign conventions are wrong, the controller could perform badly.\\n\\n```python\\nimport numpy as np\\n\\n# State feedback u = K . [x, theta, x_dot, theta_dot]\\n# Gains from pole placement (all closed-loop poles near -5) on the\\n# linearised cart-pole model.\\nK = np.array([3.0, 9.76, 2.40, 1.90])\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    s = np.asarray(obs, dtype=float)\\n    if not np.all(np.isfinite(s)):\\n        return [0.0]\\n    u = float(np.dot(K, s))\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\",\"ttft_ms\":27436,\"type\":\"result\",\"duration_ms\":32785,\"uuid\":\"d580d2db-0514-4187-a0d9-9e6b2d4b461b\",\"ttft_stream_ms\":716,\"time_to_request_ms\":68,\"first_content_frame_ms\":716,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 2144,
+  "output_tokens": 3364,
+  "output_tokens_details": {
+   "thinking_tokens": 2713
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3364,
+    "cache_read_input_tokens": 2144,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

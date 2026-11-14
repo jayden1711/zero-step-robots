@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T12:59:38-0600",
+ "prompt_sha256": "e8a3881e9d4e47aa9e8f373d17536d584b2b82aefbf760b8366a1e10c234f4fa",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 30.428039073944092,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":29647,\"stop_reason\":\"end_turn\",\"session_id\":\"55ba4c05-e08f-440b-a342-782503b7cbf5\",\"total_cost_usd\":0.087672,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":3302,\"cache_read_input_tokens\":1440,\"output_tokens\":3048,\"output_tokens_details\":{\"thinking_tokens\":2105},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":3302,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3048,\"cache_read_input_tokens\":1440,\"cache_creation_input_tokens\":3302,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":3302},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3048,\"cacheReadInputTokens\":1440,\"cacheCreationInputTokens\":3302,\"webSearchRequests\":0,\"costUSD\":0.087672,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2105,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Round 0 is a conservative baseline. It balances the torso through the hip, holds the leg and foot with simple joint stiffness, and adds a moderate 2 Hz hop rhythm. The point is to learn whether the robot stays upright before pushing for speed.\\n\\n- **Torso balance (to a0):** a0 = \u22124\u00b7obs[1] \u2212 0.5\u00b7obs[7] \u2212 0.15\u00b7obs[5] + 0.15. The bias sets a small forward lean (about 0.04 rad). The speed term reduces that lean as forward speed rises, which regulates speed.\\n- **Leg and foot stiffness:** a joint-angle and joint-velocity controller holds each joint near straight (0 rad), so the leg acts like a spring.\\n- **Rhythm:** one 2 Hz oscillator drives the leg joint (sin, amplitude 0.5), the foot (sin, 0.2) and the thigh (cos, 0.3). The thigh swing therefore runs a quarter cycle ahead of the leg push.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"cpg\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": 0.15},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -4.0, \\\"obs[7]\\\": -0.5, \\\"obs[5]\\\": -0.15},\\n    \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thigh_rhythm\\\", \\\"inputs\\\": {\\\"cos(cpg)\\\": 0.3},\\n    \\\"range\\\": 0.5, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leg_pd\\\", \\\"inputs\\\": {\\\"obs[3]\\\": -2.0, \\\"obs[9]\\\": -0.2},\\n    \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leg_rhythm\\\", \\\"inputs\\\": {\\\"sin(cpg)\\\": 0.5},\\n    \\\"range\\\": 0.6, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_pd\\\", \\\"inputs\\\": {\\\"obs[4]\\\": -2.0, \\\"obs[10]\\\": -0.2},\\n    \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_rhythm\\\", \\\"inputs\\\": {\\\"sin(cpg)\\\": 0.2},\\n    \\\"range\\\": 0.3, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":22833,\"type\":\"result\",\"duration_ms\":29678,\"uuid\":\"991f04d9-1e73-4e80-815e-ed5dd2529e3f\",\"ttft_stream_ms\":719,\"time_to_request_ms\":29,\"first_content_frame_ms\":719,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 3302,
+  "cache_read_input_tokens": 1440,
+  "output_tokens": 3048,
+  "output_tokens_details": {
+   "thinking_tokens": 2105
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 3302,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3048,
+    "cache_read_input_tokens": 1440,
+    "cache_creation_input_tokens": 3302,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 3302
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

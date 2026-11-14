@@ -1,0 +1,91 @@
+[
+ {
+  "unit": 0,
+  "name": "torso_pd",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 1,
+  "name": "scissor_pd",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 2,
+  "name": "scissor_ff",
+  "type": "linear",
+  "scale": 0.2449489742783178,
+  "rel_error_bound": 0.02,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "unit": 3,
+  "name": "knee_r_pd",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 4,
+  "name": "knee_l_pd",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 5,
+  "name": "knee_r_flex",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 6,
+  "name": "knee_l_flex",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 7,
+  "name": "foot_r_pd",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 8,
+  "name": "foot_l_pd",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 9,
+  "name": "pushoff_r",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 10,
+  "name": "pushoff_l",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "p",
+  "index": 0,
+  "freq_hz": 0.6,
+  "input_columns": [
+   17,
+   18
+  ]
+ }
+]

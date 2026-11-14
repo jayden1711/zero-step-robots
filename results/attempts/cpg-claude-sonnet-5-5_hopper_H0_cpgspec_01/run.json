@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T19:43:19-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 22.25667643547058,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":21634,\"stop_reason\":\"end_turn\",\"session_id\":\"09a04a8b-0727-4f4e-bb0b-61d3091fbcbb\",\"total_cost_usd\":0.05306299999999999,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":6995,\"output_tokens\":2528,\"output_tokens_details\":{\"thinking_tokens\":1872},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2528,\"cache_read_input_tokens\":6995,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2528,\"cacheReadInputTokens\":6995,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.05306299999999999,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1872,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This spec is untested, since I can't run the simulation. It is a best-guess design, and the joint sign conventions below are my reading of the Hopper model, not something I checked.\\n\\n- **Posture reflex:** thigh torque a0 is driven by torso angle and angular velocity, with a bias that targets a slight forward lean of about 0.05 rad. If I have the thigh sign right, this keeps the torso upright and drifts forward.\\n- **Hopping rhythm:** one 2.5 Hz oscillator pumps the leg joint (a1) with a sine, and adds a phase-shifted cosine to the thigh (a0). The aim is a rhythmic hop that keeps the robot moving forward.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.5, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": 0.25},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"posture\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 5.0, \\\"obs[7]\\\": 0.5},\\n   \\\"range\\\": 6.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leg_pump\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0},\\n   \\\"range\\\": 1.0, \\\"tol\\\": 0.01, \\\"to\\\": {\\\"a1\\\": 0.5}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thigh_swing\\\", \\\"inputs\\\": {\\\"cos(hop)\\\": 1.0},\\n   \\\"range\\\": 1.0, \\\"tol\\\": 0.01, \\\"to\\\": {\\\"a0\\\": 0.3}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_damp\\\", \\\"inputs\\\": {\\\"obs[10]\\\": 1.0, \\\"obs[1]\\\": 2.0},\\n   \\\"range\\\": 12.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": -0.1}}\\n ]}\\n```\",\"ttft_ms\":17800,\"type\":\"result\",\"duration_ms\":21660,\"uuid\":\"a5a54906-0cf8-4d8b-8d49-89ddd555b76e\",\"ttft_stream_ms\":973,\"time_to_request_ms\":23,\"first_content_frame_ms\":974,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 6995,
+  "output_tokens": 2528,
+  "output_tokens_details": {
+   "thinking_tokens": 1872
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2528,
+    "cache_read_input_tokens": 6995,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

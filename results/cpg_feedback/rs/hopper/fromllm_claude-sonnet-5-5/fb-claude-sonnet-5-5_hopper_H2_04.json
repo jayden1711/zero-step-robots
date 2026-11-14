@@ -1,0 +1,133 @@
+{
+ "seed": 3202243211,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.8834543656518319,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.04049015849126543,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 0.008111871653990568,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": 0.0458802839266635,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": 0.676940946711381,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": 0.29048335457768515,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 2.5,
+    "phase0": 0.0
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a1": 0.3
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "thigh_rhythm",
+    "inputs": {
+     "sin(hop)": 1.0
+    },
+    "range": 1.1,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.4
+    }
+   },
+   {
+    "type": "linear",
+    "name": "leg_rhythm",
+    "inputs": {
+     "cos(hop)": 1.0
+    },
+    "range": 1.1,
+    "tol": 0.02,
+    "to": {
+     "a1": 0.6
+    }
+   },
+   {
+    "type": "linear",
+    "name": "foot_rhythm",
+    "inputs": {
+     "cos(hop)": 1.0
+    },
+    "range": 1.1,
+    "tol": 0.02,
+    "to": {
+     "a2": 0.3
+    }
+   },
+   {
+    "type": "linear",
+    "name": "balance",
+    "inputs": {
+     "obs[1]": 3.0,
+     "obs[7]": 0.3
+    },
+    "range": 3.0,
+    "tol": 0.02,
+    "to": {
+     "a0": -1.0
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 308.6906637649348,
+  "sem_return": 0.6374785032111335,
+  "std_return": 6.342831021206099,
+  "median_return": 308.9971678497418,
+  "min_return": 298.1353439425245,
+  "max_return": 345.3643576233756,
+  "mean_length": 196.81,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.9036011847347457,
+  "mean_distance_healthy": 0.8910718866088717,
+  "median_distance_healthy": 0.9004319646896077,
+  "min_distance_healthy": 0.8220439600248574,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

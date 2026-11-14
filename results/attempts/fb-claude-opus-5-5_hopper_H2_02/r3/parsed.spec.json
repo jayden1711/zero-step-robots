@@ -1,0 +1,123 @@
+{
+ "target": "cpg",
+ "obs_dim": 11,
+ "act_dim": 3,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "hop",
+   "freq_hz": 2.0,
+   "phase0": 0.0
+  }
+ ],
+ "bias": {
+  "a0": 0.09,
+  "a1": -0.6,
+  "a2": 0.15
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "torso_balance",
+   "inputs": {
+    "obs[1]": -4.0,
+    "obs[7]": -0.5,
+    "obs[5]": -0.2
+   },
+   "range": 3.5,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "thigh_pd",
+   "inputs": {
+    "obs[2]": -1.0,
+    "obs[8]": -0.1
+   },
+   "range": 2.5,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "thigh_rhythm",
+   "inputs": {
+    "sin(hop)": 0.3
+   },
+   "range": 0.5,
+   "tol": 0.02,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "leg_pd",
+   "inputs": {
+    "obs[3]": -2.0,
+    "obs[9]": -0.2
+   },
+   "range": 4.0,
+   "tol": 0.05,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "leg_rhythm",
+   "inputs": {
+    "cos(hop)": 0.6
+   },
+   "range": 0.9,
+   "tol": 0.02,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "ankle_balance",
+   "inputs": {
+    "obs[1]": -2.5,
+    "obs[7]": -0.4,
+    "obs[5]": -0.125
+   },
+   "range": 3.0,
+   "tol": 0.05,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_pd",
+   "inputs": {
+    "obs[4]": -0.5,
+    "obs[10]": -0.05
+   },
+   "range": 2.0,
+   "tol": 0.05,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_rhythm",
+   "inputs": {
+    "cos(hop)": 0.25
+   },
+   "range": 0.4,
+   "tol": 0.02,
+   "to": {
+    "a2": 1.0
+   }
+  }
+ ]
+}

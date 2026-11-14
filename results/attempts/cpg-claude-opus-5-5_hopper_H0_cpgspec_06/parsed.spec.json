@@ -1,0 +1,25 @@
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [
+   {"name": "Z", "freq_hz": 0.0, "phase0": 1.0472},
+   {"name": "R", "freq_hz": 0.1, "phase0": 0.0},
+   {"name": "C", "freq_hz": 2.2, "phase0": 0.0}
+ ],
+ "couplings": [
+   {"from": "Z", "to": "R", "weight": 1.2566, "phase_lag": 0.0}
+ ],
+ "bias": {"a0": 0.03, "a1": 0.15, "a2": -0.35},
+ "units": [
+   {"type": "linear", "name": "hip_torso_pd",
+    "inputs": {"obs[1]": -1.0, "obs[7]": -0.15},
+    "range": 1.0, "tol": 0.02, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "knee_pd_ramped",
+    "inputs": {"obs[3]": -1.0, "obs[9]": -0.1, "sin(R)": -0.4},
+    "range": 1.5, "tol": 0.02, "to": {"a1": 1.0}},
+   {"type": "linear", "name": "ankle_pd_speed_ramped",
+    "inputs": {"obs[4]": -1.5, "obs[10]": -0.25, "obs[5]": -0.2, "sin(R)": 1.12},
+    "range": 2.0, "tol": 0.03, "to": {"a2": 1.0}},
+   {"type": "reflex", "name": "gated_hop_drive",
+    "inputs": {"sin(C)": 1.0, "sin(R)": 2.0},
+    "threshold": 2.0, "sharpness": 2.5,
+    "to": {"a1": 0.15, "a2": -0.35}}
+ ]}

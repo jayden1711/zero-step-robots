@@ -1,0 +1,41 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_torso_pd",
+  "type": "linear",
+  "scale": 0.19999999999999998,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 1,
+  "name": "knee_lock",
+  "type": "linear",
+  "scale": 0.25819888974716115,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 2,
+  "name": "ankle_foot_placement_balance",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 3,
+  "name": "toe_push_pump",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.0,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

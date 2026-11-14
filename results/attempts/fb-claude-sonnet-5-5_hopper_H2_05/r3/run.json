@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T13:10:34-0600",
+ "prompt_sha256": "dc05c3538c057af739744d49206aed7a50d0587306e6ae8a2cf8116e6a2267d7",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 23.412299394607544,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":22737,\"stop_reason\":\"end_turn\",\"session_id\":\"37bb8adc-6271-45ec-b475-2e721e61337c\",\"total_cost_usd\":0.114701,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":7669,\"cache_read_input_tokens\":4505,\"output_tokens\":2622,\"output_tokens_details\":{\"thinking_tokens\":2131},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":7669,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2622,\"cache_read_input_tokens\":4505,\"cache_creation_input_tokens\":7669,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":7669},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2622,\"cacheReadInputTokens\":4505,\"cacheCreationInputTokens\":7669,\"webSearchRequests\":0,\"costUSD\":0.114701,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":2131,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Round 1 was the best so far, but the thigh drifted back to -1.2 rad and the torso sank until it fell. Round 2 failed because its thigh set point was positive, past the 0 limit, which pinned the thigh and tipped the torso forward.\\n\\nFor round 3 I'm adding a weak thigh spring toward a rearward set point of -0.25 rad, which is inside the joint limit. I'm keeping the round-1 torso-angle feedback and the always-positive leg torque, with a modest leg and foot pulse.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.5, \\\"a1\\\": 0.5, \\\"a2\\\": 0.0},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 5.0, \\\"obs[7]\\\": 0.5, \\\"obs[2]\\\": 2.0, \\\"obs[8]\\\": 0.1},\\n   \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": -1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"push\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0},\\n   \\\"range\\\": 1.2, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 0.3, \\\"a2\\\": 0.2}}\\n ]}\\n```\",\"ttft_ms\":19937,\"type\":\"result\",\"duration_ms\":22763,\"uuid\":\"083639b5-5309-4adc-8e0e-41db546d1bf0\",\"ttft_stream_ms\":981,\"time_to_request_ms\":22,\"first_content_frame_ms\":981,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 7669,
+  "cache_read_input_tokens": 4505,
+  "output_tokens": 2622,
+  "output_tokens_details": {
+   "thinking_tokens": 2131
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 7669,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2622,
+    "cache_read_input_tokens": 4505,
+    "cache_creation_input_tokens": 7669,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 7669
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,33 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_torso_balance_and_swing",
+  "type": "linear",
+  "scale": 0.32274861218395146,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.2
+ },
+ {
+  "unit": 1,
+  "name": "ankle_balance_and_speed",
+  "type": "linear",
+  "scale": 0.32274861218395146,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.2
+ },
+ {
+  "unit": 2,
+  "name": "ankle_push_off",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "osc",
+  "index": 0,
+  "freq_hz": 2.5,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

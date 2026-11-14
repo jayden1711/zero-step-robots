@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:10:17-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 14.42386269569397,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":13237,\"stop_reason\":\"end_turn\",\"session_id\":\"ed9f51c7-b9e5-4a7f-8e09-394f48056f03\",\"total_cost_usd\":0.03197678,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":135,\"cache_read_input_tokens\":5209,\"output_tokens\":1347,\"output_tokens_details\":{\"thinking_tokens\":1122},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":135,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1347,\"cache_read_input_tokens\":5209,\"cache_creation_input_tokens\":135,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":135},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1347,\"cacheReadInputTokens\":5209,\"cacheCreationInputTokens\":135,\"webSearchRequests\":0,\"costUSD\":0.03197678,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1122,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like the MuJoCo inverted pendulum, with obs as [cart position, pole angle, cart velocity, pole angular velocity]. I wrote a linear state-feedback controller on that assumption. I could not run it, so the gains are estimates and untested.\\n\\nThe pole angle and angular velocity terms push the cart toward the lean. The small position and velocity terms with the same sign keep the cart from drifting away.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, v, w = obs\\n    u = 0.1 * x + 5.0 * th + 0.25 * v + 0.7 * w\\n    return [max(-3.0, min(3.0, u))]\\n```\",\"ttft_ms\":11817,\"type\":\"result\",\"duration_ms\":13319,\"uuid\":\"ef5b13c6-f049-4d11-be57-4c76fc7187e3\",\"ttft_stream_ms\":1020,\"time_to_request_ms\":81,\"first_content_frame_ms\":1020,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 135,
+  "cache_read_input_tokens": 5209,
+  "output_tokens": 1347,
+  "output_tokens_details": {
+   "thinking_tokens": 1122
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 135,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1347,
+    "cache_read_input_tokens": 5209,
+    "cache_creation_input_tokens": 135,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 135
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

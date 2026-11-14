@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T12:27:36-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 21.118025064468384,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":20084,\"stop_reason\":\"end_turn\",\"session_id\":\"46ab69e0-f83e-48d8-90b3-ea6b7d11dd68\",\"total_cost_usd\":0.055623920000000014,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":136,\"cache_read_input_tokens\":5456,\"output_tokens\":2419,\"output_tokens_details\":{\"thinking_tokens\":1667},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":136,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2419,\"cache_read_input_tokens\":5456,\"cache_creation_input_tokens\":136,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":136},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2419,\"cacheReadInputTokens\":5456,\"cacheCreationInputTokens\":136,\"webSearchRequests\":0,\"costUSD\":0.055623920000000014,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1667,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a hand-designed controller. I couldn't run it, so it is untested, and I assumed the system is a Hopper-like hopping robot. Only the first three hidden units are used.\\n\\n- **Hip and knee (actions 0, 1):** hold the joints straight with a small constant bias plus a PD term.\\n- **Ankle (action 2):** apply torque proportional to the torso angle and angular velocity to keep the body upright.\\n\\nThe gains and the sign of the ankle feedback are best guesses from standard hopper conventions.\\n\\n```json\\n{\\n\\\"W1\\\": [\\n[0,0,-1.0,0,0,0,0,0,-0.05,0,0],\\n[0,0,0,-1.0,0,0,0,0,0,-0.05,0],\\n[0,6.0,0,0,0,0,0,0.6,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,0,0,0,0,0,0,0,0,0]\\n],\\n\\\"b1\\\": [0.5,0.5,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n\\\"W2\\\": [\\n[1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0]\\n],\\n\\\"b2\\\": [0,0,0]\\n}\\n```\",\"ttft_ms\":15938,\"type\":\"result\",\"duration_ms\":20136,\"uuid\":\"9258f95c-9bc9-4379-838a-bc946472f8eb\",\"ttft_stream_ms\":926,\"time_to_request_ms\":50,\"first_content_frame_ms\":926,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 136,
+  "cache_read_input_tokens": 5456,
+  "output_tokens": 2419,
+  "output_tokens_details": {
+   "thinking_tokens": 1667
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 136,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2419,
+    "cache_read_input_tokens": 5456,
+    "cache_creation_input_tokens": 136,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 136
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

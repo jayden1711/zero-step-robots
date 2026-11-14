@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T11:54:55-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1009
+ },
+ "seconds": 21.815836191177368,
+ "usage": {
+  "completion_tokens": 1782,
+  "prompt_tokens": 648,
+  "total_tokens": 2430,
+  "prompt_tokens_details": {
+   "cached_tokens": 643
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to produce a deterministic controller that keeps obs[1] within +/-0.2 for as long as possible. Observation vector length 4. obs[1] likely something like a position or velocity? The environment not specified; but we know that reward is +1 for every step where |obs[1]| <= 0.2. The episode terminates when |obs[1]| > 0.2. So we need to keep obs[1] stable.\n\nWe cannot know dynamics. But we can attempt to produce a constant action that stabilizes obs[1] around zero. Perhaps the system is a pendulum-like? Or some linear system? Since we don't know, best approach is to set action to zero to maintain equilibrium. But maybe zero action is not enough.\n\nObservation indices: maybe obs[1] is velocity; action could be a torque to counteract. We have 1 action.\n\nWe could attempt to approximate a PD controller that tries to keep obs[1] at 0. But we need to pick weights that implement some simple linear feedback on obs[1] and maybe others.\n\nGiven we don't know dynamics, we can try to set the network to approximate a simple function: action = -k * obs[1]. Where k is some positive constant, maybe 1. So we set W2 row to zero except for one index corresponding to hidden units that encode obs[1]. But hidden units are tanh(W1@obs+b1). We could design W1 and W2 such that overall action is linear in obs[1] maybe with small saturation. We can set W1 such that one hidden unit is tanh(obs[1]) maybe. Then W2 can scale and bias to produce -k * obs[1]. But tanh(obs[1]) is not linear; but for small obs[1] it's approx linear. However we can set W1 row for hidden unit 0: [0, 1, 0, 0] (so it takes obs[1]). Then hidden unit 0 becomes tanh(obs[1]). Then set W2 row 0: some weight times that hidden unit. We also can add bias to offset.\n\nWe need to keep action within [-3,3]. We'll clip anyway.\n\nLet's design:\n\nW1: 16 rows; each row 4 numbers.\n\nWe only care about first hidden unit representing obs[1]. Others can be zeros.\n\nSet b1 to all zeros for simplicity.\n\nSet W1[0] = [0, 1, 0, 0]. Others zero.\n\nSet W2: 1 row with 16 numbers. We set weight at index 0 to -k, rest zero. And set bias to 0.\n\nThus action = clip(-k * tanh(obs[1]), -3,3). For small obs[1], tanh(obs[1]) \u2248 obs[1], so action \u2248 -k * obs[1]. With k moderate maybe 2 or 5.\n\nWe need to keep |obs[1]| <=0.2. If the system is a linear integrator: obs[1] maybe velocity that changes by action each step? If we set action = -k*obs[1], that is negative feedback, should reduce obs[1] magnitude. We need to choose k big enough to quickly damp but not too large to saturate. Since action clipped to 3, we can set k such that -k*obs[1] stays within [-3,3] for |obs[1]| <=0.2. For |obs[1]|=0.2, -k*0.2 <= 3 => k <= 15. For negative obs[1] negative, -k*(-0.2)=k*0.2 <=3 => k<=15. So k up to 15.\n\nIf the system dynamics cause obs[1] to drift, we might need stronger k.\n\nLet's pick k=10. So action = clip(-10 * tanh(obs[1]), -3, 3). For obs[1]=0.2, tanh(0.2)=0.197375, so action \u2248 -1.97375. That's within bounds. Good.\n\nBut if system is linear such that obs[1] updates by adding action each step: obs[1]_{t+1} = obs[1]_t + action (or some other). Then action -1.97 will reduce obs[1] magnitude by about 1.97 each step, quickly driving it to 0. But if action is clipped to -3, for larger obs[1] we can still push.\n\nBut we need to keep |obs[1]| <=0.2. If action reduces too much, obs[1] may overshoot negative side. But with feedback, overshoot may be small. We'll trust.\n\nAlternatively we could add another hidden unit that implements sign of obs[1] to avoid oscillation.\n\nBut for simplicity, we'll produce the weights as described.\n\nThus W1: 16 rows. We'll list each row as list of 4 numbers.\n\nRow0: [0.0, 1.0, 0.0, 0.0]\nRows 1-15: [0.0, 0.0, 0.0, 0.0] each.\n\nb1: 16 zeros.\n\nW2: one row with 16 numbers: weight0 = -10.0, rest zeros.\n\nb2: [0.0].\n\nLet's produce JSON block accordingly.\n\nBut need to ensure numeric format: plain decimals.\n\nCheck shape: W1 is list of 16 lists each of length 4. Good.\n\nb1: list length 16.\n\nW2: list of 1 list length 16. So we put as [[-10, 0, 0, ..., 0]].\n\nb2: list length 1: [0].\n\nOk.\n\nLet's produce final output.\n\n",
+ "server_timings": {
+  "cache_n": 643,
+  "prompt_n": 5,
+  "prompt_ms": 43.528,
+  "prompt_per_token_ms": 8.7056,
+  "prompt_per_second": 114.86859033265944,
+  "predicted_n": 1782,
+  "predicted_ms": 21747.27,
+  "predicted_per_token_ms": 12.210707467714768,
+  "predicted_per_second": 81.8953367480148
+ }
+}

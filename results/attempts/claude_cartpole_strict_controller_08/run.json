@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:23:08-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 16.215726613998413,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":15131,\"stop_reason\":\"end_turn\",\"session_id\":\"0739f892-f504-459b-96e8-4bb3ec3d1ac7\",\"total_cost_usd\":0.03869448,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":135,\"cache_read_input_tokens\":6044,\"output_tokens\":1644,\"output_tokens_details\":{\"thinking_tokens\":1344},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":135,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1644,\"cache_read_input_tokens\":6044,\"cache_creation_input_tokens\":135,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":135},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1644,\"cacheReadInputTokens\":6044,\"cacheCreationInputTokens\":135,\"webSearchRequests\":0,\"costUSD\":0.03869448,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1344,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a guess at the dynamics: I assume the observation is [cart position, pole angle, cart velocity, pole angular velocity], like a standard cart-pole. I couldn't run anything, so the gains are hand-estimated rather than tuned.\\n\\nThe controller is a linear state-feedback law that pushes the cart toward the lean. The angle and angular-velocity terms do the stabilizing. Small positive position and velocity terms pull the cart back toward center, which for a cart-pole means positive gain in this form.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, xd, thd = obs[0], obs[1], obs[2], obs[3]\\n    u = 0.05 * x + 3.0 * th + 0.15 * xd + 0.4 * thd\\n    if u > 3.0:\\n        u = 3.0\\n    elif u < -3.0:\\n        u = -3.0\\n    return [u]\\n```\",\"ttft_ms\":13158,\"type\":\"result\",\"duration_ms\":15187,\"uuid\":\"e38dae8c-78c4-465c-bee4-f7d53536a698\",\"ttft_stream_ms\":900,\"time_to_request_ms\":59,\"first_content_frame_ms\":900,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 135,
+  "cache_read_input_tokens": 6044,
+  "output_tokens": 1644,
+  "output_tokens_details": {
+   "thinking_tokens": 1344
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 135,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1644,
+    "cache_read_input_tokens": 6044,
+    "cache_creation_input_tokens": 135,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 135
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

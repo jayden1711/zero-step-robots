@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T11:56:04-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1001
+ },
+ "seconds": 29.790621995925903,
+ "usage": {
+  "completion_tokens": 2372,
+  "prompt_tokens": 704,
+  "total_tokens": 3076,
+  "prompt_tokens_details": {
+   "cached_tokens": 699
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a controller for inverted pendulum. Use neural net with tanh hidden layer 16. Need to produce weights manually. We want high reward, ideally keep pole upright for many steps. Classic control: use linear controller (PD) or similar. But with neural net, we can approximate linear mapping: action = K1*position + K2*angle + K3*velocity + K4*ang_velocity. Since hidden layer 16 tanh, we can approximate linear by making hidden weights small so tanh behaves like identity. We can set W1 small (e.g., 0.01) and W2 large to approximate linear combination.\n\nGoal: approximate linear PD: action = -k_pos * pos - k_ang * angle - k_vel * v - k_angvel * ang_vel. Because need to keep upright (angle ~0). We also need to keep cart near center maybe. Standard inverted pendulum control uses k1=1.0, etc. We can tune approximate.\n\nWe can set W1 to be small values: maybe 0.01 times identity for each input to each neuron? But we have 16 hidden units: we could set W1 as 0.01*random values? But we want simple linear mapping. We can set each hidden unit to just one input: e.g., first 4 units correspond to each observation; remaining 12 units zeros. Then tanh(W1@obs) will approximate each input times 0.01. Then we can set W2 weights to sum weighted contributions. Let's design:\n\nLet W1 be 16x4. We'll set rows:\n\n1: [0.01, 0, 0, 0]\n2: [0, 0.01, 0, 0]\n3: [0, 0, 0.01, 0]\n4: [0, 0, 0, 0.01]\n5-16: zeros.\n\nThen h = tanh([0.01*pos, 0.01*vel, 0.01*angle, 0.01*ang_vel, 0,...]) but tanh(small) \u2248 small. So h \u2248 [0.01*pos, 0.01*vel, 0.01*angle, 0.01*ang_vel, 0,...].\n\nThen action = clip( W2 @ h + b2). W2 is 1x16: we can set weights for first 4 units to approximate linear PD. Others zero. Let's choose:\n\naction = -k1*pos - k2*angle - k3*vel - k4*ang_vel\n\nWe must multiply by 0.01 because h is 0.01 times each variable. So W2 first four weights should be [-k1*100? Wait: if h[0] = 0.01*pos, then action contribution from pos: w0 * 0.01*pos. So we want w0*0.01 = -k1 => w0 = -k1/0.01 = -100*k1. Similarly for others.\n\nLet's pick k1=1.0, k2=10.0, k3=1.0, k4=10.0. Then w0 = -100, w2? Wait mapping: we need to match index: we defined first row corresponds to pos (index 0). second row: vel. third row: angle? Wait we assigned third row to 0.01 for third input which is pole angle. Fourth row: 0.01 for angular velocity. So mapping:\n\n- h0 = 0.01 * pos\n- h1 = 0.01 * vel\n- h2 = 0.01 * angle\n- h3 = 0.01 * ang_vel\n\nThus action = w0*h0 + w1*h1 + w2*h2 + w3*h3 + rest 0 + b2.\n\nWe want action = -k1*pos - k2*vel - k3*angle - k4*ang_vel.\n\nThen w0*0.01*pos = -k1*pos => w0 = -k1/0.01 = -100*k1. Similarly w1 = -k2/0.01 = -100*k2. w2 = -k3/0.01 = -100*k3. w3 = -k4/0.01 = -100*k4.\n\nSo with k1=1.0, k2=1.0, k3=10.0, k4=10.0, we get:\n\nw0 = -100\nw1 = -100\nw2 = -1000\nw3 = -1000\n\nThis might be too large but clipped to [-3,3]. The action will saturate at -3 or +3. But we can adjust k's small to avoid saturation. Maybe use k1=0.1, k2=0.1, k3=1.0, k4=1.0.\n\nThen w0 = -10, w1 = -10, w2 = -100, w3 = -100.\n\nNow action may saturate but less.\n\nBut we may also want positive sign for angle? Actually we want action that pushes cart towards angle direction. For inverted pendulum, typical PD: action = -k_pos*pos - k_angle*angle. But sign depends on convention of angle (positive up?). The angle is from vertical; if positive means leaning right, we need to push cart left to bring angle back. So action = -k_angle * angle. So negative sign as above. Good.\n\nThus action = -10*0.01*pos -10*0.01*vel -100*0.01*angle -100*0.01*ang_vel = -0.1*pos -0.1*vel -1.0*angle -1.0*ang_vel.\n\nBut maybe we want also a bias to center near zero: b2 maybe 0. But maybe we need small bias to keep near zero when angle small.\n\nHowever, with tanh, we might lose linearity for larger values, but we keep small weights so tanh behaves linear. Good.\n\nLet's set W1 as described: first four rows each have 0.01 in one position, others zero. Rows 5-16 all zeros. b1 all zeros. W2: first 4 entries as above, rest zeros. b2 zero.\n\nNow we need to output JSON with 16 rows each 4 numbers for W1. Let's write them.\n\nRow0: [0.01, 0, 0, 0]\nRow1: [0, 0.01, 0, 0]\nRow2: [0, 0, 0.01, 0]\nRow3: [0, 0, 0, 0.01]\nRow4-15: [0,0,0,0] each.\n\nb1: 16 zeros.\n\nW2: 16 numbers: w0..w15. w0=-10, w1=-10, w2=-100, w3=-100, rest 0.\n\nb2: 0.\n\nLet's ensure shapes: W1: list of 16 lists each of 4 numbers. b1: list of 16 numbers. W2: list of 16 numbers. b2: single number.\n\nWe may consider maybe set W2 as list of 1 list? The spec: W2: [1,16] (a list of 1 row(s), each with 16 numbers). So we need outer list of length 1 containing inner list of 16 numbers. So W2: [[...]].\n\nb2: [1] as list of 1 number? The spec: b2: [1]. So we should output list of one number. Yes. So b2: [0].\n\nThus JSON:\n\n{\n  \"W1\": [[0.01,0,0,0],[0,0.01,0,0],[0,0,0.01,0],[0,0,0,0.01],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0],[0,0,0,0]],\n  \"b1\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\n  \"W2\": [[-10,-10,-100,-100,0,0,0,0,0,0,0,0,0,0,0,0]],\n  \"b2\": [0]\n}\n\nThis should be fine. We might consider that action is clipped to [-3,3]. With this controller, typical values: pos ~ small (~0), vel ~0, angle ~0.1 rad maybe, ang_vel ~0. So action ~ -1*angle -1*ang_vel ~ -0.1. So within range. When angle large up to 0.2, action -0.2, within range. So good.\n\nEdge case: when pole falls, action will saturate? But not needed.\n\nThus output.",
+ "server_timings": {
+  "cache_n": 699,
+  "prompt_n": 5,
+  "prompt_ms": 47.68,
+  "prompt_per_token_ms": 9.536,
+  "prompt_per_second": 104.86577181208054,
+  "predicted_n": 2372,
+  "predicted_ms": 29695.244,
+  "predicted_per_token_ms": 12.524354280894137,
+  "predicted_per_second": 79.84443569482036
+ }
+}

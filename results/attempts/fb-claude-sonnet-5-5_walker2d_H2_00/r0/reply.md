@@ -1,0 +1,23 @@
+This is the round-0 design. The two oscillators are coupled in antiphase at 1 Hz. Each thigh is driven by its own oscillator's cosine. Each knee flexes through a reflex while that leg's thigh torque is positive (swing). The feet get a small rhythmic drive. Torso angle and angular velocity feed back to both thighs as negative gains. I have not simulated it, and the gait signs are a first guess to be adjusted from your results.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {},
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"cos(R)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a0": 0.6}},
+  {"type": "linear", "name": "thighL", "inputs": {"cos(L)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a3": 0.6}},
+  {"type": "reflex", "name": "kneeR", "inputs": {"cos(R)": 1.0}, "threshold": 0.0, "sharpness": 4.0, "to": {"a1": -0.4}},
+  {"type": "reflex", "name": "kneeL", "inputs": {"cos(L)": 1.0}, "threshold": 0.0, "sharpness": 4.0, "to": {"a4": -0.4}},
+  {"type": "linear", "name": "footR", "inputs": {"sin(R)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a2": 0.3}},
+  {"type": "linear", "name": "footL", "inputs": {"sin(L)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a5": 0.3}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": -1.0, "obs[10]": -0.1}, "range": 3.0, "tol": 0.05, "to": {"a0": 1.0, "a3": 1.0}}
+ ]}
+```

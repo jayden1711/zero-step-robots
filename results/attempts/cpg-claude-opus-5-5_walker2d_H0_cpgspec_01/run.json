@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T21:51:40-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 445.525603055954,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":444756,\"stop_reason\":\"end_turn\",\"session_id\":\"4eec34f2-2765-4147-9913-f7012798fed6\",\"total_cost_usd\":0.8595332,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":3966,\"output_tokens\":42869,\"output_tokens_details\":{\"thinking_tokens\":40863},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":42869,\"cache_read_input_tokens\":3966,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":42869,\"cacheReadInputTokens\":3966,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.8595332,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":40863,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a CPG-timed walking controller in the style of SIMBICON. I couldn't simulate it, so whether it actually walks is untested.\\n\\n**How it works**\\n- **Oscillator:** One oscillator sets the step timing. Its rate rises a little with forward speed (`obs[8]`).\\n- **Torso and hips:** The torso weighs only about 3.7 kg of the robot's roughly 24 kg, so I split hip control into two parts:\\n  - **Leg swing:** Equal and opposite hip torques drive the angle between the two hips toward a sine wave. The swing leg goes forward and the stance leg pushes back, with no net torque on the torso.\\n  - **Torso balance:** A shared torque on both hips holds the torso tilted back by 0.3 rad. In my reading of the model, the hip joint can only move backward from the torso line (range \u2212150\u00b0 to 0). Tilting the torso back is what lets the swing leg reach in front of the body.\\n- **Speed feedback on step length:** Four units multiply forward speed by sin(phase). Steps get longer when the robot moves faster and shorter when it is slow, which helps it recover.\\n- **Knees:** Each knee is held straight (pushed against its 0 limit) during stance. A timed unit bends the knee during mid-swing and also lifts the toes for ground clearance.\\n- **Ankles:** A soft controller keeps each foot level with the ground. A small extra ankle torque slows the robot above about 0.6 m/s and gives a gentle push below it.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"gait\\\", \\\"freq_hz\\\": 0.65, \\\"phase0\\\": 0.0, \\\"feedback\\\": {\\\"obs[8]\\\": 1.5}}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a1\\\": -0.45, \\\"a4\\\": -0.45, \\\"a2\\\": 0.08, \\\"a5\\\": 0.08},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"hipR\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.5, \\\"obs[2]\\\": -4.3, \\\"obs[5]\\\": 4.3, \\\"obs[10]\\\": 0.055, \\\"obs[11]\\\": -0.43, \\\"obs[14]\\\": 0.43, \\\"sin(gait)\\\": 1.075, \\\"cos(gait)\\\": 0.72}, \\\"threshold\\\": 0.45, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"hipL\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.5, \\\"obs[2]\\\": 4.3, \\\"obs[5]\\\": -4.3, \\\"obs[10]\\\": 0.055, \\\"obs[11]\\\": 0.43, \\\"obs[14]\\\": -0.43, \\\"sin(gait)\\\": -1.075, \\\"cos(gait)\\\": -0.72}, \\\"threshold\\\": 0.45, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a3\\\": 1.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"kneeR\\\", \\\"inputs\\\": {\\\"obs[3]\\\": -2.0, \\\"obs[12]\\\": -0.14}, \\\"threshold\\\": -0.1, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"kneeL\\\", \\\"inputs\\\": {\\\"obs[6]\\\": -2.0, \\\"obs[15]\\\": -0.14}, \\\"threshold\\\": -0.1, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"ankleR\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -1.0, \\\"obs[2]\\\": -1.0, \\\"obs[3]\\\": -1.0, \\\"obs[4]\\\": -1.0, \\\"obs[13]\\\": -0.06, \\\"obs[8]\\\": -0.4}, \\\"threshold\\\": -0.24, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a2\\\": 0.5}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"ankleL\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -1.0, \\\"obs[5]\\\": -1.0, \\\"obs[6]\\\": -1.0, \\\"obs[7]\\\": -1.0, \\\"obs[16]\\\": -0.06, \\\"obs[8]\\\": -0.4}, \\\"threshold\\\": -0.24, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a5\\\": 0.5}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swingflexR\\\", \\\"inputs\\\": {\\\"cos(gait)\\\": 0.9394, \\\"sin(gait)\\\": -0.3429}, \\\"threshold\\\": 0.4, \\\"sharpness\\\": 6.0, \\\"to\\\": {\\\"a1\\\": -0.45, \\\"a2\\\": 0.08}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swingflexL\\\", \\\"inputs\\\": {\\\"cos(gait)\\\": -0.9394, \\\"sin(gait)\\\": 0.3429}, \\\"threshold\\\": 0.4, \\\"sharpness\\\": 6.0, \\\"to\\\": {\\\"a4\\\": -0.45, \\\"a5\\\": 0.08}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"prod1\\\", \\\"inputs\\\": {\\\"obs[8]\\\": 0.35, \\\"sin(gait)\\\": 0.5}, \\\"threshold\\\": -0.6585, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": -2.0, \\\"a3\\\": 2.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"prod2\\\", \\\"inputs\\\": {\\\"obs[8]\\\": -0.35, \\\"sin(gait)\\\": -0.5}, \\\"threshold\\\": -0.6585, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": -2.0, \\\"a3\\\": 2.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"prod3\\\", \\\"inputs\\\": {\\\"obs[8]\\\": 0.35, \\\"sin(gait)\\\": -0.5}, \\\"threshold\\\": -0.6585, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": 2.0, \\\"a3\\\": -2.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"prod4\\\", \\\"inputs\\\": {\\\"obs[8]\\\": -0.35, \\\"sin(gait)\\\": 0.5}, \\\"threshold\\\": -0.6585, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": 2.0, \\\"a3\\\": -2.0}}\\n ]}\\n```\",\"ttft_ms\":429976,\"type\":\"result\",\"duration_ms\":444785,\"uuid\":\"ac8e96b0-18e3-4f55-bbe5-94f093f3a0eb\",\"ttft_stream_ms\":1383,\"time_to_request_ms\":26,\"first_content_frame_ms\":1384,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 3966,
+  "output_tokens": 42869,
+  "output_tokens_details": {
+   "thinking_tokens": 40863
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 42869,
+    "cache_read_input_tokens": 3966,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

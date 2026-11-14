@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-09T16:30:38-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 167.50104355812073,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":166799,\"stop_reason\":\"end_turn\",\"session_id\":\"734f9a85-d95f-4152-812f-2ba573b24262\",\"total_cost_usd\":0.3165874000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":4497,\"output_tokens\":15716,\"output_tokens_details\":{\"thinking_tokens\":14607},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":15716,\"cache_read_input_tokens\":4497,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":15716,\"cacheReadInputTokens\":4497,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.3165874000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":14607,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is an untested design: I couldn't simulate it, so every gain is reasoned from the model's geometry rather than tuned.\\n\\n**Rhythm.** One 2 Hz oscillator drives a stiff-legged ankle hop.\\n- **Push-off, sin(\u03c6) > 0:** the foot presses its toe down (a2 < 0), which lifts the robot off the ground. At the same time the hip pushes the leg slightly backward (a0 < 0) to move the body forward.\\n- **Flight, sin(\u03c6) < 0:** the toe lifts ready for landing, and the thigh swings the leg forward again.\\n\\n**Balance.** A PD loop on the torso angle and angular velocity drives the hip: a0 = \u22123\u00b7(\u03b8 \u2212 \u03b8_ref) \u2212 0.075\u00b7\u03c9. The gains are sized against the torso's inertia and the 0.008 s step so the discrete loop stays stable. The thigh can't swing forward of the torso, so I set the upright target slightly backward (\u03b8_ref \u2248 \u22120.05). That keeps the foot roughly under the hip and leaves room for corrections in both directions.\\n\\n**Speed.** A small term in obs[5] tilts the hip command so the torso leans back as the robot speeds up, which places the foot further ahead and slows the next hop. It is centred near 0.5 m/s.\\n\\n**Knee and foot.** The knee is held straight with a positive bias plus a spring term. A light spring-damper keeps the foot near neutral so each landing is roughly flat.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.1, \\\"a1\\\": 0.4, \\\"a2\\\": 0.0},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_balance_pd\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[7]\\\": 0.025},\\n    \\\"range\\\": 0.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": -3.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"speed_regulation\\\", \\\"inputs\\\": {\\\"obs[5]\\\": 1.0},\\n    \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": -0.1}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thigh_rhythm\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": -0.1}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_pushoff_rhythm\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": -0.4}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_centering\\\", \\\"inputs\\\": {\\\"obs[4]\\\": 1.0, \\\"obs[10]\\\": 0.07},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": -0.3}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_hold_straight\\\", \\\"inputs\\\": {\\\"obs[3]\\\": 1.0, \\\"obs[9]\\\": 0.05},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": -1.0}}\\n ]}\\n```\",\"ttft_ms\":157632,\"type\":\"result\",\"duration_ms\":166825,\"uuid\":\"d60e50ee-85c8-4ef4-9866-2bbf12372795\",\"ttft_stream_ms\":1302,\"time_to_request_ms\":24,\"first_content_frame_ms\":1302,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 4497,
+  "output_tokens": 15716,
+  "output_tokens_details": {
+   "thinking_tokens": 14607
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 15716,
+    "cache_read_input_tokens": 4497,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

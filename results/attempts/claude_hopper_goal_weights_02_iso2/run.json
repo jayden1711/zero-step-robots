@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:19:24-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 22.5279757976532,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":21444,\"stop_reason\":\"end_turn\",\"session_id\":\"51121ec1-6644-4ee7-99bc-c57a2ad0e5cc\",\"total_cost_usd\":0.05886232000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":136,\"cache_read_input_tokens\":5476,\"output_tokens\":2566,\"output_tokens_details\":{\"thinking_tokens\":1678},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":136,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2566,\"cache_read_input_tokens\":5476,\"cache_creation_input_tokens\":136,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":136},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2566,\"cacheReadInputTokens\":5476,\"cacheCreationInputTokens\":136,\"webSearchRequests\":0,\"costUSD\":0.05886232000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1678,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a hand-designed controller, since I can't train or test anything. I read the setup as a Hopper-like system: obs[0] is torso height, obs[1] is torso pitch, and obs[7] is pitch rate. The strategy is to survive 1000 steps for about 1000 reward, rather than to run fast.\\n\\n- **Thigh and leg (actions 0 and 1):** a constant +1 torque, which presses the joints against their straight-leg limit.\\n- **Foot (action 2):** a PD controller on torso pitch, `2.8*tanh(angle) + 2.0*tanh(0.2*pitch_rate)`, that acts like an ankle balancing an inverted pendulum.\\n- **Assumptions:** the positive-pitch-means-forward-lean sign and the gains are guesses I could not check. If the sign is wrong, the hopper will fall.\\n\\n```json\\n{\\n  \\\"W1\\\": [\\n    [0,1.0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0.2,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0]\\n  ],\\n  \\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n  \\\"W2\\\": [\\n    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n    [2.8,2.0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]\\n  ],\\n  \\\"b2\\\": [1.0,1.0,0.0]\\n}\\n```\",\"ttft_ms\":16176,\"type\":\"result\",\"duration_ms\":21524,\"uuid\":\"d6a9e179-83c7-4036-b93d-2d88077574bd\",\"ttft_stream_ms\":836,\"time_to_request_ms\":78,\"first_content_frame_ms\":836,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 136,
+  "cache_read_input_tokens": 5476,
+  "output_tokens": 2566,
+  "output_tokens_details": {
+   "thinking_tokens": 1678
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 136,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2566,
+    "cache_read_input_tokens": 5476,
+    "cache_creation_input_tokens": 136,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 136
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,21 @@
+Both runs fell backward. In round 1 the thigh torques were saturated and the thighs sat against the joint limit near 0, so thigh balance torque alone could not catch the fall. This revision adds balance feedback at the ankles, where positive torque pushes the body forward, strengthens the thigh feedback, and weakens the rhythmic drives further. I have not simulated it.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a0": 0.15, "a3": 0.15},
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"cos(R)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a0": 0.2}},
+  {"type": "linear", "name": "thighL", "inputs": {"cos(L)": 1.0}, "range": 1.0, "tol": 0.02, "to": {"a3": 0.2}},
+  {"type": "reflex", "name": "kneeR", "inputs": {"cos(R)": 1.0}, "threshold": 0.0, "sharpness": 4.0, "to": {"a1": -0.2}},
+  {"type": "reflex", "name": "kneeL", "inputs": {"cos(L)": 1.0}, "threshold": 0.0, "sharpness": 4.0, "to": {"a4": -0.2}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": -6.0, "obs[10]": -0.5}, "range": 6.0, "tol": 0.05, "to": {"a0": 1.0, "a3": 1.0, "a2": 0.8, "a5": 0.8}}
+ ]}
+```

@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:13:43-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 32.040199518203735,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":30889,\"stop_reason\":\"end_turn\",\"session_id\":\"070de960-2007-4b86-a468-dbc2eef567e7\",\"total_cost_usd\":0.06537124000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":166,\"cache_read_input_tokens\":3062,\"output_tokens\":2874,\"output_tokens_details\":{\"thinking_tokens\":2175},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2874,\"cache_read_input_tokens\":3062,\"cache_creation_input_tokens\":166,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":166},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":2874,\"cacheReadInputTokens\":3062,\"cacheCreationInputTokens\":166,\"webSearchRequests\":0,\"costUSD\":0.06537124000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2175,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a fixed linear state-feedback (LQR-style) controller. I designed the gains by hand from an approximate model of the MuJoCo cart-pole. I couldn't run it, so the score is untested.\\n\\n```python\\nimport numpy as np\\n\\n# Linear state feedback: u = Kx*x + Kv*v + Kth*theta + Kw*omega\\n# Positive pole angle leans toward +x, so all gains are positive\\n# (push the cart under the falling pole; position terms are the slow outer loop).\\nK_X = 0.3\\nK_V = 0.5\\nK_TH = 6.0\\nK_W = 0.8\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, v, w = (float(o) for o in obs[:4])\\n    u = K_X * x + K_V * v + K_TH * th + K_W * w\\n    if not np.isfinite(u):\\n        u = 0.0\\n    return [float(np.clip(u, -3.0, 3.0))]\\n```\\n\\n**How I chose the gains**\\n\\n- **Model.** The motor gear is about 100, the cart is about 17 kg and the pole about 5 kg, with the pole 0.6 m long. From this I estimated two linearised equations:\\n  - pole: \u03b8'' \u2248 24.5\u00b7\u03b8 \u2212 12.5\u00b7u\\n  - cart: x'' \u2248 5\u00b7u\\n- **Pole (fast loop).** The angle gain of 6 and angular-velocity gain of 0.8 give a well-damped loop at roughly 7\u20138 rad/s. That is well within what the 0.04 s step can handle. The angle gain is about 3\u00d7 the minimum needed for stability (about 2), so it should tolerate model errors of about 2\u00d7.\\n- **Cart position (slow loop).** The position gain of 0.3 and velocity gain of 0.5 give a slow loop at about 0.9 rad/s with damping ratio about 0.7. This keeps the cart near the centre of the rail without disturbing the pole loop.\\n- **Saturation.** At the termination angle of 0.2 rad, the angle term asks for 1.2, well inside the \u00b13 limit, so the force rarely saturates.\",\"ttft_ms\":24625,\"type\":\"result\",\"duration_ms\":30950,\"uuid\":\"d8a77522-9597-4172-8309-f3261ab97413\",\"ttft_stream_ms\":1136,\"time_to_request_ms\":58,\"first_content_frame_ms\":1136,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 166,
+  "cache_read_input_tokens": 3062,
+  "output_tokens": 2874,
+  "output_tokens_details": {
+   "thinking_tokens": 2175
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 166,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2874,
+    "cache_read_input_tokens": 3062,
+    "cache_creation_input_tokens": 166,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 166
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

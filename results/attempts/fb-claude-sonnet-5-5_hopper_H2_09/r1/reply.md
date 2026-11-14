@@ -1,0 +1,18 @@
+Round 0 fell backward at about 0.5 s, so the torso feedback was too weak against the rhythm. This revision strengthens the angle and damping feedback on the thigh, trims the leg and thigh rhythm amplitudes, and adds a small forward-lean bias.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.0, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.1, "a1": 0.2, "a2": 0.0},
+ "units": [
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"cos(hop)": 0.3, "sin(hop)": 0.15},
+   "range": 1.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"sin(hop)": 0.5},
+   "range": 1.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "foot_rhythm", "inputs": {"sin(hop)": 0.2, "cos(hop)": 0.1},
+   "range": 1.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 1.0, "obs[7]": 0.3},
+   "range": 5.0, "tol": 0.05, "to": {"a0": -6.0}}
+ ]}
+```

@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:37:44-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 202.67482590675354,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":201468,\"stop_reason\":\"end_turn\",\"session_id\":\"07bc7f9a-a557-4256-a06a-7715a36ccd6b\",\"total_cost_usd\":0.41929976,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":2308,\"output_tokens\":18968,\"output_tokens_details\":{\"thinking_tokens\":17466},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":18968,\"cache_read_input_tokens\":2308,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":18968,\"cacheReadInputTokens\":2308,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.41929976,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":17466,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I couldn't test this. It's a conservative design that aims for about 1000 (staying healthy for all 1000 steps) plus roughly 40 from a forward lean.\\n\\n**Why lean instead of hop:** The 11-dimensional observation, 3 actions, 0.008 s step and health rules match MuJoCo's Hopper. The speed term in the reward adds up to (final x \u2212 initial x) / 0.008. So every meter the torso ends up forward of where it started is worth about 125 reward. A hopping gait designed blind would most likely fall early and lose most of the 1000-step survival reward. Instead, the controller holds a statically stable pose and leans the body forward over the long foot:\\n\\n- **Joint control:** Each joint has PD control toward its target, plus gravity feedforward. Joint-space PD stays stable whatever the sign conventions, and the body rests rigidly on its flat foot.\\n- **Target pose:**\\n  - knee locked straight;\\n  - leg leaned about 0.33 rad forward using the ankle;\\n  - torso leaned only about 0.12 rad, which keeps it well inside the |pitch| < 0.2 limit.\\n- **Stability margin:** The estimated center of mass is about 0.17 m ahead of the ankle, and the toe contact is at about 0.26 m. The torso ends up about 0.33 m forward, worth about +40 reward.\\n- **Slow ramp:** The lean is ramped in slowly with a rate limit.\\n- **Direction check:** If the integrated forward velocity (obs[5]) shows the body moving backward early on, the lean direction flips. This guards against my joint-sign assumptions being mirrored.\\n- **Pitch safety:** If the torso pitch gets close to the limit, the controller backs the lean off.\\n\\n```python\\nimport math\\n\\nDT = 0.008\\nLMAX = 0.33          # target forward lean of the (straight) leg, rad\\nPR_RATIO = 0.12 / 0.33  # torso lean as fraction of leg lean\\nRATE = 0.0013        # lean ramp rate per step (rad)\\nCHECK_STEP = 100\\n\\n_step = 0\\n_lam = 0.0\\n_goal = LMAX\\n_x_est = 0.0\\n_checked = False\\n\\n\\ndef reset():\\n    global _step, _lam, _goal, _x_est, _checked\\n    _step = 0\\n    _lam = 0.0\\n    _goal = LMAX\\n    _x_est = 0.0\\n    _checked = False\\n\\n\\ndef _clip(v, lo, hi):\\n    return lo if v < lo else (hi if v > hi else v)\\n\\n\\ndef act(obs):\\n    global _step, _lam, _goal, _x_est, _checked\\n    _step += 1\\n    _x_est += float(obs[5]) * DT\\n\\n    # Direction sanity check: if leaning moved us backward, mirror the lean.\\n    if not _checked and _step >= CHECK_STEP:\\n        _checked = True\\n        if _x_est < -0.03:\\n            _goal = -LMAX\\n\\n    pitch = float(obs[1])\\n    if abs(pitch) > 0.18:\\n        # back off the lean if torso pitch nears the health limit\\n        if _lam > 0:\\n            _lam = max(0.0, _lam - RATE)\\n        elif _lam < 0:\\n            _lam = min(0.0, _lam + RATE)\\n    else:\\n        _lam += _clip(_goal - _lam, -RATE, RATE)\\n\\n    lam = _lam\\n    pr = PR_RATIO * lam\\n\\n    q_thigh, q_leg, q_foot = float(obs[2]), float(obs[3]), float(obs[4])\\n    v_thigh, v_leg, v_foot = float(obs[8]), float(obs[9]), float(obs[10])\\n\\n    t_thigh = pr - lam\\n    t_leg = 0.05      # press knee into its straight limit\\n    t_foot = lam\\n\\n    a_thigh = 2.0 * (t_thigh - q_thigh) - 0.2 * v_thigh - 0.0346 * math.sin(pr)\\n    a_leg = 2.0 * (t_leg - q_leg) - 0.2 * v_leg\\n    a_foot = (3.0 * (t_foot - q_foot) - 0.5 * v_foot\\n              - 0.45 * (0.676 * math.sin(lam) + 0.0694 * math.sin(pr)))\\n\\n    return [_clip(a_thigh, -1.0, 1.0),\\n            _clip(a_leg, -1.0, 1.0),\\n            _clip(a_foot, -1.0, 1.0)]\\n```\",\"ttft_ms\":188663,\"type\":\"result\",\"duration_ms\":201548,\"uuid\":\"b0ab76fa-df3a-422d-8e90-b2f918d0e655\",\"ttft_stream_ms\":757,\"time_to_request_ms\":76,\"first_content_frame_ms\":757,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 2308,
+  "output_tokens": 18968,
+  "output_tokens_details": {
+   "thinking_tokens": 17466
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 18968,
+    "cache_read_input_tokens": 2308,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

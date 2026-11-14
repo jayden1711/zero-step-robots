@@ -1,0 +1,178 @@
+{
+ "seed": 2606596442,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": -0.04483631477247585,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.22918585554195964,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.2015054055678121,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.19200538768585027,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.22108965907542796,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.18460026672580765,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "R",
+    "freq_hz": 1.2,
+    "phase0": 0.0
+   },
+   {
+    "name": "L",
+    "freq_hz": 1.2,
+    "phase0": 3.14159
+   }
+  ],
+  "couplings": [
+   {
+    "from": "R",
+    "to": "L",
+    "weight": 2.0,
+    "phase_lag": 3.14159
+   },
+   {
+    "from": "L",
+    "to": "R",
+    "weight": 2.0,
+    "phase_lag": 3.14159
+   }
+  ],
+  "bias": {},
+  "units": [
+   {
+    "type": "linear",
+    "name": "r_thigh",
+    "inputs": {
+     "sin(R)": 0.6,
+     "obs[1]": -0.8,
+     "obs[10]": -0.2
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "r_knee",
+    "inputs": {
+     "sin(R)": -0.7
+    },
+    "range": 1.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "r_foot",
+    "inputs": {
+     "cos(R)": 0.3,
+     "obs[1]": -0.3
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "l_thigh",
+    "inputs": {
+     "sin(L)": 0.6,
+     "obs[1]": -0.8,
+     "obs[10]": -0.2
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a3": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "l_knee",
+    "inputs": {
+     "sin(L)": -0.7
+    },
+    "range": 1.0,
+    "tol": 0.05,
+    "to": {
+     "a4": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "l_foot",
+    "inputs": {
+     "cos(L)": 0.3,
+     "obs[1]": -0.3
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a5": 1.0
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "walker2d",
+  "variant": "stock",
+  "env_id": "Walker2d-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 77.42230670684702,
+  "sem_return": 0.20651287657067643,
+  "std_return": 2.054777177885731,
+  "median_return": 78.12081619556204,
+  "min_return": 72.49251128140409,
+  "max_return": 81.69027366842498,
+  "mean_length": 81.64,
+  "frac_full_length": 0.0,
+  "mean_distance": -0.024954210492788054,
+  "mean_distance_healthy": -0.04532927492714729,
+  "median_distance_healthy": -0.04219861448515254,
+  "min_distance_healthy": -0.07975531674079168,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

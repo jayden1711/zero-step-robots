@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:43:00-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1006
+ },
+ "seconds": 27.01211452484131,
+ "usage": {
+  "completion_tokens": 2035,
+  "prompt_tokens": 636,
+  "total_tokens": 2671,
+  "prompt_tokens_details": {
+   "cached_tokens": 0
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to craft a deterministic controller for InvertedPendulum-v5. Classic control problem. We need to produce a policy that maximizes time steps before pole falls. This is classic inverted pendulum on a cart. We can approximate with a linear controller using a state-feedback from linearized dynamics. Use LQR for inverted pendulum. But we don't have the dynamics? We can approximate.\n\nBut we can also implement a simple PD controller that pushes cart in direction of pole's angular velocity and angle. Known approach: a PD controller that applies force based on pole angle and angular velocity. Eg a = -k_angle * theta - k_angular_velocity * theta_dot - k_position * x - k_velocity * x_dot. We'll choose gains via trial, but we can't test. Need to guess.\n\nIn many references, for inverted pendulum with cart, typical LQR gains might be something like:\n\nk = [ -10.0, -3.0, -10.0, -2.0] maybe?\n\nBut we need to ensure action clipped between [-3,3]. So we may need to scale.\n\nAlternatively we can implement a simple policy: a = -k * theta - k_dot * theta_dot. Choose k=5, k_dot=2? But may overshoot.\n\nLet's think: The dynamics: For inverted pendulum, the equation: a = M*a_cart? Actually unknown.\n\nWe need to approximate with simple PD on angle and angular velocity. Many references show that for inverted pendulum on a cart, a simple PD controller can stabilize. Example: a = -k1 * theta - k2 * theta_dot. With k1 ~ 10, k2 ~ 1? But we also may need to account for cart position, but we can ignore it for upright stabilization.\n\nHowever, the reward only depends on pole angle <= 0.2 rad. So we just need to keep pole upright, not cart location. So we can ignore cart position and velocity. But we must not let the cart move too far causing episode termination due to non-finite? Actually only termination if angle > 0.2 rad. So cart location can go anywhere? There may be constraints? Observations are not clipped; but if cart goes far, simulation might produce non-finite? Not likely. So we can ignore cart location.\n\nThus we can implement act() that takes obs: [x, theta, x_dot, theta_dot].\n\nWe compute action = -k_theta * theta - k_theta_dot * theta_dot.\n\nWe need to clip action to [-3,3] after computing.\n\nWe can choose k_theta=5, k_theta_dot=1. That gives a range maybe within [-3,3] if theta small. But if initial theta ~ up to 0.01? Actually perturbation up to 0.01. So at start, angle ~ small, maybe 0.02. Then a ~ -5*0.02 - 1*0.01 = -0.11. That's small. So maybe not enough to correct quickly if the pole starts falling. But the system is stable maybe not needed large.\n\nBut if angle gets bigger, action may exceed 3. But clipped. So maybe we need more aggressive. Let's choose k_theta=10, k_theta_dot=2. Then for theta=0.2 rad, a = -10*0.2 - 2*0 = -2. That's within range. For theta=0.3 rad, a would be -3, but we only allow up to 0.2 rad before termination. So within safe. For theta=0.2 rad, action -2. So we can maintain.\n\nBut what if theta_dot large? For initial small perturbations, small.\n\nBut we need to be robust to noise. Maybe add a small bias to push back to center.\n\nAlternatively, we could use a linear quadratic regulator (LQR) solution for inverted pendulum. But we don't have dynamics parameters. Could approximate. But simple PD may suffice.\n\nBetter approach: Use a linear control that maps state vector to action: a = K * [theta, theta_dot]^T. Where K = [-10, -2]. That will keep pole upright. Many resources use K = [-15, -4], etc.\n\nBut we also might include cart velocity and position to avoid drift, but not necessary.\n\nLet's design act() that returns [action]. The function expects a list of floats and returns a list of floats. So we must return [a]. We'll clip to [-3,3].\n\nAlso we can define reset() maybe to reset any state? Not needed.\n\nBut we may want to implement a simple state machine for the controller: We can maintain a reference for the desired angle = 0. So we can compute error. We'll just compute.\n\nPotential pitfalls: The action might be returned as a Python list but we might return numpy array. We need list.\n\nSo:\n\ndef act(obs):\n    x, theta, x_dot, theta_dot = obs\n    Kp = 10.0\n    Kd = 2.0\n    a = -Kp * theta - Kd * theta_dot\n    if a > 3: a = 3\n    elif a < -3: a = -3\n    return [a]\n\nThis is simple. But we need to test if this yields good performance. We can't test but we can guess. Many participants used this simple PD controller and it works.\n\nBut we might also use a small feedforward term: maybe also use cart velocity to push back if cart goes out of center. But we can ignore.\n\nLet's refine: Use a small offset to maintain cart near zero. Add term: -Kx * x - Kxd * x_dot. Choose Kx=0.1, Kxd=0.05 maybe. That may help keep cart from drifting. But not necessary.\n\nWe can compute:\n\na = -Kp*theta - Kd*theta_dot - Kx*x - Kxd*x_dot\n\nLet's choose Kp=10, Kd=2, Kx=0.1, Kxd=0.05.\n\nThen for x=0, no effect. For large x, push back.\n\nClip to [-3,3].\n\nLet's implement that.\n\nAlso we can define reset() to do nothing.\n\nReturn list.\n\nAlso we can optionally keep a state variable for smoothing.\n\nBut we can just compute directly.\n\nLet's produce final code.\n\nWe need to ensure that act(obs) returns a list of length 1. We'll cast to list.\n\nAlso we might convert to float.\n\nOk. Write code.\n\nWe need to output as a single python code block.\n\nWe also might add comments for readability.\n\nLet's produce final answer.",
+ "server_timings": {
+  "cache_n": 0,
+  "prompt_n": 636,
+  "prompt_ms": 809.297,
+  "prompt_per_token_ms": 1.2724795597484277,
+  "prompt_per_second": 785.8672403332769,
+  "predicted_n": 2035,
+  "predicted_ms": 26179.238,
+  "predicted_per_token_ms": 12.870815142576205,
+  "predicted_per_second": 77.69515674978774
+ }
+}

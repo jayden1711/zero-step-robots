@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T22:20:29-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 249.34167408943176,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":248432,\"stop_reason\":\"end_turn\",\"session_id\":\"ff0ac22a-1730-490d-86f0-e93bbb48612a\",\"total_cost_usd\":0.48236120000000005,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":3966,\"output_tokens\":24010,\"output_tokens_details\":{\"thinking_tokens\":22467},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":24010,\"cache_read_input_tokens\":3966,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":24010,\"cacheReadInputTokens\":3966,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.48236120000000005,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":22467,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I couldn't simulate this controller, so it is untested. It is designed by hand from the Walker2d model, and the joint sign conventions below come from my reading of the model file. It is a single central pattern generator: one oscillator drives smooth joint targets, and saturating PD controllers (tanh units) track them, with posture and speed feedback added on top.\\n\\n**How it works**\\n\\n- **Rhythm and leg pattern.** One oscillator at 1 Hz drives the right leg with phase \u03c6 and the left leg with \u03c6+\u03c0.\\n  - Right thigh target: \u22120.25 + 0.25\u00b7sin \u03c6. This sweeps from \u22120.5 to 0, staying inside the hip's [\u2212150\u00b0, 0] range.\\n  - Knee target: \u22120.4 \u2212 0.4\u00b7cos(\u03c6+\u03c0/4). The knee is nearly straight in stance, bends to about \u22120.8 in early swing for foot clearance, and starts bending in late stance for toe-off.\\n  - Ankle target: a +0.1 forward-lean bias, about 0.2 rad toe-up in swing and a little push-off in late stance.\\n- **Torso balance.** Both hips get a torso-pitch term, 2\u00b7(\u03b8 \u2212 0.2). Because the hips can only extend, the gait needs a slight backward torso lean, so 0.2 is the reference. Together with the stance-leg joint stiffness this holds the torso upright.\\n- **Speed regulation.** Both hips also get a Raibert-style term, 0.15\u00b7(vx \u2212 0.6). When the robot moves fast, the swing foot lands further forward; when it is slow, the foot lands closer.\\n- **Damping kept stable for 8 ms control steps.**\\n  - Hip damping uses the thigh's world-frame angular velocity (joint velocity + torso angular velocity). This damps a swinging leg without making the light torso chatter when both feet are planted.\\n  - Ankle damping is kept very small because the foot's inertia is small, and larger damping would go unstable at this step size.\\n- **Start-up.** The initial phase \u03c0/2 makes the right leg's starting target match the standing pose (stance start). The left leg goes straight to its toe-off pose.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"osc\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 1.5708}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"right_hip\\\", \\\"inputs\\\": {\\\"obs[2]\\\": -6.0, \\\"sin(osc)\\\": 1.5, \\\"obs[11]\\\": -0.5, \\\"obs[1]\\\": 2.0, \\\"obs[10]\\\": -0.4, \\\"obs[8]\\\": 0.15},\\n    \\\"threshold\\\": 1.99, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"left_hip\\\", \\\"inputs\\\": {\\\"obs[5]\\\": -6.0, \\\"sin(osc)\\\": -1.5, \\\"obs[14]\\\": -0.5, \\\"obs[1]\\\": 2.0, \\\"obs[10]\\\": -0.4, \\\"obs[8]\\\": 0.15},\\n    \\\"threshold\\\": 1.99, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a3\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"right_knee\\\", \\\"inputs\\\": {\\\"obs[3]\\\": -4.0, \\\"cos(osc)\\\": -1.131, \\\"sin(osc)\\\": 1.131, \\\"obs[12]\\\": -0.2},\\n    \\\"threshold\\\": 1.6, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"left_knee\\\", \\\"inputs\\\": {\\\"obs[6]\\\": -4.0, \\\"cos(osc)\\\": 1.131, \\\"sin(osc)\\\": -1.131, \\\"obs[15]\\\": -0.2},\\n    \\\"threshold\\\": 1.6, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"right_ankle\\\", \\\"inputs\\\": {\\\"obs[4]\\\": -3.0, \\\"cos(osc)\\\": 0.573, \\\"sin(osc)\\\": 0.177, \\\"obs[13]\\\": -0.03},\\n    \\\"threshold\\\": -0.3, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"left_ankle\\\", \\\"inputs\\\": {\\\"obs[7]\\\": -3.0, \\\"cos(osc)\\\": -0.573, \\\"sin(osc)\\\": -0.177, \\\"obs[16]\\\": -0.03},\\n    \\\"threshold\\\": -0.3, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a5\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":236099,\"type\":\"result\",\"duration_ms\":248461,\"uuid\":\"6ea157f3-9b4a-44e4-8780-d74504268516\",\"ttft_stream_ms\":1305,\"time_to_request_ms\":27,\"first_content_frame_ms\":1305,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 3966,
+  "output_tokens": 24010,
+  "output_tokens_details": {
+   "thinking_tokens": 22467
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 24010,
+    "cache_read_input_tokens": 3966,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

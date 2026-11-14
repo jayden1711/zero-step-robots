@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:16:22-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 41.96358895301819,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":40941,\"stop_reason\":\"end_turn\",\"session_id\":\"7c936ed4-7ff8-4837-8ae4-14ac69e0d83e\",\"total_cost_usd\":0.08410005999999999,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":168,\"cache_read_input_tokens\":2413,\"output_tokens\":3731,\"output_tokens_details\":{\"thinking_tokens\":2668},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":168,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3731,\"cache_read_input_tokens\":2413,\"cache_creation_input_tokens\":168,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":168},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3731,\"cacheReadInputTokens\":2413,\"cacheCreationInputTokens\":168,\"webSearchRequests\":0,\"costUSD\":0.08410005999999999,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2668,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller makes the hopper stand still and balanced rather than hop forward. It should score about 1000 points per episode, though I couldn't run it to check.\\n\\n**Why standing:** A trained hopping gait can score around 3000. A hopping gait written without testing would very likely fall early and score well under 1000. Each step the hopper stays healthy earns +1, so standing for all 1000 steps earns about 1000.\\n\\n**Why the hopper should stay up:** If every joint is held stiff, the hopper acts like one rigid body resting on its flat foot. The foot extends from about \u22120.19 m to +0.32 m around the ankle. My estimate puts the centre of mass at about +0.02 m, well inside the foot. That makes the rigid pose statically stable, and the tiny starting perturbations (at most 0.005) won't tip it over.\\n\\n**Settings:**\\n- **Joint stiffness:** Each joint is driven back to its starting angle (about 0) with stiffness and damping. The damping is kept low enough for the 0.008 s step, given the model's built-in joint inertia (armature = 1) and gear ratio of 200.\\n- **Balance correction:** A small, slow correction makes the hopper lean back if its torso angle drifts.\\n- **Torque size:** The torques stay small, so the control cost is negligible.\\n\\n```python\\nimport numpy as np\\n\\n# Hold the hopper rigid in its upright standing pose. With all joints stiff, the\\n# body is a rigid object resting on its flat foot with its centre of mass well\\n# inside the support region, so it stays healthy for the full episode.\\n\\nKP = np.array([1.0, 1.0, 1.0])     # 200 Nm/rad after gear\\nKD = np.array([0.08, 0.08, 0.08])  # kept small for discrete-time stability\\nTARGET = np.array([-0.02, -0.02, 0.0])  # thigh/leg slightly inside their [-150deg, 0] range\\n\\n# Gentle torso-angle correction through the ankle (small, so a sign error\\n# could not destabilise the rigid stance quickly).\\nK_TORSO = 0.3\\nD_TORSO = 0.03\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    o = np.asarray(obs, dtype=float)\\n    q = o[2:5]\\n    qd = o[8:11]\\n    torso_ang = o[1]\\n    torso_angvel = o[7]\\n\\n    a = KP * (TARGET - q) - KD * qd\\n\\n    # Torso angle ~= -(sum of joint angles) - foot tilt; nudging the foot joint\\n    # in the same direction as the torso error rotates the body back upright.\\n    a[2] += -K_TORSO * torso_ang * 0.0 + 0.0  # disabled: rigid stance is already stable\\n    _ = D_TORSO * torso_angvel\\n\\n    a = np.clip(a, -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\\n\\nI left the torso-angle correction switched off (multiplied by 0) because I couldn't confirm the sign of the torso angle without a test run. If the sign were wrong, the correction would push the hopper over instead of righting it. The stiff joints alone already give a stable stance.\",\"ttft_ms\":30359,\"type\":\"result\",\"duration_ms\":41023,\"uuid\":\"f4b8d7e9-1898-4aca-872b-4e6aaad2e6a3\",\"ttft_stream_ms\":718,\"time_to_request_ms\":81,\"first_content_frame_ms\":718,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 168,
+  "cache_read_input_tokens": 2413,
+  "output_tokens": 3731,
+  "output_tokens_details": {
+   "thinking_tokens": 2668
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 168,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3731,
+    "cache_read_input_tokens": 2413,
+    "cache_creation_input_tokens": 168,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 168
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

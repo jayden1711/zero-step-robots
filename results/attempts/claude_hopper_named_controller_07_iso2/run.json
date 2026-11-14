@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:19:43-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 19.759194135665894,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":18410,\"stop_reason\":\"end_turn\",\"session_id\":\"d6d36e24-ea4a-4875-a0f4-f3d8e04892f1\",\"total_cost_usd\":0.04760756000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":5478,\"output_tokens\":2054,\"output_tokens_details\":{\"thinking_tokens\":1679},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2054,\"cache_read_input_tokens\":5478,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2054,\"cacheReadInputTokens\":5478,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.04760756000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1679,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I can't run anything here, so this is a conservative balance controller aimed at surviving all 1000 steps (about 1000 reward) rather than at speed. I haven't tested it, and the sign of the foot feedback is derived from the MuJoCo joint-axis conventions, not checked in simulation.\\n\\n- **Thigh and leg:** a stiff PD controller holds both joints at 0, a straight, extended leg.\\n- **Foot:** a torque on the foot reacts on the leg, so the foot action has the same sign as the torso angle and its angular velocity.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    z, th, q1, q2, q3, vx, vz, w, w1, w2, w3 = obs\\n\\n    a1 = -6.0 * q1 - 0.3 * w1\\n    a2 = -6.0 * q2 - 0.3 * w2\\n    a3 = 3.0 * th + 0.5 * w - 0.5 * q3 - 0.05 * w3\\n\\n    def c(a):\\n        return max(-1.0, min(1.0, float(a)))\\n\\n    return [c(a1), c(a2), c(a3)]\\n```\",\"ttft_ms\":16096,\"type\":\"result\",\"duration_ms\":18489,\"uuid\":\"e4aee792-ba20-409e-a0a8-c58d95eea3dc\",\"ttft_stream_ms\":985,\"time_to_request_ms\":78,\"first_content_frame_ms\":986,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 5478,
+  "output_tokens": 2054,
+  "output_tokens_details": {
+   "thinking_tokens": 1679
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2054,
+    "cache_read_input_tokens": 5478,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

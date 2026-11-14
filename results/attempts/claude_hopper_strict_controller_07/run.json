@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:29:08-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 18.048137426376343,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":16988,\"stop_reason\":\"end_turn\",\"session_id\":\"6098eca9-f19f-45ac-a32e-a0033e3199ae\",\"total_cost_usd\":0.04483336000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":134,\"cache_read_input_tokens\":6188,\"output_tokens\":1922,\"output_tokens_details\":{\"thinking_tokens\":1378},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":134,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1922,\"cache_read_input_tokens\":6188,\"cache_creation_input_tokens\":134,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":134},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1922,\"cacheReadInputTokens\":6188,\"cacheCreationInputTokens\":134,\"webSearchRequests\":0,\"costUSD\":0.04483336000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1378,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I can't run anything here, so this is an untested hand-built balance controller, and the signs are my best reading of the usual layout for this kind of system. If the observation matches a standard hopper (height, body angle, three joint angles, then velocities), the plan is to hold the leg straight and use the ankle torque to correct body tilt, so it survives long enough to collect the +1 per step.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    ang = obs[1]\\n    thigh = obs[3 - 1 + 0] if False else obs[2]\\n    leg = obs[3]\\n    foot = obs[4]\\n    angvel = obs[7]\\n    thigh_v = obs[8]\\n    leg_v = obs[9]\\n    foot_v = obs[10]\\n\\n    a_thigh = -2.0 * thigh - 0.1 * thigh_v + 0.3\\n    a_leg = -2.0 * leg - 0.1 * leg_v + 0.3\\n    a_foot = 3.0 * ang + 0.3 * angvel - 1.0 * foot - 0.05 * foot_v\\n\\n    return [float(np.clip(a_thigh, -1, 1)),\\n            float(np.clip(a_leg, -1, 1)),\\n            float(np.clip(a_foot, -1, 1))]\\n```\\n\\nIndex assumptions: obs[0] is height, obs[1] is body angle, obs[2:5] are thigh, leg and foot angles, and obs[5:11] are velocities (x, z, angular, then the three joints). The ankle gain signs are the part most likely to be wrong; if the tilt correction is backwards, the system will fall quickly.\",\"ttft_ms\":13273,\"type\":\"result\",\"duration_ms\":17042,\"uuid\":\"a2b6fc8f-b5e3-4b79-91dc-3f472f482f83\",\"ttft_stream_ms\":837,\"time_to_request_ms\":53,\"first_content_frame_ms\":837,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 134,
+  "cache_read_input_tokens": 6188,
+  "output_tokens": 1922,
+  "output_tokens_details": {
+   "thinking_tokens": 1378
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 134,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1922,
+    "cache_read_input_tokens": 6188,
+    "cache_creation_input_tokens": 134,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 134
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

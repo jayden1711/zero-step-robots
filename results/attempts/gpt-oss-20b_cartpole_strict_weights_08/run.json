@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T11:54:38-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1008
+ },
+ "seconds": 17.429109811782837,
+ "usage": {
+  "completion_tokens": 1349,
+  "prompt_tokens": 648,
+  "total_tokens": 1997,
+  "prompt_tokens_details": {
+   "cached_tokens": 643
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to produce a deterministic controller that keeps |obs[1]| <= 0.2 as long as possible. Observations: 4 numbers. The state probably some dynamic system, maybe cart-pole? Observations likely positions and velocities; obs[1] might be angle or something. We don't know dynamics. But we can attempt to approximate a simple proportional controller: use obs[1] and maybe obs[3] to correct. Let's design W2 such that action = k * obs[1] + k2 * obs[3] + bias. We want action in [-3,3] clipped.\n\nWe need to keep |obs[1]| small; likely the system is a pendulum where action is torque. Observations: [angle, angle_velocity, position, pos_velocity]. We can design a PD controller: torque = -kp*theta - kd*theta_dot. Use obs[0] and obs[1] maybe. But we don't know mapping: maybe obs[0] is angle, obs[1] is velocity? The reward depends on obs[1] <=0.2. So obs[1] likely is velocity? So we need to keep velocity low. Actually reward if |obs[1]| <=0.2. So we need to keep second observation small. Might be velocity of something.\n\nWe can treat obs[1] as velocity to keep small. We can design action to dampen. action = -k * obs[1]. Also maybe use obs[0] to stabilize angle.\n\nLet's just set W2 row as [0, -1, 0, 0], and bias zero. That yields action = -obs[1], clipped to [-3,3]. For small obs[1], action small.\n\nBut we might need more complexity. Let's also add obs[0] to help angle: action = -obs[0] - obs[1]. So weights: [-1, -1, 0, 0], bias 0. This might keep both small.\n\nSet W2 = [ [-1, -1, 0, 0] ] but need shape [1,16]. We'll produce a hidden layer that approximates this linear mapping. We can set W1 as identity mapping to hidden 16 units? But hidden is tanh. We can set W1 to identity for first 4 units? Actually W1 shape 16x4. We can set first 4 rows to identity, others zero. b1 zero.\n\nThen hidden outputs: first 4 tanh of obs[0], obs[1], obs[2], obs[3]. Others zero -> tanh(0)=0. Then we set W2 row to use only first 2 hidden units: [-1, -1, 0,...] others zero. bias zero. That yields action = -tanh(obs[0]) - tanh(obs[1]). That may dampen. But we want action linear-ish to obs[1]. Tanh will saturate for large values but initial small perturbations.\n\nProbably good.\n\nLet's produce numeric arrays. W1: 16 rows, each 4 numbers. We'll set rows 0-3 identity: [1,0,0,0], [0,1,0,0], [0,0,1,0], [0,0,0,1]. rows 4-15 all zeros: [0,0,0,0].\n\nb1: 16 zeros.\n\nW2: single row of 16 numbers: [-1, -1, 0,0,0,...0] (14 zeros). So first two entries -1, rest 0.\n\nb2: [0].\n\nReturn JSON.",
+ "server_timings": {
+  "cache_n": 643,
+  "prompt_n": 5,
+  "prompt_ms": 46.61,
+  "prompt_per_token_ms": 9.322,
+  "prompt_per_second": 107.2731173567904,
+  "predicted_n": 1349,
+  "predicted_ms": 17344.612,
+  "predicted_per_token_ms": 12.86692284866469,
+  "predicted_per_second": 77.71865983511191
+ }
+}

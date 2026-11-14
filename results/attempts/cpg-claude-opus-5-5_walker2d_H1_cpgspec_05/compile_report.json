@@ -1,0 +1,71 @@
+[
+ {
+  "unit": 0,
+  "name": "right_hip",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 1,
+  "name": "left_hip",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 2,
+  "name": "right_knee_pd",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 3,
+  "name": "left_knee_pd",
+  "type": "linear",
+  "scale": 0.12909944487358058,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 4,
+  "name": "right_knee_swing_flex",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 5,
+  "name": "left_knee_swing_flex",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 6,
+  "name": "right_ankle_pd",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 7,
+  "name": "left_ankle_pd",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "oscillator": "gait",
+  "index": 0,
+  "freq_hz": 0.8,
+  "input_columns": [
+   17,
+   18
+  ]
+ }
+]

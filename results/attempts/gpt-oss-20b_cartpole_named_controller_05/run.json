@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:42:26-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1005
+ },
+ "seconds": 23.31528639793396,
+ "usage": {
+  "completion_tokens": 1848,
+  "prompt_tokens": 636,
+  "total_tokens": 2484,
+  "prompt_tokens_details": {
+   "cached_tokens": 631
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to produce a good controller for InvertedPendulum. Standard control: PD or linear controller. Observations: cart pos, pole angle, cart vel, pole angular vel. We can use linear state feedback to stabilize.\n\nWe can implement a simple proportional-derivative controller on pole angle and angular velocity. Also maybe incorporate cart position and velocity to keep cart near zero.\n\nSimplify: action = k1 * pole_angle + k2 * pole_angular_velocity + k3 * cart_position + k4 * cart_velocity\n\nWe need to choose coefficients. We could use known linear LQR coefficients for inverted pendulum. But we can approximate.\n\nStandard LQR for inverted pendulum? For cart-pole, but here it's cart with pole hinged, but we have InvertedPendulum-v5: it's a cart with pendulum on top; same as standard cart-pole. The typical LQR solution uses state vector [x, theta, x_dot, theta_dot]. The cost matrix Q and R produce K.\n\nWe could approximate coefficients: K = [k1, k2, k3, k4] where action = -Kx. Let's find approximate values: According to literature, for inverted pendulum LQR, K might be something like [0.0, -10, 0.0, -5]? Actually need to compute but we can approximate.\n\nWe can also use simpler rule: apply force proportional to pole angle and angular velocity: action = -k_angle * theta - k_ang_vel * theta_dot. Choose k_angle ~ 10, k_ang_vel ~ 1. But must also include cart position: maybe small k_pos * x + k_vel * x_dot. Use small coefficients to keep cart centered.\n\nSo:\n\nk_theta = 10\nk_theta_dot = 1\nk_x = 0.0\nk_x_dot = 0.0\n\nThen action = -(k_theta * theta + k_theta_dot * theta_dot). That might suffice.\n\nBut we may also need to consider that action clipped to [-3,3].\n\nBetter to use known values from OpenAI gym 'CartPole-v1' with a controller: For example, a simple PD on angle works.\n\nLet's propose: action = -20 * theta - 1.5 * theta_dot\n\nWe can test approximate. But we cannot test.\n\nAlternatively, we can implement a simple PID that tries to keep theta near 0. But we only get angle and angular velocity.\n\nLet's design:\n\n- Proportional on theta: kp = -12 (negative because when theta positive, we need negative force to bring down).\n- Derivative on theta_dot: kd = -1.5\n- Maybe also use cart velocity: but maybe not needed.\n\nSo action = kp * theta + kd * theta_dot\n\nBut we need to ensure sign: If theta is positive (pendulum leaning to right), we want to push cart left (negative force). So kp should be negative: action = -kp * theta? Actually if theta > 0, we want action negative. So we can set kp = -10: then action = -10 * theta gives negative action for positive theta. Good.\n\nSimilarly, if theta_dot positive (pendulum rotating clockwise), we want to push left? Actually if theta positive (right lean) and theta_dot positive, meaning rotating clockwise (toward right?), need to accelerate left to counter. So we can use negative kd: action = -1.5 * theta_dot.\n\nThus action = -10 * theta - 1.5 * theta_dot.\n\nBut we might also want to add cart velocity to push it back to center: if cart velocity positive, we push left. So add -0.5 * x_dot.\n\nBut we need to avoid too large.\n\nThus action = -10 * theta - 1.5 * theta_dot - 0.5 * x_dot\n\nAlso maybe add small cart position: -0.1 * x\n\nLet's just do that.\n\nImplement act(obs):\n\nx, theta, x_dot, theta_dot = obs\naction = -10*theta - 1.5*theta_dot - 0.5*x_dot\n\nWe can optionally clip to [-3,3], but numpy will clip.\n\nReturn [action] in list.\n\nAlso define reset() to optionally reset any state if needed, but none.\n\nBut we can also use a simple integrator for theta error? Not needed.\n\nBetter to include a small integral? But we can ignore.\n\nWe need to import numpy for clip.\n\nWe can also use math. Let's just import numpy as np.\n\nLet's produce module.\n\nPotential issues: The action must be returned as list of 1 float. We'll return [float(action)].\n\nWe should clip: action = np.clip(action, -3, 3).\n\nAlso we may want to ensure action is float. Return as [float(action)].\n\nThat's simple.\n\nWe may also want to set deterministic random state? Not needed.\n\nWe'll also define reset() that does nothing.\n\nOk.\n\nBut to increase performance maybe better to adjust coefficients. Let's refine.\n\nThe typical LQR solution for cart-pole: I found online coefficients: For the state vector [x, x_dot, theta, theta_dot], K = [0, 0, -20, -10] maybe. But we also need cart pos.\n\nMaybe use K = [0.1, 0.0, -15, -5]. But I'm not sure.\n\nLet's choose:\n\naction = -10*theta - 5*theta_dot - 1*x_dot\n\nBut maybe we should also include cart position: -0.5*x\n\nLet's keep action as: action = -10*theta - 5*theta_dot - 1*x_dot - 0.5*x\n\nWill that be too big? Let's compute typical values: theta <=0.2 rad => 10*0.2 =2. So first term up to 2. theta_dot? For stable, maybe up to 5 rad/s? 5*5=25? That would be too high. But we clip to 3. But we might push too extreme. But we clip.\n\nThus we should keep kd lower, maybe 1.5.\n\nLet's settle on action = -10*theta - 1.5*theta_dot - 0.5*x_dot - 0.2*x.\n\nClip to [-3,3].\n\nOk.\n\nAlso, we could incorporate a simple integral on theta: maintain an accumulator of theta error, but that might lead to drift. But we can skip.\n\nGiven unknown environment, but likely these coefficients should be okay.\n\nLet's produce module.\n\nWe need to define act(obs) and reset().\n\nAdd import numpy.\n\nLet's produce final code.",
+ "server_timings": {
+  "cache_n": 631,
+  "prompt_n": 5,
+  "prompt_ms": 47.149,
+  "prompt_per_token_ms": 9.4298,
+  "prompt_per_second": 106.04678784279625,
+  "predicted_n": 1848,
+  "predicted_ms": 23223.785,
+  "predicted_per_token_ms": 12.573787222523011,
+  "predicted_per_second": 79.53053302896147
+ }
+}

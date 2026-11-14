@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:44:29-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 50.34281897544861,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":47925,\"stop_reason\":\"end_turn\",\"session_id\":\"927fcf42-20a7-4923-a36b-79051333dcaa\",\"total_cost_usd\":0.10417989999999998,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":166,\"cache_read_input_tokens\":3165,\"output_tokens\":4637,\"output_tokens_details\":{\"thinking_tokens\":3524},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4637,\"cache_read_input_tokens\":3165,\"cache_creation_input_tokens\":166,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":166},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4637,\"cacheReadInputTokens\":3165,\"cacheCreationInputTokens\":166,\"webSearchRequests\":0,\"costUSD\":0.10417989999999998,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3524,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller is a linear state-feedback (PD) law built into the network. Only one hidden unit is used, with small input weights so that tanh stays close to linear. The other 15 units are zeroed.\\n\\n**Control law** (approximately, while the action is not clipped):\\n\\n`action \u2248 0.10\u00b7x + 3.0\u00b7\u03b8 + 0.15\u00b7\u1e8b + 0.40\u00b7\u03b8\u0307`\\n\\n**Signs.** The hinge rotates about +y, so a positive angle tips the pole toward +x. A positive force pushes the cart toward +x. To catch the pole, the cart therefore pushes in the direction the pole leans, which is why the angle gains are positive. To bring the cart back to the centre of the rail, the controller has to tilt the pole toward the centre first. That is why the position and velocity gains are also positive and kept small.\\n\\n**Gain sizing.** The actuator gear is about 100. The cart is about 10.5 kg and the pole about 5 kg, with its centre of mass at 0.3 m. A rough linearized model gives \u03b8\u0308 \u2248 29\u03b8 \u2212 19u.\\n\\n- **Angle loop:** With these gains the angle loop has a natural frequency of about 5\u20138 rad/s and a damping ratio of about 0.7\u20130.9. That holds across two different modelling approximations.\\n- **Discrete step:** At dt = 0.04 s this is still well inside the stable range for discrete-time control.\\n- **Position loop:** The cart-position loop is slow, around 1 rad/s, and well damped. The cart should stay away from the rail limits without disturbing the balance.\\n\\n**Linearity of tanh.** The tanh input is 0.1 \u00d7 action. For actions up to about 3, that keeps tanh nearly linear (tanh(0.3) \u2248 0.29). W2 = 10 undoes the 0.1 scaling.\\n\\n```json\\n{\\\"W1\\\": [[0.01, 0.3, 0.015, 0.04], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0], [0.0, 0.0, 0.0, 0.0]], \\\"b1\\\": [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0], \\\"W2\\\": [[10.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]], \\\"b2\\\": [0.0]}\\n```\",\"ttft_ms\":39335,\"type\":\"result\",\"duration_ms\":48410,\"uuid\":\"24dd1f50-9369-4d4a-a607-158ead9c64c7\",\"ttft_stream_ms\":2107,\"time_to_request_ms\":479,\"first_content_frame_ms\":2107,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 166,
+  "cache_read_input_tokens": 3165,
+  "output_tokens": 4637,
+  "output_tokens_details": {
+   "thinking_tokens": 3524
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 166,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4637,
+    "cache_read_input_tokens": 3165,
+    "cache_creation_input_tokens": 166,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 166
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

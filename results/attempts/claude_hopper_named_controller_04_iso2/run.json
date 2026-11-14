@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:18:51-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 15.722151041030884,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":14752,\"stop_reason\":\"end_turn\",\"session_id\":\"743035d6-4e6c-4cba-8412-d36161da0500\",\"total_cost_usd\":0.03885156,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":5478,\"output_tokens\":1656,\"output_tokens_details\":{\"thinking_tokens\":1233},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1656,\"cache_read_input_tokens\":5478,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1656,\"cacheReadInputTokens\":5478,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.03885156,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1233,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I couldn't test this, so it's a conservative balancing controller, not a hopping gait. It tries to keep the hopper standing for all 1000 steps, which should score roughly 1000.\\n\\n- **Thigh and leg:** these hold their joint angle near 0, the straight-leg limit, with a small bias into the stop.\\n- **Foot:** ankle torque is a PD controller on torso angle, so it pushes the torso back upright.\\n\\nThe sign convention is my best guess: a positive torso angle means leaning backward, and a positive foot torque pushes the torso forward. If I have that backwards, the ankle torque will destabilise the hopper instead of balancing it.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    ang = obs[1]\\n    q_th, q_leg = obs[2], obs[3]\\n    w = obs[7]\\n    w_th, w_leg = obs[8], obs[9]\\n\\n    a_th = -5.0 * q_th - 0.5 * w_th + 0.3\\n    a_leg = -5.0 * q_leg - 0.5 * w_leg + 0.3\\n    a_foot = 8.0 * ang + 1.0 * w\\n\\n    return [max(-1.0, min(1.0, a)) for a in (a_th, a_leg, a_foot)]\\n```\",\"ttft_ms\":11866,\"type\":\"result\",\"duration_ms\":14830,\"uuid\":\"8eb0e976-eec3-4b58-94ca-f2233675e40e\",\"ttft_stream_ms\":839,\"time_to_request_ms\":74,\"first_content_frame_ms\":839,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 5478,
+  "output_tokens": 1656,
+  "output_tokens_details": {
+   "thinking_tokens": 1233
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1656,
+    "cache_read_input_tokens": 5478,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

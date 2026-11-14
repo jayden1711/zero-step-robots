@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T23:03:58-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 25.631916284561157,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":24931,\"stop_reason\":\"end_turn\",\"session_id\":\"59e761a2-79dd-4983-8969-ab2734d17498\",\"total_cost_usd\":0.06517819999999998,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":138,\"cache_read_input_tokens\":7031,\"output_tokens\":3133,\"output_tokens_details\":{\"thinking_tokens\":2335},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":138,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3133,\"cache_read_input_tokens\":7031,\"cache_creation_input_tokens\":138,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":138},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":3133,\"cacheReadInputTokens\":7031,\"cacheCreationInputTokens\":138,\"webSearchRequests\":0,\"costUSD\":0.06517819999999998,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":2335,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This spec is untested, since I can't run anything. It combines posture stabilisation with a simple alternating gait from one oscillator, and the signs and gains are a best guess.\\n\\n- **Torso:** a PD unit on torso angle and angular velocity drives both hips.\\n- **Feet:** each ankle gets a PD unit that keeps the foot flat.\\n- **Hips:** the oscillator drives them in antiphase.\\n- **Knees:** a reflex on the oscillator flexes each knee during its swing and extends it during stance.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"g\\\", \\\"freq_hz\\\": 1.2, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a1\\\": 0.1, \\\"a4\\\": 0.1},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_pd\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.5, \\\"obs[10]\\\": 0.15},\\n   \\\"range\\\": 4.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0, \\\"a3\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"r_foot_pd\\\", \\\"inputs\\\": {\\\"obs[4]\\\": -1.0, \\\"obs[13]\\\": -0.05},\\n   \\\"range\\\": 3.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"l_foot_pd\\\", \\\"inputs\\\": {\\\"obs[7]\\\": -1.0, \\\"obs[16]\\\": -0.05},\\n   \\\"range\\\": 3.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a5\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_cpg\\\", \\\"inputs\\\": {\\\"sin(g)\\\": 1.0},\\n   \\\"range\\\": 1.5, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 0.4, \\\"a3\\\": -0.4}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"r_knee_swing\\\", \\\"inputs\\\": {\\\"cos(g)\\\": 1.0},\\n   \\\"threshold\\\": 0.3, \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a1\\\": -0.5}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"l_knee_swing\\\", \\\"inputs\\\": {\\\"cos(g)\\\": -1.0},\\n   \\\"threshold\\\": 0.3, \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a4\\\": -0.5}}\\n ]}\\n```\",\"ttft_ms\":20537,\"type\":\"result\",\"duration_ms\":24961,\"uuid\":\"fdbb8fe8-90f6-4ade-8177-63ca94e91bf3\",\"ttft_stream_ms\":949,\"time_to_request_ms\":28,\"first_content_frame_ms\":949,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 138,
+  "cache_read_input_tokens": 7031,
+  "output_tokens": 3133,
+  "output_tokens_details": {
+   "thinking_tokens": 2335
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 138,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3133,
+    "cache_read_input_tokens": 7031,
+    "cache_creation_input_tokens": 138,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 138
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:17:41-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 22.077245235443115,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":21094,\"stop_reason\":\"end_turn\",\"session_id\":\"a08760a7-d1a6-4b45-964d-56adb268b4c0\",\"total_cost_usd\":0.064196,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":1296,\"cache_read_input_tokens\":4320,\"output_tokens\":2356,\"output_tokens_details\":{\"thinking_tokens\":1901},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":1296,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2356,\"cache_read_input_tokens\":4320,\"cache_creation_input_tokens\":1296,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":1296},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2356,\"cacheReadInputTokens\":4320,\"cacheCreationInputTokens\":1296,\"webSearchRequests\":0,\"costUSD\":0.064196,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1901,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I wrote a standing-balance controller, which I could not run or test. Staying upright for all 1000 steps is worth about 1000 reward, so I aimed for that rather than speed. I assumed joint sign conventions from the Hopper model files (all joint axes are `0 -1 0`, so positive torso angle means leaning backward), and the gains are untuned guesses.\\n\\n- **Foot:** positive torque tips the body forward, so the foot torque follows the torso angle and angular velocity to correct a lean.\\n- **Thigh and leg:** PD terms hold both joints near straight (angle 0), with a small torso-angle term on the thigh.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    th = obs[1]\\n    q1, q2, q3 = obs[2], obs[3], obs[4]\\n    w = obs[7]\\n    dq1, dq2, dq3 = obs[8], obs[9], obs[10]\\n\\n    a3 = 6.0 * th + 0.8 * w - 0.5 * q3 * 0.0\\n    a2 = -4.0 * q2 - 0.15 * dq2\\n    a1 = -4.0 * q1 - 0.15 * dq1 + 2.0 * th + 0.3 * w\\n\\n    def c(x):\\n        return max(-1.0, min(1.0, x))\\n\\n    return [c(a1), c(a2), c(a3)]\\n```\",\"ttft_ms\":18490,\"type\":\"result\",\"duration_ms\":21159,\"uuid\":\"e833a301-2188-4e84-b982-2bb3b1f6ff74\",\"ttft_stream_ms\":849,\"time_to_request_ms\":64,\"first_content_frame_ms\":849,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 1296,
+  "cache_read_input_tokens": 4320,
+  "output_tokens": 2356,
+  "output_tokens_details": {
+   "thinking_tokens": 1901
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 1296,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2356,
+    "cache_read_input_tokens": 4320,
+    "cache_creation_input_tokens": 1296,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1296
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

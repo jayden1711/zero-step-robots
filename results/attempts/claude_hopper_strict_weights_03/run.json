@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T12:26:49-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 23.492672443389893,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":22465,\"stop_reason\":\"end_turn\",\"session_id\":\"dfc652ba-8e82-45b3-945a-5bd177a9bf60\",\"total_cost_usd\":0.06592432000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":134,\"cache_read_input_tokens\":5456,\"output_tokens\":2888,\"output_tokens_details\":{\"thinking_tokens\":1900},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":134,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2888,\"cache_read_input_tokens\":5456,\"cache_creation_input_tokens\":134,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":134},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2888,\"cacheReadInputTokens\":5456,\"cacheCreationInputTokens\":134,\"webSearchRequests\":0,\"costUSD\":0.06592432000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1900,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a hand-designed stabilizing controller, not a trained one, and I could not run it, so it is untested. I assumed the layout matches a Hopper-style one-legged walker: obs[0] is height, obs[1] torso angle, obs[2:5] thigh, leg and foot angles, obs[5] forward velocity, obs[6] vertical velocity, obs[7] torso angular velocity, and obs[8:11] joint velocities.\\n\\nThe three action units behave like proportional-derivative (PD) feedback:\\n- **Foot:** pushes against torso lean, like an inverted pendulum balanced from the ankle. It also gently holds the foot angle near zero.\\n- **Thigh:** gets a smaller lean correction, plus a pull toward zero hip angle.\\n- **Knee:** holds the leg straight with a PD term.\\n\\nEach hidden unit stays roughly linear for small inputs. The aim is to stay upright for the full 1000 steps and collect about 1 reward per step. The gains, and the sign of the lean correction, are guesses from rough physics, so the controller could fall over if the assumed layout or signs are wrong.\\n\\n```json\\n{\\n  \\\"W1\\\": [\\n    [0,1.0,-0.25,0,0,0,0,0.15,-0.025,0,0],\\n    [0,0,0,-0.5,0,0,0,0,0,-0.05,0],\\n    [0,2.0,0,0,-0.15,0,0,0.2,0,0,-0.025],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,0,0,0,0,0,0,0,0,0]\\n  ],\\n  \\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n  \\\"W2\\\": [\\n    [2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n    [0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n    [0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0]\\n  ],\\n  \\\"b2\\\": [0,0,0]\\n}\\n```\",\"ttft_ms\":16788,\"type\":\"result\",\"duration_ms\":22518,\"uuid\":\"b2952700-b354-41ec-b75c-daf0ed0d440a\",\"ttft_stream_ms\":851,\"time_to_request_ms\":53,\"first_content_frame_ms\":851,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 134,
+  "cache_read_input_tokens": 5456,
+  "output_tokens": 2888,
+  "output_tokens_details": {
+   "thinking_tokens": 1900
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 134,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2888,
+    "cache_read_input_tokens": 5456,
+    "cache_creation_input_tokens": 134,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 134
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

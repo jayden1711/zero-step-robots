@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T23:02:29-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 18.733657360076904,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":18099,\"stop_reason\":\"end_turn\",\"session_id\":\"352cec6b-b36e-4838-b214-1342c20e06d1\",\"total_cost_usd\":0.047650200000000004,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":7031,\"output_tokens\":2257,\"output_tokens_details\":{\"thinking_tokens\":1368},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2257,\"cache_read_input_tokens\":7031,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2257,\"cacheReadInputTokens\":7031,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.047650200000000004,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1368,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This spec is untested, since I can't run anything here. It combines one oscillator driving the thighs in antiphase, knee flexion during swing, and PD stabilisation of the torso, knees and ankles. The signs of the hip and torso feedback are my best guess from the joint axis conventions and may be wrong.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"p\\\", \\\"freq_hz\\\": 1.5, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a1\\\": 0.1, \\\"a4\\\": 0.1},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_drive\\\", \\\"inputs\\\": {\\\"sin(p)\\\": 1.0}, \\\"range\\\": 1.2, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 0.4, \\\"a3\\\": -0.4}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"r_swing_knee\\\", \\\"inputs\\\": {\\\"cos(p)\\\": 1.0}, \\\"threshold\\\": 0.3, \\\"sharpness\\\": 5.0, \\\"to\\\": {\\\"a1\\\": -0.3}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"l_swing_knee\\\", \\\"inputs\\\": {\\\"cos(p)\\\": -1.0}, \\\"threshold\\\": 0.3, \\\"sharpness\\\": 5.0, \\\"to\\\": {\\\"a4\\\": -0.3}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_pd\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 2.0, \\\"obs[10]\\\": 0.3}, \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0, \\\"a3\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"r_knee_pd\\\", \\\"inputs\\\": {\\\"obs[3]\\\": -1.0, \\\"obs[12]\\\": -0.1}, \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"l_knee_pd\\\", \\\"inputs\\\": {\\\"obs[6]\\\": -1.0, \\\"obs[15]\\\": -0.1}, \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"r_ankle_pd\\\", \\\"inputs\\\": {\\\"obs[4]\\\": -1.0, \\\"obs[13]\\\": -0.1}, \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"l_ankle_pd\\\", \\\"inputs\\\": {\\\"obs[7]\\\": -1.0, \\\"obs[16]\\\": -0.1}, \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a5\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":13568,\"type\":\"result\",\"duration_ms\":18130,\"uuid\":\"4e89fc58-6e5c-4a65-9942-ee2a186cc619\",\"ttft_stream_ms\":1011,\"time_to_request_ms\":30,\"first_content_frame_ms\":1012,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 7031,
+  "output_tokens": 2257,
+  "output_tokens_details": {
+   "thinking_tokens": 1368
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2257,
+    "cache_read_input_tokens": 7031,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

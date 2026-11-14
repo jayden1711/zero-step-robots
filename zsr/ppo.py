@@ -12,7 +12,7 @@ from .harness import evaluate
 from .policy import MLPPolicy, save_weights
 from .tasks import HIDDEN, make_env
 
-TIMESTEPS = {"cartpole": 100_000, "hopper": 1_000_000}
+TIMESTEPS = {"cartpole": 100_000, "hopper": 1_000_000, "walker2d": 1_000_000}
 
 
 def export_actor(model, task: str) -> MLPPolicy:

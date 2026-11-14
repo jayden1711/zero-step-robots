@@ -1,0 +1,41 @@
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 0.85 | 0.94 | torso angle out of range
+1 | 0.85 | 0.95 | torso angle out of range
+2 | 0.83 | 0.93 | torso angle out of range
+3 | 0.83 | 0.93 | torso angle out of range
+4 | 0.83 | 0.92 | torso angle out of range
+5 | 0.84 | 0.94 | torso angle out of range
+6 | 0.85 | 0.94 | torso angle out of range
+7 | 0.84 | 0.93 | torso angle out of range
+8 | 0.85 | 0.95 | torso angle out of range
+9 | 0.85 | 0.94 | torso angle out of range
+
+Over the 10 episodes: mean d 0.84 m, min 0.83, max 0.85; mean time survived 0.94 s; mean forward speed 0.90 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+thigh | -0.815 | -0.005 | 0.02 | 0.00
+leg | 0.001 | 0.003 | 0.51 | 0.00
+foot | 0.004 | 0.808 | 0.13 | 0.00
+torso angle min -0.054, max 0.198 rad; torso height min 0.81, max 1.25 m
+foot: on the ground 0.83 of the steps, 2 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | 0.00
+0.10 | 0.00 | 1.20 | -0.050 | yes | 1.31
+0.20 | 0.05 | 1.21 | -0.051 | yes | 2.51
+0.30 | 0.14 | 1.20 | -0.033 | yes | 3.82
+0.40 | 0.22 | 1.19 | -0.013 | yes | 5.03
+0.50 | 0.27 | 1.18 | 0.004 | yes | 0.05
+0.60 | 0.32 | 1.15 | 0.021 | yes | 1.26
+0.70 | 0.45 | 1.11 | 0.058 | yes | 2.56
+0.80 | 0.61 | 1.02 | 0.109 | no | 3.77
+0.90 | 0.79 | 0.85 | 0.174 | yes | 5.08
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+balance: 0.00
+push: 0.00

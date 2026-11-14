@@ -1,6 +1,6 @@
 # Criticisms a skeptical expert would raise, and how this repo answers them
 
-No result numbers here. Numbers live in the git-ignored `results/` (paths below) until the owner approves publishing.
+No result numbers here. Numbers live in `results/` (paths below), published with the owner's approval on 2026-11-11.
 Each item is one of: **Addressed** (where), **Extra experiment** (what, and whether it was run), or **Limitation**
 (stated up front). Everything is simulation (MuJoCo through Gymnasium); no real robot is involved anywhere.
 
@@ -271,3 +271,69 @@ Merge or reconcile `prepost` and `rerun` (the earlier reviewer's corrections are
 (the clips were regenerated on `clips2`); handle the git history; state "one reply, no execution, simulation" and
 "stands still" beside every hopper number, "on the stock environment" beside the 1 m statement, and the goal-arm limit (R-C1);
 the owner decides whether to run the distance-scored arm.
+
+## CPG track (pre-registered 2026-11-09, `docs/prereg-2026-11-09-cpg.md`)
+
+Target: an LLM writes, through `circuitc`, an oscillator / CPG network (`cpg-v1`) that moves Hopper-v5, then Walker2d-v5,
+at least 3 m forward before falling; hint levels H2 (full), H1 (structure), H0 (none); Claude Opus 5.5 and Sonnet 5.5,
+10 attempts per model x task x level. Outcome, stated plainly: **it did not work.** No arm met the target and no single
+attempt passed, on either task, at any hint level. Numbers: `results/cpg_report.md` (`scripts/cpg_report.py results`).
+
+C1. **"The bar is out of reach for this network."** Hopper: **Addressed.** A CPG of the same `cpg-v1` form, structure
+    by hand and parameters set by a search on dev seeds only (budget fixed in the prereg), passes on the scoring seeds,
+    so the network can do it. Walker2d: **Limitation.** The tuned CPG did not reach 3 m within its budget, so headroom
+    for `cpg-v1` on Walker2d is not shown; PPO's plain 16-unit network does reach it, so the bar itself is reachable.
+    The Walker2d negative result is therefore weaker than the hopper one.
+C2. **"The tuned CPG passes by covering 3 m and then falling."** True, and stated: its episodes reach 3 m and then end
+    in a fall; the metric (distance to the last healthy step) counts that, as pre-registered. It shows the network can
+    produce the motion, not a sustained gait.
+C3. **"The hints gave away the answer"** / **"the hints were wrong."** Hint text was written from the env XML, the
+    Gymnasium docs and generic gait knowledge, frozen with SHA-256 before any tuning or attempt
+    (`prompts/SHA256SUMS-cpg.txt`); no tuned constant is in it. Every sign fact in H2 was checked numerically in the env
+    before freezing. Even at H2 no attempt passed. A post-hoc check (labelled as such in the report): the sign of the
+    torso-pitch to hip gain is correct more often at H2 than at H1/H0, and at least one H2 reply argued the hint was
+    inconsistent and flipped the sign, using an axis convention that does not hold in this model. A correct sign alone
+    did not give a gait.
+C4. **"One reply with no feedback is unfair; with rollouts it would work."** By design (prereg section 7, zero training).
+    A feedback / revision arm was not pre-registered and was not run. This is the contrast with LLM-in-the-loop work
+    (Prompt2Walk) and with reward-writing plus RL (Eureka, Language to Rewards); it says nothing about those settings.
+C5. **"The spec language is the obstacle, not the design."** Partly addressed: every reply compiled (no compile or
+    load failures), so format was not the failure. Not analysed: how often `linear` units ran outside their declared
+    range (saturation). **Limitation.**
+C6. **"Two models, ten attempts per cell."** Limitation, as in item 8. The local models were in the prereg only if the GPU
+    queue reached this project before 2026-11-20; they were not run.
+C7. **Run-order and transport incidents.** One Opus hopper call timed out at the runner's 900 s limit; it is kept
+    (renamed `_try1`, with a NOTE.md) and was repeated once with the same index, as the prereg allows; later calls used a
+    1800 s timeout (recorded per call). Because the old runner exited on that failure, a chained Walker2d batch started
+    before the Sonnet hopper cells, against the prereg order; it was stopped within a minute with one call in flight and
+    no reply; that call is kept (renamed `_aborted1`). The Walker2d cells then ran in the prereg order. Both renamed
+    directories are listed in the report as transport failures, not attempts.
+C8. **"PPO beats it, so what?"** PPO is an upper reference trained with a million environment steps on the env reward;
+    the LLM arms use zero steps. The comparison shows the gap, not a like-for-like contest.
+
+## CPG feedback arm (pre-registered 2026-11-10, `docs/prereg-2026-11-10-cpg-feedback.md`)
+
+The model writes the `cpg-v1` design, reads a fixed rollout summary on dev seeds, and revises 5 times; the round-5 design
+is scored on held-out seeds. Outcome, stated plainly: **the pre-registered target was not met** (no model x task cell had
+5 of 10 passing attempts), but on hopper some Opus attempts pass the 3 m bar, the first LLM-written controllers in this
+project to do so; one of them hops for the full episode in every held-out episode. Walker2d: no attempt passes, and one
+model got worse with feedback. Numbers: `results/cpg_feedback_report.md`, `results/cpg_feedback_findings.md`.
+
+F1. **"This is no longer zero-shot."** Correct, and labelled everywhere: the model sees dev-seed rollout summaries of its
+    own designs. Still no gradient step, optimiser, code-side search or code-side selection: every number is the
+    model's, the final design is the round-5 reply (not the best round), and code only compiles, simulates and summarises.
+F2. **"It overfit the practice episodes."** Addressed: the scoring seeds are never shown; every round is scored on them
+    only for the report; dev and held-out means of the passing designs agree closely.
+F3. **"Random revisions would do as well."** Tested with the same budget (prereg baselines): random search from a random
+    CPG never passes; random search from the model's own round-0 designs passes only where the start already passed. On
+    hopper one Opus attempt went from standing to a sustained hop through its own revisions, after reading the contact
+    pattern in the summary; random search from the same start did not. One case is an anecdote, not a rate.
+F4. **"A pass appeared before any feedback."** True: one Opus round-0 design (no feedback yet, slightly different opening
+    paragraph from the no-feedback prompt) passed. One in 10 against 0 in 10 in the no-feedback arm is not a measurable
+    difference; the no-feedback verdict is unchanged and not re-scored.
+F5. **"Feedback helps, so more rounds would solve it."** Not shown: Walker2d did not pass, and Opus on Walker2d got worse
+    with feedback. More rounds or a larger cohort were not pre-registered and were not run.
+F6. **"Two models, ten attempts per cell, one hint level."** Limitation: H2 only (H0 was conditional and not triggered).
+F7. **Prior-work contrast.** Prompt2Walk queries the LLM every control step; Eureka and Language to Rewards have the LLM
+    write reward code that RL or MPC optimises. Here the LLM writes the controller's numbers and no optimiser runs.
+    LLM-as-optimiser work with rollout feedback is related and has not been checked (TO VERIFY).

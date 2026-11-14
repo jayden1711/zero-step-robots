@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:21:53-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 13.870496988296509,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":12557,\"stop_reason\":\"end_turn\",\"session_id\":\"e193a60d-809b-401d-9026-347ca51cfde2\",\"total_cost_usd\":0.031447680000000006,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":134,\"cache_read_input_tokens\":6044,\"output_tokens\":1315,\"output_tokens_details\":{\"thinking_tokens\":1106},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":134,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1315,\"cache_read_input_tokens\":6044,\"cache_creation_input_tokens\":134,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":134},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1315,\"cacheReadInputTokens\":6044,\"cacheCreationInputTokens\":134,\"webSearchRequests\":0,\"costUSD\":0.031447680000000006,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1106,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I haven't run this, so the gains are a judgment call. The observation looks like a cart-pole (cart position, pole angle, cart velocity, pole angular velocity). I wrote a linear state-feedback controller on that assumption, with all gains positive, so the cart is pushed toward the side the pole leans. It is stateless, so `reset` does nothing.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, xd, thd = obs\\n    u = 0.2 * x + 4.0 * th + 0.4 * xd + 0.8 * thd\\n    return [max(-3.0, min(3.0, u))]\\n```\",\"ttft_ms\":11277,\"type\":\"result\",\"duration_ms\":12689,\"uuid\":\"3a8ea1b2-5312-489f-a8e3-65c82da5d81e\",\"ttft_stream_ms\":834,\"time_to_request_ms\":131,\"first_content_frame_ms\":834,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 134,
+  "cache_read_input_tokens": 6044,
+  "output_tokens": 1315,
+  "output_tokens_details": {
+   "thinking_tokens": 1106
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 134,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1315,
+    "cache_read_input_tokens": 6044,
+    "cache_creation_input_tokens": 134,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 134
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

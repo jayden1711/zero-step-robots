@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-09T19:00:16-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 478.1833436489105,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":477439,\"stop_reason\":\"end_turn\",\"session_id\":\"1f01fb61-07aa-4f10-8e91-399d2b0ea09f\",\"total_cost_usd\":0.893454,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":3930,\"output_tokens\":44565,\"output_tokens_details\":{\"thinking_tokens\":43309},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":44565,\"cache_read_input_tokens\":3930,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":44565,\"cacheReadInputTokens\":3930,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.893454,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":43309,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a hand-reasoned hopping controller; I couldn't simulate or tune it, so treat the parameters as an untested first guess.\\n\\n**Conventions.** All joints use axis (0,\u22121,0). Positive torso angle means leaning back, and a positive joint angle swings the distal link forward. Positive a2 tilts the toe up and the upper body forward.\\n\\n**Constraint that shapes the gait.** The hip range is [\u2212150\u00b0, 0] and the torso must stay within \u00b10.2 rad. This rules out a knee-driven crouch, and the leg is far heavier than the torso, so the leg can't be swung during flight. The gait therefore comes from the ankle and foot:\\n\\n- **Hip (a0):** a PD loop keeps the torso upright.\\n- **Knee (a1):** a PD loop holds the knee nearly straight (\u22120.05 rad).\\n- **Ankle balance (a2):** a PD loop controls how far the upper body's centre of mass sits ahead of the ankle (L, a linear function of the torso, hip and knee angles), with a set-point of 5 cm forward.\\n  - A velocity term leans the body further forward when torso x-velocity is below 0.8 m/s.\\n  - A weak term keeps the foot level in world frame.\\n- **Push-off:** a 2.2 Hz oscillator fires a one-sided toe-down push (up to 0.6) during about 30% of each cycle. The push lifts the heel and launches a short hop. Its reaction rotates the upper body backward, which places the foot ahead of the centre of mass for the next landing.\\n  - The oscillator starts at phase \u22123.0, so the first push comes about 0.25 s in, after the initial drop has settled.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.2, \\\"phase0\\\": -3.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a1\\\": -0.15, \\\"a2\\\": -0.065},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_pd_hip\\\",\\n    \\\"inputs\\\": {\\\"obs[1]\\\": 4.0, \\\"obs[7]\\\": 0.3},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_hold\\\",\\n    \\\"inputs\\\": {\\\"obs[3]\\\": -3.0, \\\"obs[9]\\\": -0.3},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_balance\\\",\\n    \\\"inputs\\\": {\\\"obs[1]\\\": 0.822, \\\"obs[2]\\\": 0.717, \\\"obs[3]\\\": 0.351, \\\"obs[4]\\\": -0.3,\\n               \\\"obs[7]\\\": 0.222, \\\"obs[8]\\\": 0.197, \\\"obs[9]\\\": 0.112, \\\"obs[10]\\\": -0.04,\\n               \\\"obs[5]\\\": -0.2},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"toe_push\\\",\\n    \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0}, \\\"threshold\\\": 0.6, \\\"sharpness\\\": 8.0,\\n    \\\"to\\\": {\\\"a2\\\": -0.3}}\\n ]}\\n```\\n\\n**How the biases break down:**\\n\\n- **a1 = \u22120.15:** knee set-point term, \u22123 \u00d7 0.05.\\n- **a2 = \u22120.065,** the sum of three parts:\\n  - +0.075 from the balance set-point (1.5 \u00d7 0.05 m)\\n  - +0.16 from the velocity target (0.2 \u00d7 0.8 m/s)\\n  - \u22120.3 so that the push is 0 when off and \u22120.6 when on\",\"ttft_ms\":467091,\"type\":\"result\",\"duration_ms\":477464,\"uuid\":\"45491df6-7f68-4a46-ae66-4676b5a9d488\",\"ttft_stream_ms\":1384,\"time_to_request_ms\":22,\"first_content_frame_ms\":1385,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 3930,
+  "output_tokens": 44565,
+  "output_tokens_details": {
+   "thinking_tokens": 43309
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 44565,
+    "cache_read_input_tokens": 3930,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

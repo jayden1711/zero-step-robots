@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T14:31:18-0600",
+ "prompt_sha256": "577d898ceeecb90e25e80a3b2d3fb659c339d98ed987ea909fe9791ccde9c741",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 25.938655138015747,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":25242,\"stop_reason\":\"end_turn\",\"session_id\":\"e5ca5333-d150-41d3-93cf-221a63260e22\",\"total_cost_usd\":0.127089,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":7655,\"cache_read_input_tokens\":4505,\"output_tokens\":3247,\"output_tokens_details\":{\"thinking_tokens\":2259},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":7655,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3247,\"cache_read_input_tokens\":4505,\"cache_creation_input_tokens\":7655,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":7655},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":3247,\"cacheReadInputTokens\":4505,\"cacheCreationInputTokens\":7655,\"webSearchRequests\":0,\"costUSD\":0.127089,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":2259,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Round 1 stood on both feet with stiff legs and slowly tipped over backwards. The thighs were already at their joint limit (angle 0), so the hip feedback could do nothing. This revision adds ankle torque feedback on torso angle, because a positive foot torque with the foot planted pitches the body forward. It also deepens the knee flexion during swing and adds a small forward-lean bias at the feet. I have not run it.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [\\n  {\\\"name\\\": \\\"R\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 0.0},\\n  {\\\"name\\\": \\\"L\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 3.14159}\\n ],\\n \\\"couplings\\\": [\\n  {\\\"from\\\": \\\"R\\\", \\\"to\\\": \\\"L\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159},\\n  {\\\"from\\\": \\\"L\\\", \\\"to\\\": \\\"R\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159}\\n ],\\n \\\"bias\\\": {\\\"a1\\\": 0.1, \\\"a4\\\": 0.1, \\\"a2\\\": 0.1, \\\"a5\\\": 0.1},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"r_thigh\\\", \\\"inputs\\\": {\\\"sin(R)\\\": 0.5, \\\"obs[1]\\\": -2.0, \\\"obs[10]\\\": -0.3},\\n   \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"l_thigh\\\", \\\"inputs\\\": {\\\"sin(L)\\\": 0.5, \\\"obs[1]\\\": -2.0, \\\"obs[10]\\\": -0.3},\\n   \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a3\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"r_knee\\\", \\\"inputs\\\": {\\\"sin(R)\\\": -0.6, \\\"obs[3]\\\": -0.5, \\\"obs[12]\\\": -0.05},\\n   \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"l_knee\\\", \\\"inputs\\\": {\\\"sin(L)\\\": -0.6, \\\"obs[6]\\\": -0.5, \\\"obs[15]\\\": -0.05},\\n   \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"r_foot\\\", \\\"inputs\\\": {\\\"obs[4]\\\": -0.3, \\\"obs[13]\\\": -0.03, \\\"obs[1]\\\": -1.5, \\\"obs[10]\\\": -0.15},\\n   \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"l_foot\\\", \\\"inputs\\\": {\\\"obs[7]\\\": -0.3, \\\"obs[16]\\\": -0.03, \\\"obs[1]\\\": -1.5, \\\"obs[10]\\\": -0.15},\\n   \\\"range\\\": 3.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a5\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":20336,\"type\":\"result\",\"duration_ms\":25281,\"uuid\":\"8aae7180-fcfe-4b90-9811-483d69191857\",\"ttft_stream_ms\":881,\"time_to_request_ms\":38,\"first_content_frame_ms\":881,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 7655,
+  "cache_read_input_tokens": 4505,
+  "output_tokens": 3247,
+  "output_tokens_details": {
+   "thinking_tokens": 2259
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 7655,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3247,
+    "cache_read_input_tokens": 4505,
+    "cache_creation_input_tokens": 7655,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 7655
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

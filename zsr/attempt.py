@@ -15,16 +15,24 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .cpg import CPGPolicy
 from .harness import PythonController, evaluate, limit_resources
 from .policy import MLPPolicy, n_params, shapes
 from .tasks import HIDDEN, TASKS
 
 ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+from circuitc import compile_cpg  # noqa: E402
 PROMPTS = ROOT / "prompts"
-ARMS = {"strict": "v2", "named": "v1", "goal": "v2"}
+ARMS = {"strict": "v2", "named": "v1", "goal": "v2", "H0": "v3", "H1": "v3", "H2": "v3"}
+# H0/H1/H2 = CPG track hint levels (docs/prereg-2026-11-09-cpg.md section 4), mode `cpgspec` only.
+LEVELS = ("H0", "H1", "H2")
+CPG_TASKS = ("hopper", "walker2d")
 # `goal` = the strict prompt plus one sentence naming the goal (forward distance); hopper only.
-ARM_TASKS = {"goal": ("hopper",)}
-MODES = ("weights", "controller")
+ARM_TASKS = {"goal": ("hopper",), **{lv: CPG_TASKS for lv in LEVELS}}
+PROMPT_TASKS = ("cartpole", "hopper")  # tasks with v1/v2 prompts; walker2d exists only in the CPG track (v3)
+MODES = ("weights", "controller")  # v1/v2 modes; the CPG track uses mode "cpgspec"
+ALL_MODES = MODES + ("cpgspec",)
 
 
 def _read(name: str) -> str:
@@ -32,20 +40,42 @@ def _read(name: str) -> str:
 
 
 def arm_valid(task: str, arm: str) -> bool:
-    return task in ARM_TASKS.get(arm, (task,))
+    return task in ARM_TASKS.get(arm, PROMPT_TASKS)
 
 
 def component_files(task: str, mode: str, arm: str) -> list:
     v = ARMS[arm]
+    if arm in LEVELS:
+        hints = [f"hint_{task}_H{k}_{v}.md" for k in range(1, int(arm[1]) + 1)]
+        return [f"template_{v}.md", f"task_{task}_{v}.md", f"format_cpgspec_{v}.md", *hints]
     files = [f"template_{v}.md", f"task_{task}_{v}.md", f"format_{mode}_{v}.md"]
     if arm == "goal":
         files.append(f"goal_{task}_{v}.md")
     return files
 
 
+def build_prompt_cpg(task: str, level: str) -> str:
+    t, v = TASKS[task], ARMS[level]
+    files = component_files(task, "cpgspec", level)
+    fmt = _read(files[2])
+    for k, val in {"{{OBS_DIM}}": t.obs_dim, "{{ACT_DIM}}": t.act_dim, "{{OBS_DIM_MAX}}": t.obs_dim - 1,
+                   "{{ACT_LAST}}": f"a{t.act_dim - 1}"}.items():
+        fmt = fmt.replace(k, str(val))
+    hint = "\n\n".join(_read(f).strip() for f in files[3:])
+    text = _read(files[0]).replace("{{TASK_SPEC}}", _read(files[1]).strip())
+    text = text.replace("{{HINT}}", "\n" + hint + "\n" if hint else "")
+    text = text.replace("{{OUTPUT_FORMAT}}", fmt.strip())
+    assert "{{" not in text, "unfilled placeholder"
+    return text.strip() + "\n"
+
+
 def build_prompt(task: str, mode: str, arm: str = "strict") -> str:
     if not arm_valid(task, arm):
         raise ValueError(f"arm {arm!r} is not defined for task {task!r}")
+    if (arm in LEVELS) != (mode == "cpgspec"):
+        raise ValueError("mode 'cpgspec' goes with the hint levels H0/H1/H2 and only with them")
+    if arm in LEVELS:
+        return build_prompt_cpg(task, arm)
     t, sh = TASKS[task], shapes(task)
     v = ARMS[arm]
     fmt = _read(f"format_{mode}_{v}.md")
@@ -105,6 +135,21 @@ def score_attempt(d: Path, episodes: int = 100) -> dict:
                 raise ValueError("no ```json block in reply")
             (d / "parsed.weights.json").write_text(block)
             pol = MLPPolicy(task, json.loads(block))
+        elif mode == "cpgspec":
+            block = extract_block(reply, "json")
+            if block is None:
+                raise ValueError("no ```json block in reply")
+            (d / "parsed.spec.json").write_text(block)
+            spec = json.loads(block)
+            t = TASKS[task]
+            if isinstance(spec, dict) and (spec.get("obs_dim"), spec.get("act_dim"), spec.get("hidden")) != (
+                    t.obs_dim, t.act_dim, HIDDEN):
+                raise ValueError(f"spec dims {spec.get('obs_dim')}/{spec.get('act_dim')}/{spec.get('hidden')} do not "
+                                 f"match the task ({t.obs_dim}/{t.act_dim}/{HIDDEN})")
+            params, report = compile_cpg(spec)
+            (d / "parsed.cpg.json").write_text(json.dumps(params, indent=1))
+            (d / "compile_report.json").write_text(json.dumps(report, indent=1))
+            pol = CPGPolicy(task, params)
         else:
             block = extract_block(reply, "python")
             if block is None:
@@ -124,12 +169,12 @@ def main(argv=None):
     sub = ap.add_subparsers(dest="cmd", required=True)
     p = sub.add_parser("prompt")
     p.add_argument("task", choices=TASKS)
-    p.add_argument("mode", choices=MODES)
-    p.add_argument("--arm", choices=ARMS, default="strict")
+    p.add_argument("mode", choices=ALL_MODES)
+    p.add_argument("--arm", choices=ARMS, default="strict", help="strict|named|goal, or H0|H1|H2 with mode cpgspec")
     n = sub.add_parser("new")
     n.add_argument("id")
     n.add_argument("task", choices=TASKS)
-    n.add_argument("mode", choices=MODES)
+    n.add_argument("mode", choices=ALL_MODES)
     n.add_argument("--model", required=True)
     n.add_argument("--interface", required=True, help="e.g. 'subscription UI (pasted by hand)' or 'local gpu-run'")
     n.add_argument("--arm", choices=ARMS, default="strict", help="strict = prompt v2 (raw numbers), named = v1")

@@ -177,3 +177,18 @@ recorded in `~/projects/worklane-notes/addenda-2026-11-09.md`). Every earlier ar
   - controllers through `sim-run`, local models through `gpu-run`;
   - the contamination labelling;
   - CRITIQUES tracking.
+
+## Addendum 2026-11-09 (b): CPG track (owner decision)
+Pre-registration in [docs/prereg-2026-11-09-cpg.md](docs/prereg-2026-11-09-cpg.md), committed before any code, prompt,
+baseline or attempt of the track. The LLM writes an oscillator / CPG network through `circuitc` (format `cpg-v1`);
+target: Hopper-v5, then Walker2d-v5, at least 3 m forward without falling; hint levels H2 -> H1 -> H0; timebox ends 2026-11-23.
+Result (2026-11-09): all 120 pre-registered Claude attempts ran; the target was not met (see CRITIQUES.md, CPG track;
+numbers in `results/cpg_report.md`).
+
+## Addendum 2026-11-10: CPG feedback arm (owner decision)
+Pre-registration in [docs/prereg-2026-11-10-cpg-feedback.md](docs/prereg-2026-11-10-cpg-feedback.md), committed before any
+code, prompt, baseline or attempt of the arm: the model revises its cpg-v1 design 5 times from a fixed dev-seed rollout
+summary; round-5 design scored on held-out seeds; baselines: the no-feedback arm and random-search proposers with the same
+budget. The no-feedback result stays as reported.
+Result (2026-11-10): all 240 pre-registered calls ran; the arm-level target was not met on either task, but 2 of 10 Opus
+hopper attempts pass the 3 m bar (see CRITIQUES.md, CPG feedback arm; numbers in `results/cpg_feedback_report.md`).

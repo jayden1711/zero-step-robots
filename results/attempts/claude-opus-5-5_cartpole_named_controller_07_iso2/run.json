@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:58:19-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 44.1867790222168,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":43052,\"stop_reason\":\"end_turn\",\"session_id\":\"e0a1ce9d-2fbf-4eb9-8e6b-9cd32b746824\",\"total_cost_usd\":0.09464994,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":2227,\"output_tokens\":4212,\"output_tokens_details\":{\"thinking_tokens\":2434},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4212,\"cache_read_input_tokens\":2227,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4212,\"cacheReadInputTokens\":2227,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.09464994,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2434,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I computed the gains by reasoning about the physics, not by tuning against the simulation. Nothing has been run, so the score is unverified.\\n\\n**Approach.** The controller is a discrete-time LQR (linear-quadratic regulator), computed once when the module is imported.\\n\\n- **Model.** I estimated the masses from the standard MuJoCo XML geometry, using density 1000:\\n  - cart \u2248 10.5 kg\\n  - pole \u2248 5 kg, length 0.6 m\\n  - motor gear assumed to be 100, so 1 unit of action \u2248 100 N\\n- **Linearisation.** I linearised the cart-pole around upright, added small damping terms, and converted it to discrete time at the 0.04 s step using a series matrix exponential.\\n- **Solving.** The Riccati equation is solved by iterating it to convergence. The resulting gains keep the pole upright (fast inner loop) and slowly bring the cart back to the rail centre (outer loop).\\n- **Robustness.** LQR has wide stability margins, so modest errors in the mass or gear estimates should still be stable. Because the gains are all computed at import, `act` itself is fast and has no state.\\n- **Fallback.** If the numerics fail or give implausible gains, the code uses hand-derived proportional-derivative gains instead. These were chosen for closed-loop pole frequency ~8 rad/s plus a gentle cart-centring term.\\n\\n```python\\nimport numpy as np\\n\\nDT = 0.04\\n\\n\\ndef _expm(M, terms=30):\\n    out = np.eye(M.shape[0])\\n    term = np.eye(M.shape[0])\\n    for k in range(1, terms):\\n        term = term @ M / k\\n        out = out + term\\n    return out\\n\\n\\ndef _compute_gain():\\n    # Physical estimates (MuJoCo InvertedPendulum, density 1000)\\n    Mc = 10.47      # cart mass\\n    m = 5.02        # pole mass\\n    l = 0.3         # pivot -> pole COM\\n    I_com = m * 0.6 ** 2 / 12.0\\n    Ip = I_com + m * l * l\\n    g = 9.81\\n    gear = 100.0\\n    d_slide = 1.0\\n    d_hinge = 1.0\\n\\n    Mm = np.array([[Mc + m, m * l],\\n                   [m * l, Ip]])\\n    Minv = np.linalg.inv(Mm)\\n    # generalized forces: [F - d_slide*v, m g l th - d_hinge*w]\\n    # state s = [x, th, v, w]\\n    Kq = np.array([[0.0, 0.0],\\n                   [0.0, m * g * l]])\\n    Dq = np.array([[d_slide, 0.0],\\n                   [0.0, d_hinge]])\\n    A = np.zeros((4, 4))\\n    A[0, 2] = 1.0\\n    A[1, 3] = 1.0\\n    A[2:, :2] = Minv @ Kq\\n    A[2:, 2:] = -Minv @ Dq\\n    B = np.zeros((4, 1))\\n    B[2:, 0] = Minv @ np.array([gear, 0.0])\\n\\n    # Discretize (ZOH) via augmented matrix exponential\\n    aug = np.zeros((5, 5))\\n    aug[:4, :4] = A * DT\\n    aug[:4, 4:] = B * DT\\n    E = _expm(aug, 40)\\n    Ad = E[:4, :4]\\n    Bd = E[:4, 4:]\\n\\n    Q = np.diag([1.0, 20.0, 0.5, 0.5])\\n    R = np.array([[0.5]])\\n\\n    P = Q.copy()\\n    for _ in range(5000):\\n        S = R + Bd.T @ P @ Bd\\n        K = np.linalg.solve(S, Bd.T @ P @ Ad)\\n        Pn = Q + Ad.T @ P @ (Ad - Bd @ K)\\n        if np.max(np.abs(Pn - P)) < 1e-10 * (1 + np.max(np.abs(P))):\\n            P = Pn\\n            break\\n        P = Pn\\n    S = R + Bd.T @ P @ Bd\\n    K = np.linalg.solve(S, Bd.T @ P @ Ad)\\n    K = K.reshape(-1)\\n\\n    # Sanity check: closed loop must be stable\\n    eig = np.linalg.eigvals(Ad - Bd @ K.reshape(1, 4))\\n    if not np.all(np.isfinite(K)) or np.max(np.abs(eig)) >= 0.999:\\n        raise ValueError(\\\"bad gain\\\")\\n    # sign sanity: angle gain must make u push in direction of lean\\n    if K[1] >= 0:\\n        raise ValueError(\\\"bad sign\\\")\\n    return K\\n\\n\\ntry:\\n    _K = _compute_gain()\\nexcept Exception:\\n    # fallback: u = -K s with hand-derived PD + gentle cart centering\\n    _K = -np.array([0.2, 4.5, 0.4, 0.75])\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    s = np.asarray(obs, dtype=float).reshape(-1)[:4]\\n    if not np.all(np.isfinite(s)):\\n        return [0.0]\\n    u = float(-_K @ s)\\n    if not np.isfinite(u):\\n        u = 0.0\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\",\"ttft_ms\":28590,\"type\":\"result\",\"duration_ms\":43137,\"uuid\":\"6e39a67b-7fad-4b3c-83be-13c8439dfde4\",\"ttft_stream_ms\":1096,\"time_to_request_ms\":82,\"first_content_frame_ms\":1097,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 2227,
+  "output_tokens": 4212,
+  "output_tokens_details": {
+   "thinking_tokens": 2434
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4212,
+    "cache_read_input_tokens": 2227,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

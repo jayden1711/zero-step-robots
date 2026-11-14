@@ -1,0 +1,79 @@
+{
+ "target": "cpg",
+ "obs_dim": 11,
+ "act_dim": 3,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "hop",
+   "freq_hz": 2.5,
+   "phase0": 0.0
+  }
+ ],
+ "couplings": [],
+ "bias": {
+  "a0": 0.0,
+  "a1": -0.6,
+  "a2": -0.04
+ },
+ "units": [
+  {
+   "type": "linear",
+   "name": "hip_torso_pd_swing",
+   "inputs": {
+    "obs[1]": -1.5,
+    "obs[7]": -0.08,
+    "sin(hop)": 0.35
+   },
+   "range": 1.0,
+   "tol": 0.05,
+   "to": {
+    "a0": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "knee_pd_thrust",
+   "inputs": {
+    "obs[3]": -2.0,
+    "obs[9]": -0.1,
+    "cos(hop)": 0.6
+   },
+   "range": 1.6,
+   "tol": 0.05,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "foot_pushoff",
+   "inputs": {
+    "cos(hop)": -0.2
+   },
+   "range": 0.25,
+   "tol": 0.02,
+   "to": {
+    "a2": 1.0
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "ankle_leg_angle_speed",
+   "inputs": {
+    "obs[1]": -1.0,
+    "obs[2]": 1.0,
+    "obs[3]": 1.0,
+    "obs[7]": -0.2,
+    "obs[8]": 0.2,
+    "obs[9]": 0.2,
+    "obs[5]": -0.3
+   },
+   "threshold": -0.42,
+   "sharpness": 6.0,
+   "to": {
+    "a2": 0.2
+   }
+  }
+ ]
+}

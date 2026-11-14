@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:09:07-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 48.450247049331665,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":46909,\"stop_reason\":\"end_turn\",\"session_id\":\"efac56a4-6136-4a59-8a55-e46cfe22b9a1\",\"total_cost_usd\":0.09570726,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":2413,\"output_tokens\":4259,\"output_tokens_details\":{\"thinking_tokens\":3337},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":167,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4259,\"cache_read_input_tokens\":2413,\"cache_creation_input_tokens\":167,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":167},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4259,\"cacheReadInputTokens\":2413,\"cacheCreationInputTokens\":167,\"webSearchRequests\":0,\"costUSD\":0.09570726,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3337,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller only tries to keep the hopper standing upright and does not attempt to hop. I couldn't run or test it, so the stability and the expected score below are both untested estimates.\\n\\n**Why balance instead of hopping:** most of the reward is the +1 per healthy step, so standing safely for all 1000 steps earns about 1000. A hopping gait could earn more, but with no way to tune it, one mistake makes the hopper fall and end the episode early.\\n\\n**How it balances:**\\n\\n- **Hip and knee:** these joints are held stiff at 0 rad, which is also the edge of their allowed range, so the joint limit helps hold them there. With both locked, the whole body above the ankle moves as one rigid piece.\\n- **Ankle:** the rigid body then behaves like an upside-down pendulum pivoting at the ankle. While the foot stays flat, the torso angle is minus the foot joint angle. A positive foot torque therefore tips the body forward, and the controller uses it to drive the torso angle back to 0.\\n- **Ankle gains:** about 300 Nm/rad of stiffness and roughly critical damping (motor gear is 200, so action 1.5 \u2248 300 Nm). Gravity pulls the body over at roughly 60 Nm/rad, so the stiffness is about five times that. The gains are kept small so that the ankle torque from normal-sized errors stays within what the foot can push without tipping over its edge.\\n- **Saturation:** if the correction is large, it is clipped to \u00b10.15 so the foot is not levered off the ground.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    o = np.asarray(obs, dtype=float)\\n    ang = o[1]\\n    thigh, leg, foot = o[2], o[3], o[4]\\n    angv = o[7]\\n    thigh_v, leg_v, foot_v = o[8], o[9], o[10]\\n\\n    # stiff PD holding thigh and leg straight (0 is also their joint limit)\\n    kp, kd = 1.5, 0.15\\n    a_thigh = -kp * (thigh - 0.0) - kd * thigh_v\\n    a_leg = -kp * (leg - 0.0) - kd * leg_v\\n\\n    # ankle strategy: body (rigid above ankle) is an inverted pendulum on the flat foot.\\n    # positive foot torque rotates the body toward negative torso angle.\\n    a_foot = 1.5 * ang + 0.3 * angv\\n    # keep the ankle torque modest so the foot does not tip off its edges\\n    a_foot = float(np.clip(a_foot, -0.15, 0.15))\\n\\n    return [float(np.clip(a_thigh, -1, 1)),\\n            float(np.clip(a_leg, -1, 1)),\\n            a_foot]\\n```\",\"ttft_ms\":38254,\"type\":\"result\",\"duration_ms\":47043,\"uuid\":\"fa5f482c-7d71-4a41-bd05-4233286397d5\",\"ttft_stream_ms\":1196,\"time_to_request_ms\":132,\"first_content_frame_ms\":1196,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 167,
+  "cache_read_input_tokens": 2413,
+  "output_tokens": 4259,
+  "output_tokens_details": {
+   "thinking_tokens": 3337
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 167,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4259,
+    "cache_read_input_tokens": 2413,
+    "cache_creation_input_tokens": 167,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 167
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

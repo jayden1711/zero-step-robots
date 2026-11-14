@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:11:36-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 15.148930072784424,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":14001,\"stop_reason\":\"end_turn\",\"session_id\":\"ddb58b30-2319-42d2-a89d-c14d94706525\",\"total_cost_usd\":0.035611180000000006,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":138,\"cache_read_input_tokens\":5209,\"output_tokens\":1511,\"output_tokens_details\":{\"thinking_tokens\":1240},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":138,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1511,\"cache_read_input_tokens\":5209,\"cache_creation_input_tokens\":138,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":138},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1511,\"cacheReadInputTokens\":5209,\"cacheCreationInputTokens\":138,\"webSearchRequests\":0,\"costUSD\":0.035611180000000006,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1240,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like MuJoCo's InvertedPendulum, with obs as [cart position, pole angle, cart velocity, pole angular velocity]. I couldn't run anything, so the controller is a linear state feedback with gains estimated from rough physics, and none of it has been tested.\\n\\nThe gains are all positive: pushing the cart toward the side the pole leans is what keeps it up. The pole-angle and angular-velocity gains do the balancing, and the small cart position and velocity gains stop the cart drifting off.\\n\\n```python\\nimport numpy as np\\n\\nK = np.array([0.1, 5.0, 0.3, 0.6])\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    u = float(np.dot(K, np.asarray(obs, dtype=float)))\\n    return [max(-3.0, min(3.0, u))]\\n```\",\"ttft_ms\":12227,\"type\":\"result\",\"duration_ms\":14072,\"uuid\":\"2c5ea584-c771-434c-900d-d5fa48b2c5bb\",\"ttft_stream_ms\":896,\"time_to_request_ms\":70,\"first_content_frame_ms\":896,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 138,
+  "cache_read_input_tokens": 5209,
+  "output_tokens": 1511,
+  "output_tokens_details": {
+   "thinking_tokens": 1240
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 138,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1511,
+    "cache_read_input_tokens": 5209,
+    "cache_creation_input_tokens": 138,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 138
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

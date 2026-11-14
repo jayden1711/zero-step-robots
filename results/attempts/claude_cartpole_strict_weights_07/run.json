@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T12:22:13-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 13.530785083770752,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":12390,\"stop_reason\":\"end_turn\",\"session_id\":\"89538307-273e-45f8-ab80-0a2ae09d2da9\",\"total_cost_usd\":0.034916640000000006,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":134,\"cache_read_input_tokens\":5312,\"output_tokens\":1480,\"output_tokens_details\":{\"thinking_tokens\":1019},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":134,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1480,\"cache_read_input_tokens\":5312,\"cache_creation_input_tokens\":134,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":134},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1480,\"cacheReadInputTokens\":5312,\"cacheCreationInputTokens\":134,\"webSearchRequests\":0,\"costUSD\":0.034916640000000006,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1019,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like a cart-pole balance task, with obs ordered as cart position, pole angle, cart velocity, and pole angular velocity. I haven't run it, so the gains are a guess from that assumption. The controller is a linear state-feedback law implemented through four near-linear tanh units, with the other twelve units zeroed out.\\n\\n```json\\n{\\n  \\\"W1\\\": [\\n    [0.3, 0, 0, 0],\\n    [0, 0.3, 0, 0],\\n    [0, 0, 0.3, 0],\\n    [0, 0, 0, 0.3],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0],\\n    [0, 0, 0, 0]\\n  ],\\n  \\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],\\n  \\\"W2\\\": [[1.0, 20.0, 1.67, 2.67, 0,0,0,0,0,0,0,0,0,0,0,0]],\\n  \\\"b2\\\": [0]\\n}\\n```\",\"ttft_ms\":9812,\"type\":\"result\",\"duration_ms\":12449,\"uuid\":\"97c709b0-36ac-4fa8-b1b9-ba936f1841ec\",\"ttft_stream_ms\":937,\"time_to_request_ms\":58,\"first_content_frame_ms\":938,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 134,
+  "cache_read_input_tokens": 5312,
+  "output_tokens": 1480,
+  "output_tokens_details": {
+   "thinking_tokens": 1019
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 134,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1480,
+    "cache_read_input_tokens": 5312,
+    "cache_creation_input_tokens": 134,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 134
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

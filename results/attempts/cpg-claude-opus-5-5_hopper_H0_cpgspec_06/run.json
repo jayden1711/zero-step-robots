@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-09T18:50:46-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 569.2073431015015,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":568415,\"stop_reason\":\"end_turn\",\"session_id\":\"fc923c33-dd76-4933-bd06-94b8d854e0b8\",\"total_cost_usd\":1.0827859999999998,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":3930,\"output_tokens\":54032,\"output_tokens_details\":{\"thinking_tokens\":52726},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":54032,\"cache_read_input_tokens\":3930,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":54032,\"cacheReadInputTokens\":3930,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":1.0827859999999998,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":52726,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is designed from first principles and has not been tested, so it may not pass.\\n\\n**Design**\\n- **Torso balance:** the hip runs a PD controller on torso angle `obs[1]` and its rate `obs[7]`, aiming slightly forward (+0.03 rad). With the leg planted, a positive `a0` pitches the torso forward.\\n- **Posture:** the knee and ankle run PD controllers towards a crouched, forward-leaning stance:\\n  - knee at \u22120.25 rad, ankle at +0.5 rad;\\n  - this puts the hip well ahead of the ankle;\\n  - the whole-body centre of mass sits about 0.20 m in front of the ankle, still behind the toe (about 0.32 m);\\n  - the ankle term also cancels about 28 Nm of gravity load.\\n- **Speed regulation:** the ankle takes forward-velocity feedback around a 0.8 m/s target. Going too slowly adds dorsiflexion, so it leans and falls forward more. Going too fast plantarflexes, which moves the centre of pressure towards the toe and slows it down.\\n- **Soft start:** the robot starts straight, so the stance must not be imposed at once.\\n  - Oscillator `R` is phase-locked by a frozen oscillator `Z`. Its sine rises from 0 to 1 over about 1 s, then stays there.\\n  - All posture targets are scaled by `sin(R)`.\\n  - The hopping drive is gated by `sin(R)` inside its tanh, and its constant offset is cancelled through the bias and the `sin(R)` terms.\\n- **Hopping:** oscillator `C` runs at 2.2 Hz and drives a near-square wave into the knee and ankle together.\\n  - Push phase: the ankle plantarflexes (heel lift and vertical push) while the knee extends, which drives the hip forward over the planted foot.\\n  - Return phase: both reverse, and the PD controllers restore the stance during flight.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [\\n   {\\\"name\\\": \\\"Z\\\", \\\"freq_hz\\\": 0.0, \\\"phase0\\\": 1.0472},\\n   {\\\"name\\\": \\\"R\\\", \\\"freq_hz\\\": 0.1, \\\"phase0\\\": 0.0},\\n   {\\\"name\\\": \\\"C\\\", \\\"freq_hz\\\": 2.2, \\\"phase0\\\": 0.0}\\n ],\\n \\\"couplings\\\": [\\n   {\\\"from\\\": \\\"Z\\\", \\\"to\\\": \\\"R\\\", \\\"weight\\\": 1.2566, \\\"phase_lag\\\": 0.0}\\n ],\\n \\\"bias\\\": {\\\"a0\\\": 0.03, \\\"a1\\\": 0.15, \\\"a2\\\": -0.35},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_torso_pd\\\",\\n    \\\"inputs\\\": {\\\"obs[1]\\\": -1.0, \\\"obs[7]\\\": -0.15},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_pd_ramped\\\",\\n    \\\"inputs\\\": {\\\"obs[3]\\\": -1.0, \\\"obs[9]\\\": -0.1, \\\"sin(R)\\\": -0.4},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_pd_speed_ramped\\\",\\n    \\\"inputs\\\": {\\\"obs[4]\\\": -1.5, \\\"obs[10]\\\": -0.25, \\\"obs[5]\\\": -0.2, \\\"sin(R)\\\": 1.12},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.03, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"gated_hop_drive\\\",\\n    \\\"inputs\\\": {\\\"sin(C)\\\": 1.0, \\\"sin(R)\\\": 2.0},\\n    \\\"threshold\\\": 2.0, \\\"sharpness\\\": 2.5,\\n    \\\"to\\\": {\\\"a1\\\": 0.15, \\\"a2\\\": -0.35}}\\n ]}\\n```\",\"ttft_ms\":557688,\"type\":\"result\",\"duration_ms\":568446,\"uuid\":\"2850a36d-ff12-4398-b55f-66770bcfab42\",\"ttft_stream_ms\":1865,\"time_to_request_ms\":26,\"first_content_frame_ms\":1865,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 3930,
+  "output_tokens": 54032,
+  "output_tokens_details": {
+   "thinking_tokens": 52726
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 54032,
+    "cache_read_input_tokens": 3930,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

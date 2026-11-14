@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T19:29:46-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 495.2280390262604,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":494410,\"stop_reason\":\"end_turn\",\"session_id\":\"bc97ce60-fe2b-4d1c-8098-79446147f01f\",\"total_cost_usd\":0.9273739999999999,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":3930,\"output_tokens\":46261,\"output_tokens_details\":{\"thinking_tokens\":44808},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":46261,\"cache_read_input_tokens\":3930,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":46261,\"cacheReadInputTokens\":3930,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.9273739999999999,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":44808,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller is designed from first principles and has not been simulated, so how well it works is uncertain. It sets up a toe-hopping gait: the ankle pushes off to hop and also places the foot for balance, while the hip keeps the torso upright and the knee stays locked straight.\\n\\n**Sign conventions used** (from the Hopper XML axes: `rooty` is about +y, the other joints are about \u2212y):\\n- **Torso:** positive torso angle means leaning forward.\\n- **Hip (a0):** positive torque tips the torso forward.\\n- **Knee (a1):** positive torque straightens the knee into its limit.\\n- **Ankle (a2):** positive torque tips the shin forward and lifts the toes. Negative torque presses the toes down (plantarflex).\\n\\n**Design**\\n\\n- **Hip, torso posture (a0):** a PD controller holds the torso upright: a0 = \u22121.0\u00b7\u03b2 \u2212 0.15\u00b7\u03b2\u0307. The joint armature is about 1, giving a stiffness of about 200 Nm/rad, around 13 rad/s and near-critical damping.\\n- **Knee (a1):** a constant bias of 0.3 plus PD on the knee angle keeps the knee locked straight at its limit. This makes the leg a rigid strut.\\n- **Ankle, balance and foot placement (a2):** one linear PD law covers both phases.\\n  - Inputs are the foot joint angle, the global shin pitch (obs1 \u2212 obs2 \u2212 obs3), the shin pitch rate, and x-velocity against a target of 0.6 m/s.\\n  - The pitch reference is 0.09 rad, which puts the centre of mass over the middle of the foot.\\n  - **On the ground:** the law acts as ankle balance. The net pitch stiffness is about 123 Nm/rad above the gravity term, with a damping ratio of about 0.8.\\n  - **In the air:** the same law sets the foot angle. Moving too fast points the toes down, so the robot lands on its toe ahead of the centre of mass and slows. Moving too slowly lifts the toes, so it lands on its heel behind the centre of mass and speeds up. This is Raibert-style foot placement using the 0.39 m foot.\\n- **Hop drive (a2):** a 2.5 Hz oscillator adds a one-sided plantarflex pulse of about 64 Nm peak during roughly 40% of each cycle. This pushes the robot off its toes to hop. The reaction torque also pitches the leg backward, which brings the foot forward under the body during flight.\\n  - The pulse is built from a reflex unit plus a bias.\\n  - The starting phase is set so the first push comes roughly when the robot lands after its initial 4 cm drop.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.5, \\\"phase0\\\": -1.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a1\\\": 0.3, \\\"a2\\\": 0.08},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_torso_pd\\\",\\n    \\\"inputs\\\": {\\\"obs[1]\\\": -1.0, \\\"obs[7]\\\": -0.15},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_lock\\\",\\n    \\\"inputs\\\": {\\\"obs[3]\\\": -3.0, \\\"obs[9]\\\": -0.1},\\n    \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_balance_placement\\\",\\n    \\\"inputs\\\": {\\\"obs[4]\\\": -0.5, \\\"obs[10]\\\": -0.1,\\n               \\\"obs[1]\\\": -0.5, \\\"obs[2]\\\": 0.5, \\\"obs[3]\\\": 0.5,\\n               \\\"obs[7]\\\": -0.15, \\\"obs[8]\\\": 0.15, \\\"obs[9]\\\": 0.15,\\n               \\\"obs[5]\\\": -0.25},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"hop_pushoff_pulse\\\",\\n    \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0}, \\\"threshold\\\": 0.3, \\\"sharpness\\\": 5.0,\\n    \\\"to\\\": {\\\"a2\\\": -0.16}}\\n ]}\\n```\",\"ttft_ms\":482251,\"type\":\"result\",\"duration_ms\":494447,\"uuid\":\"fb2eab1d-b0c5-4cd6-a7a5-43e1177cf350\",\"ttft_stream_ms\":1506,\"time_to_request_ms\":24,\"first_content_frame_ms\":1506,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 3930,
+  "output_tokens": 46261,
+  "output_tokens_details": {
+   "thinking_tokens": 44808
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 46261,
+    "cache_read_input_tokens": 3930,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

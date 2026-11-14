@@ -1,0 +1,134 @@
+{
+ "seed": 1258647159,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": 0.053384059280229615,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 0.03870961143221603,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": 0.025103698439059397,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": 0.04265340690190058,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": 0.08572726993573479,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": 0.019499558655198722,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 2.1550418326470187,
+    "phase0": 0.020442484590261024
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -0.04315263595321231,
+   "a1": 0.3013878472168978
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "balance",
+    "inputs": {
+     "obs[1]": 1.1446240194336488,
+     "obs[7]": -0.0511183541822226
+    },
+    "range": 2.5,
+    "tol": 0.05,
+    "to": {
+     "a0": -5.061996218311566
+    }
+   },
+   {
+    "type": "linear",
+    "name": "thigh_swing",
+    "inputs": {
+     "sin(hop)": 1.269945392952547
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.16977957072917382
+    }
+   },
+   {
+    "type": "linear",
+    "name": "leg_push",
+    "inputs": {
+     "cos(hop)": 0.7421862763229811
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a1": 0.256858471593446
+    }
+   },
+   {
+    "type": "linear",
+    "name": "foot_push",
+    "inputs": {
+     "cos(hop)": 1.583330855235837
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a2": 0.23272568049775982
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 42.44405694710711,
+  "sem_return": 0.10221477383896135,
+  "std_return": 1.0170241585646094,
+  "median_return": 42.78595016519166,
+  "min_return": 38.51142546015346,
+  "max_return": 43.94445287886477,
+  "mean_length": 32.76,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.0855703821035871,
+  "mean_distance_healthy": 0.08628336025316369,
+  "median_distance_healthy": 0.08696072723240943,
+  "min_distance_healthy": 0.07632241494572722,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

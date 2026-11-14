@@ -1,0 +1,43 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_attitude_pd",
+  "type": "linear",
+  "scale": 0.19999999999999998,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 1,
+  "name": "knee_pd",
+  "type": "linear",
+  "scale": 0.19364916731037085,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 2.0
+ },
+ {
+  "unit": 2,
+  "name": "ankle_com_balance_speed",
+  "type": "linear",
+  "scale": 0.25819888974716115,
+  "rel_error_bound": 0.05,
+  "valid_for_abs_input_below": 1.5
+ },
+ {
+  "unit": 3,
+  "name": "hop_rhythm_push",
+  "type": "linear",
+  "scale": 0.17320508075688773,
+  "rel_error_bound": 0.01,
+  "valid_for_abs_input_below": 1.0
+ },
+ {
+  "oscillator": "hop",
+  "index": 0,
+  "freq_hz": 2.5,
+  "input_columns": [
+   11,
+   12
+  ]
+ }
+]

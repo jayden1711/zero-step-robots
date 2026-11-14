@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:16:13-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 17.266873359680176,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":16200,\"stop_reason\":\"end_turn\",\"session_id\":\"f968bdd4-b94a-4d8f-8b48-eba28f670bb2\",\"total_cost_usd\":0.04309206000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":137,\"cache_read_input_tokens\":5353,\"output_tokens\":1850,\"output_tokens_details\":{\"thinking_tokens\":1479},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":137,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1850,\"cache_read_input_tokens\":5353,\"cache_creation_input_tokens\":137,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":137},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1850,\"cacheReadInputTokens\":5353,\"cacheCreationInputTokens\":137,\"webSearchRequests\":0,\"costUSD\":0.04309206000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1479,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is an untested controller; I had no way to run it. I assumed the observation is a Hopper-style layout, with torso height, torso angle, three joint angles, then velocities. The controller tries to stand upright and survive, rather than chase forward speed. The sign conventions for the torque terms are inferred from that assumption, so they are the main risk.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    ang = obs[1]\\n    w = obs[7]\\n    q_t, q_l, q_f = obs[2], obs[3], obs[4]\\n    dq_t, dq_l, dq_f = obs[8], obs[9], obs[10]\\n\\n    foot = 4.0 * ang + 0.4 * w - 0.3 * q_f - 0.02 * dq_f\\n    thigh = 1.5 * ang + 0.15 * w - 1.0 * q_t - 0.05 * dq_t\\n    leg = -1.0 * q_l - 0.05 * dq_l\\n\\n    a = np.clip([thigh, leg, foot], -1.0, 1.0)\\n    return [float(x) for x in a]\\n```\",\"ttft_ms\":13761,\"type\":\"result\",\"duration_ms\":16285,\"uuid\":\"08bfdb68-4b2a-40bc-999a-998df1760427\",\"ttft_stream_ms\":919,\"time_to_request_ms\":88,\"first_content_frame_ms\":920,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 137,
+  "cache_read_input_tokens": 5353,
+  "output_tokens": 1850,
+  "output_tokens_details": {
+   "thinking_tokens": 1479
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 137,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1850,
+    "cache_read_input_tokens": 5353,
+    "cache_creation_input_tokens": 137,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 137
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

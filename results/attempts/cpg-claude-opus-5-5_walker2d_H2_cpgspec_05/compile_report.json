@@ -1,0 +1,80 @@
+[
+ {
+  "unit": 0,
+  "name": "hip_left_scissor_torso",
+  "type": "linear",
+  "scale": 0.09999999999999999,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 1,
+  "name": "hip_right_scissor_torso",
+  "type": "linear",
+  "scale": 0.09999999999999999,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 3.0
+ },
+ {
+  "unit": 2,
+  "name": "knee_right_pd",
+  "type": "linear",
+  "scale": 0.075,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 3,
+  "name": "knee_left_pd",
+  "type": "linear",
+  "scale": 0.075,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 4,
+  "name": "foot_right_flat_spring",
+  "type": "linear",
+  "scale": 0.075,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 5,
+  "name": "foot_left_flat_spring",
+  "type": "linear",
+  "scale": 0.075,
+  "rel_error_bound": 0.03,
+  "valid_for_abs_input_below": 4.0
+ },
+ {
+  "unit": 6,
+  "name": "swing_right_knee_flex_toe_up",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "unit": 7,
+  "name": "swing_left_knee_flex_toe_up",
+  "type": "reflex",
+  "rel_error_bound": 0.0
+ },
+ {
+  "oscillator": "P",
+  "index": 0,
+  "freq_hz": 0.9,
+  "input_columns": [
+   17,
+   18
+  ]
+ },
+ {
+  "oscillator": "Q",
+  "index": 1,
+  "freq_hz": 0.9,
+  "input_columns": [
+   19,
+   20
+  ]
+ }
+]

@@ -1,0 +1,27 @@
+{
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ },
+ "cwd": "fresh empty tempfile.TemporaryDirectory under /var/tmp",
+ "prompt": "Before anything else: list every tool you can call (names only, or say none), and list any files, directories, repository contents, memory, user or project instructions (e.g. CLAUDE.md) that you can see or that were given to you in this conversation. Then state the name of your current working directory if you know it. Be exact and brief. Finish with a last line that is exactly `INSTRUCTION_FILES: none` if you were given no instruction file of any kind, otherwise `INSTRUCTION_FILES: ` followed by their names.",
+ "seconds": 3.0374274253845215,
+ "returncode": 0,
+ "stdout": "{\"duration_api_ms\":2134,\"stop_reason\":\"end_turn\",\"session_id\":\"96b035f5-a109-46d8-8d04-bdb5eb80bdee\",\"total_cost_usd\":0.014951,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":1417,\"cache_read_input_tokens\":535,\"output_tokens\":175,\"output_tokens_details\":{\"thinking_tokens\":38},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":1417,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":175,\"cache_read_input_tokens\":535,\"cache_creation_input_tokens\":1417,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":1417},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":175,\"cacheReadInputTokens\":535,\"cacheCreationInputTokens\":1417,\"webSearchRequests\":0,\"costUSD\":0.014951,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":38,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"**Tools:** none\\n\\n**Files/directories/repository contents seen:** none\\n\\n**Memory:** none\\n\\n**User/project instructions:** no CLAUDE.md or other instruction files. The only context provided is a system note with your email address, to be used only for attribution.\\n\\n**Current working directory:** `/var/tmp/zsr_claude_q7wjrirn` (not a git repository)\\n\\nINSTRUCTION_FILES: none\",\"ttft_ms\":967,\"type\":\"result\",\"duration_ms\":2157,\"uuid\":\"2f32185c-8cc0-442f-88f6-a0799c14f2e1\",\"ttft_stream_ms\":623,\"time_to_request_ms\":22,\"first_content_frame_ms\":624,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "stderr": ""
+}

@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:23:38-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 85.59197783470154,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":83887,\"stop_reason\":\"end_turn\",\"session_id\":\"9424f6f7-e9aa-4d84-8134-4a0e34d3c72f\",\"total_cost_usd\":0.17500296,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":3248,\"output_tokens\":7855,\"output_tokens_details\":{\"thinking_tokens\":6474},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":167,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":7855,\"cache_read_input_tokens\":3248,\"cache_creation_input_tokens\":167,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":167},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":7855,\"cacheReadInputTokens\":3248,\"cacheCreationInputTokens\":167,\"webSearchRequests\":0,\"costUSD\":0.17500296,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":6474,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Here is a balance controller that stands the hopper upright. It does not try to hop forward.\\n\\nI chose standing because the controller can't be tested and the score is a mean. Each healthy step is worth +1, so standing for all 1000 steps scores about 1000 per episode, with control cost near zero. A hand-tuned hopping gait could score more, but if it falls early an episode might earn under 200. I think the expected score is better with balancing.\\n\\n**Joint signs (from `hopper.xml`):** the root and all three joints rotate about \u2212y. A positive torso angle means leaning back. A positive joint torque turns the child segment the positive way and pushes the parent segment the negative way.\\n\\n**Model estimates:**\\n- **Mass:** about 15.8 kg in total. About 10.5 kg sits above the ankle, with its centre of mass about 0.75 m up.\\n- **Toppling torque:** gravity pulls the body over with about 77 N\u00b7m per radian of lean.\\n- **Foot tipping:** the foot reaches from \u22120.19 to +0.32 m around the ankle. It starts to tip at roughly 20\u201340 N\u00b7m of ankle torque.\\n- **Initial drop:** the hopper starts with its foot 4 cm above the ground, so it falls a short way first.\\n\\n**Control scheme:**\\n- **Hip:** keeps the torso upright, using the torso's absolute angle and angular velocity.\\n- **Knee:** stiff joint control holds the leg straight.\\n- **Ankle:** keeps the leg vertical (torso angle plus thigh and knee angles), which holds the centre of mass over the foot.\\n  - Stiffness is about 300 N\u00b7m/rad, well above gravity's 77.\\n  - Damping is set near critical.\\n  - With the starting perturbation of 0.005 rad or less, the ankle torque stays far below the foot-tipping limit.\\n\\n```python\\nimport numpy as np\\n\\n# Hopper standing-balance controller.\\n# Sign conventions (hopper.xml): rooty, thigh, leg and foot joints all rotate about -y,\\n# so a positive torso angle means leaning backward, and a positive joint torque rotates\\n# the child segment positively while pushing the parent segment negatively.\\n\\n# Hip: keeps the torso upright (absolute torso angle).\\nK_HIP = 3.0\\nD_HIP = 0.25\\n\\n# Knee: keeps the leg straight.\\nK_KNEE = 5.0\\nD_KNEE = 0.3\\n\\n# Ankle: keeps the whole leg vertical over the foot (inverted-pendulum balance).\\nK_ANKLE = 1.5\\nD_ANKLE = 0.35\\n\\nTORSO_TARGET = 0.0\\nLEG_ABS_TARGET = 0.0\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    o = np.asarray(obs, dtype=float)\\n    torso, q_thigh, q_leg, q_foot = o[1], o[2], o[3], o[4]\\n    w_torso, w_thigh, w_leg, w_foot = o[7], o[8], o[9], o[10]\\n\\n    # Hip: positive torque pushes the torso toward negative angle (forward).\\n    u_thigh = K_HIP * (torso - TORSO_TARGET) + D_HIP * w_torso\\n\\n    # Knee: plain PD to a straight leg.\\n    u_leg = -K_KNEE * q_leg - D_KNEE * w_leg\\n\\n    # Ankle: positive torque pushes the lower leg toward negative absolute angle.\\n    leg_abs = torso + q_thigh + q_leg\\n    leg_abs_dot = w_torso + w_thigh + w_leg\\n    u_foot = K_ANKLE * (leg_abs - LEG_ABS_TARGET) + D_ANKLE * leg_abs_dot\\n\\n    a = np.clip([u_thigh, u_leg, u_foot], -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\\n\\nI couldn't run this, so the gains rest on the hand estimates above, not on simulation. The expected score is about 1000 per episode if it balances as intended. There is essentially no forward-velocity bonus.\",\"ttft_ms\":71293,\"type\":\"result\",\"duration_ms\":84251,\"uuid\":\"29b8d43c-087f-4cf2-b5a2-8d40ab29d5ed\",\"ttft_stream_ms\":1175,\"time_to_request_ms\":71,\"first_content_frame_ms\":1176,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 167,
+  "cache_read_input_tokens": 3248,
+  "output_tokens": 7855,
+  "output_tokens_details": {
+   "thinking_tokens": 6474
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 167,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 7855,
+    "cache_read_input_tokens": 3248,
+    "cache_creation_input_tokens": 167,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 167
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

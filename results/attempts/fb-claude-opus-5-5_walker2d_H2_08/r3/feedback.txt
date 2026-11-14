@@ -1,0 +1,40 @@
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | -0.08 | 0.06 | torso angle out of range
+1 | -0.08 | 0.06 | torso angle out of range
+2 | -0.08 | 0.06 | torso angle out of range
+3 | -0.08 | 0.06 | torso angle out of range
+4 | -0.08 | 0.06 | torso angle out of range
+5 | -0.08 | 0.06 | torso angle out of range
+6 | -0.08 | 0.06 | torso angle out of range
+7 | -0.08 | 0.06 | torso angle out of range
+8 | -0.08 | 0.06 | torso angle out of range
+9 | -0.08 | 0.06 | torso angle out of range
+
+Over the 10 episodes: mean d -0.08 m, min -0.08, max -0.08; mean time survived 0.06 s; mean forward speed -1.26 m/s; episodes with d >= 3 m: 0
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+right thigh | -1.087 | -0.005 | 0.57 | 0.25
+right leg | 0.003 | 0.010 | 0.35 | 0.00
+right foot | 0.004 | 0.308 | 0.24 | 0.00
+left thigh | -1.017 | 0.001 | 0.98 | 0.88
+left leg | -0.187 | 0.002 | 0.63 | 0.12
+left foot | -0.005 | 0.039 | 0.21 | 0.00
+torso angle min -0.973, max -0.005 rad; torso height min 1.15, max 1.25 m
+right foot: on the ground 0.00 of the steps, 0 touchdowns
+left foot: on the ground 0.00 of the steps, 0 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | right foot contact | left foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | no | 1.57, 4.71
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+torso_balance: 0.00
+hip_scissor: 0.00
+R_knee: 0.00
+L_knee: 0.00
+R_foot: 0.00
+L_foot: 0.00

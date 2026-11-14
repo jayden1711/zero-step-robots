@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:12:11-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 44.83241152763367,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":43520,\"stop_reason\":\"end_turn\",\"session_id\":\"e34df079-a032-4163-8ee3-075a7b3b39c3\",\"total_cost_usd\":0.09893444000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":165,\"cache_read_input_tokens\":3062,\"output_tokens\":4400,\"output_tokens_details\":{\"thinking_tokens\":2723},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":165,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4400,\"cache_read_input_tokens\":3062,\"cache_creation_input_tokens\":165,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":165},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4400,\"cacheReadInputTokens\":3062,\"cacheCreationInputTokens\":165,\"webSearchRequests\":0,\"costUSD\":0.09893444000000001,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":2723,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a cart-pole balance task. I modelled the cart and pole with masses estimated from the MuJoCo XML: cart about 10.5 kg, pole about 5 kg with its centre of mass 0.3 m up, and an actuator gear of 100. The controller discretises that model with a zero-order hold over 0.04 s and computes a discrete LQR gain at import time.\\n\\nThe sign convention is that a positive pole angle tilts the pole toward +x, so pushing the cart toward +x recovers it. A cart displaced toward +x must first move further +x to tip the pole back. As a result, all four feedback gains come out positive.\\n\\nIf the LQR computation fails or gives an implausible gain, the module falls back to hand-tuned positive gains. I couldn't run this, so the mass and gear figures are estimates, but LQR's stability margins should tolerate moderate model error.\\n\\n```python\\nimport numpy as np\\n\\nDT = 0.04\\nG = 9.81\\n\\n# Approximate physical parameters of InvertedPendulum (MuJoCo, density 1000)\\nM_CART = 10.5      # cart capsule mass\\nM_POLE = 5.0       # pole capsule mass\\nL_COM = 0.3        # hinge to pole centre of mass\\nI_HINGE = 0.62     # pole inertia about hinge\\nGEAR = 100.0       # actuator gear\\n\\nFALLBACK_K = np.array([0.3, 6.0, 0.6, 1.0])\\n\\n\\ndef _expm(Mat):\\n    # scaling and squaring with Taylor series\\n    norm = np.max(np.sum(np.abs(Mat), axis=1))\\n    s = max(0, int(np.ceil(np.log2(norm + 1e-12))) + 1)\\n    A = Mat / (2.0 ** s)\\n    n = Mat.shape[0]\\n    E = np.eye(n)\\n    term = np.eye(n)\\n    for k in range(1, 25):\\n        term = term @ A / k\\n        E = E + term\\n    for _ in range(s):\\n        E = E @ E\\n    return E\\n\\n\\ndef _compute_gain():\\n    m, Mc, l, I = M_POLE, M_CART, L_COM, I_HINGE\\n    Mt = Mc + m\\n    ml = m * l\\n    # Linearised: Mt*xdd + ml*thdd = F ; I*thdd + ml*xdd = m*g*l*th\\n    denom = I - ml * ml / Mt\\n    a_tt = m * G * l / denom\\n    b_t = -(ml / Mt) * GEAR / denom\\n    a_xt = -(ml / Mt) * a_tt\\n    b_x = GEAR / Mt - (ml / Mt) * b_t\\n\\n    # state s = [x, th, v, w]\\n    A = np.zeros((4, 4))\\n    A[0, 2] = 1.0\\n    A[1, 3] = 1.0\\n    A[2, 1] = a_xt\\n    A[3, 1] = a_tt\\n    B = np.array([[0.0], [0.0], [b_x], [b_t]])\\n\\n    aug = np.zeros((5, 5))\\n    aug[:4, :4] = A\\n    aug[:4, 4:] = B\\n    E = _expm(aug * DT)\\n    Ad = E[:4, :4]\\n    Bd = E[:4, 4:]\\n\\n    Q = np.diag([1.0, 20.0, 0.5, 1.0])\\n    R = np.array([[0.5]])\\n    P = Q.copy()\\n    for _ in range(5000):\\n        BtP = Bd.T @ P\\n        K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad)\\n        Pn = Q + Ad.T @ P @ (Ad - Bd @ K)\\n        if np.max(np.abs(Pn - P)) < 1e-10:\\n            P = Pn\\n            break\\n        P = Pn\\n    BtP = Bd.T @ P\\n    K = np.linalg.solve(R + BtP @ Bd, BtP @ Ad)\\n    # u = -K s ; return gains so that u = gains . s\\n    gains = -K.flatten()\\n    # closed-loop stability check on the model\\n    eig = np.linalg.eigvals(Ad - Bd @ K)\\n    if not np.all(np.isfinite(gains)) or np.max(np.abs(eig)) >= 1.0:\\n        return FALLBACK_K.copy()\\n    # sanity: angle and angular-velocity gains must be positive\\n    if gains[1] <= 0 or gains[3] <= 0:\\n        return FALLBACK_K.copy()\\n    return gains\\n\\n\\ntry:\\n    GAINS = _compute_gain()\\nexcept Exception:\\n    GAINS = FALLBACK_K.copy()\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    try:\\n        s = np.asarray(obs, dtype=float).reshape(4)\\n        u = float(np.dot(GAINS, s))\\n        if not np.isfinite(u):\\n            u = 0.0\\n    except Exception:\\n        u = 0.0\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\",\"ttft_ms\":30311,\"type\":\"result\",\"duration_ms\":43599,\"uuid\":\"747a8b0c-c48a-424a-a97a-37755a8c0878\",\"ttft_stream_ms\":1128,\"time_to_request_ms\":78,\"first_content_frame_ms\":1128,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 165,
+  "cache_read_input_tokens": 3062,
+  "output_tokens": 4400,
+  "output_tokens_details": {
+   "thinking_tokens": 2723
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 165,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4400,
+    "cache_read_input_tokens": 3062,
+    "cache_creation_input_tokens": 165,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 165
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

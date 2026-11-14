@@ -1,0 +1,32 @@
+{
+ "started": "2026-11-06T15:43:47-0600",
+ "sampling": {
+  "temperature": 1.0,
+  "top_p": 1.0,
+  "max_tokens": 24000,
+  "seed": 1008
+ },
+ "seconds": 17.79643487930298,
+ "usage": {
+  "completion_tokens": 1427,
+  "prompt_tokens": 636,
+  "total_tokens": 2063,
+  "prompt_tokens_details": {
+   "cached_tokens": 631
+  }
+ },
+ "model_reported": "/home/jayden/models/gpt-oss-20b-MXFP4.gguf",
+ "finish_reason": "stop",
+ "reasoning_content": "We need to design a controller for inverted pendulum. Classic approach: use linear-quadratic regulator or PD. Since we can't test, but can approximate.\n\nState variables: cart position x, angle theta, velocity xdot, theta_dot. Force input u.\n\nGoal: keep angle near zero. The environment is standard inverted pendulum. The best is to use PD on angle and angular velocity. Also maybe consider cart position.\n\nWe can use simple feedback: u = k1 * theta + k2 * theta_dot + k3 * x + k4 * xdot. But the angle sign: we want to push cart opposite to tilt. Standard linearized system: u = Kx. For inverted pendulum, K might be something like: u = - (20 * theta + 20 * theta_dot) maybe.\n\nWe can approximate values from literature. But to get decent performance, we may choose a PID for angle and velocity. For instance:\n\nforce = -Kp * theta - Kd * theta_dot\n\nWe might ignore cart position.\n\nUse Kp ~ 15, Kd ~ 10? Let's think: In OpenAI gym environment, typical LQR uses u = -[8.97, 1.0, 0.0, 0.0] * [x, theta, xdot, theta_dot] maybe? Actually from standard inverted pendulum LQR, the gains are: K = [5.87, 0.0, 9.84, 0.0] or something. But I'm not sure.\n\nLet's find typical values: For inverted pendulum on cart, a good set: u = -10 * theta - 0.1 * theta_dot - 5 * x - 0.1 * x_dot. But the environment only limits force to [-3,3], so we need to clamp.\n\nAlternatively, we can use simple PD on angle: u = -Kp * theta - Kd * theta_dot. Choose Kp = 5, Kd = 1. Then typical force values may be within [-3,3]. Let's test: If theta ~0.2 rad, u = -5 * 0.2 = -1.0, plus small from velocity. So within range.\n\nIf theta ~0.1, u=-0.5. Good.\n\nBut might not be enough to correct quickly. We can increase Kp to 10, Kd to 2: then at 0.2 rad, u = -2.0, good.\n\nAlternatively, we can incorporate cart position to avoid drift. Suppose we also want to keep cart at center (0). We can add terms: -Kc * x - Kcd * xdot. Kc ~ 1, Kcd ~ 0.5 maybe.\n\nBut the main requirement: keep pole upright; cart position can drift but as long as angle <=0.2 rad.\n\nSimplify: just use PD on angle.\n\nImplementation:\n\ndef act(obs):\n    theta = obs[1]\n    theta_dot = obs[3]\n    force = -kp * theta - kd * theta_dot\n    return [float(force)]\n\nSet kp=10.0, kd=2.0\n\nWe can also clamp to [-3,3]. Use np.clip.\n\nAlso define reset() to maybe reset internal counters. Not needed.\n\nWe can keep state but no need.\n\nWill this performance be decent? It may be okay: PD with these gains often stabilizes the cart.\n\nBut we need to consider that the cart may drift. But the angle constraint is \u00b10.2 rad. If the cart drifts far, the pole may tilt due to dynamics. But with PD on angle only, the cart will be forced to move to balance the pole. That is typical.\n\nThus, we will write this simple controller.\n\nAlternatively, we can add a small bias to keep cart near zero: we can add Kc * x and Kcd * xdot: e.g., -kpos * x - kposd * xdot. With kpos=0.5, kposd=0.2. But if we add too much, we might push too hard causing overshoot. But we can set small.\n\nLet's design:\n\nforce = -kp * theta - kd * theta_dot - kpos * x - kposd * xdot\n\nSet kp=10, kd=2, kpos=1.0, kposd=0.5. Let's compute magnitude: worst-case x=0.5, xdot=0.5, but initial positions are within 0.01. But later may drift. So if x=0.5, -1.0*0.5 = -0.5; if xdot=0.5, -0.5*0.5 = -0.25. So additional up to -0.75. So overall maybe -2.75. Within -3. Good.\n\nWe should clip.\n\nThus final act.\n\nDefine module-level constants.\n\nAlso define reset() to do nothing.\n\nLet's produce code.",
+ "server_timings": {
+  "cache_n": 631,
+  "prompt_n": 5,
+  "prompt_ms": 50.746,
+  "prompt_per_token_ms": 10.1492,
+  "prompt_per_second": 98.52993339376502,
+  "predicted_n": 1427,
+  "predicted_ms": 17720.207,
+  "predicted_per_token_ms": 12.426512622720896,
+  "predicted_per_second": 80.47310056818185
+ }
+}

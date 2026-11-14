@@ -1,0 +1,42 @@
+{
+ "id": "fb-claude-sonnet-5-5_hopper_H2_06",
+ "task": "hopper",
+ "mode": "cpgspec-feedback",
+ "arm": "H2",
+ "level": "H2",
+ "model": "claude-sonnet-5-5",
+ "attempt_index": 6,
+ "rounds": 6,
+ "prompt_version": "v4fb",
+ "prompt_files_sha256": {
+  "template_v4fb.md": "6fe95a53150fda0c85808f72b03592460bf2163f9aef84894a692774b2a33d13",
+  "task_hopper_v3.md": "6d13bbd2880456f9bc928f8f69c7872845171c1d03585eac57f652c5d4f7f9ca",
+  "format_cpgspec_v3.md": "dcb07c204f304582a03f781555e0a545f762cfee97eeb4186aa96ec245143bcc",
+  "hint_hopper_H1_v3.md": "fb95def989d51e0b88e9164b288eb991dea7fcfe2fff5cceb6fffdcceceb2e09",
+  "hint_hopper_H2_v3.md": "6ab4c56f51e453ce8b1551ba82de79bbc442b4ee55c2c21a8962ac5ef052b9ef",
+  "feedback_history_v4fb.md": "56356961b8eacac368b70339706266a47646b153f006603e2503ed004e00d327",
+  "feedback_revise_v4fb.md": "0d5172c546043050176e47fdcd1850af5fba964e061cbe354d00cb4a6bd4677a",
+  "feedback_final_v4fb.md": "ade86ede002fac4d70f0c791325ba9e310fce5c3536461486fba4b766949bfdc"
+ },
+ "claude_flags": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "claude_env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ },
+ "interface": "claude -p (subscription CLI), fresh empty cwd under /var/tmp, no tools, no MCP",
+ "prereg": "docs/prereg-2026-11-10-cpg-feedback.md",
+ "created": "2026-11-10T19:11:51.423075+00:00"
+}

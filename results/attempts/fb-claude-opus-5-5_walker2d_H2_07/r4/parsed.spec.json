@@ -1,0 +1,133 @@
+{
+ "target": "cpg",
+ "obs_dim": 17,
+ "act_dim": 6,
+ "hidden": 16,
+ "oscillators": [
+  {
+   "name": "R",
+   "freq_hz": 1.0,
+   "phase0": 0.0
+  },
+  {
+   "name": "L",
+   "freq_hz": 1.0,
+   "phase0": 3.14159
+  }
+ ],
+ "couplings": [
+  {
+   "from": "R",
+   "to": "L",
+   "weight": 2.0,
+   "phase_lag": 3.14159
+  },
+  {
+   "from": "L",
+   "to": "R",
+   "weight": 2.0,
+   "phase_lag": 3.14159
+  }
+ ],
+ "bias": {
+  "a0": 0.15,
+  "a3": 0.15,
+  "a1": 0.2,
+  "a4": 0.2
+ },
+ "units": [
+  {
+   "type": "reflex",
+   "name": "R_swing_drive",
+   "inputs": {
+    "sin(R)": -1.0
+   },
+   "threshold": 0.0,
+   "sharpness": 3.0,
+   "to": {
+    "a0": 0.4
+   }
+  },
+  {
+   "type": "reflex",
+   "name": "L_swing_drive",
+   "inputs": {
+    "sin(L)": -1.0
+   },
+   "threshold": 0.0,
+   "sharpness": 3.0,
+   "to": {
+    "a3": 0.4
+   }
+  },
+  {
+   "type": "linear",
+   "name": "torso_balance_speed",
+   "inputs": {
+    "obs[1]": 1.0,
+    "obs[10]": 0.12,
+    "obs[8]": 0.05
+   },
+   "range": 1.5,
+   "tol": 0.05,
+   "to": {
+    "a0": -2.5,
+    "a3": -2.5
+   }
+  },
+  {
+   "type": "linear",
+   "name": "R_knee",
+   "inputs": {
+    "cos(R)": 0.495,
+    "sin(R)": 0.339,
+    "obs[12]": -0.1
+   },
+   "range": 1.6,
+   "tol": 0.05,
+   "to": {
+    "a1": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "L_knee",
+   "inputs": {
+    "cos(L)": 0.495,
+    "sin(L)": 0.339,
+    "obs[15]": -0.1
+   },
+   "range": 1.6,
+   "tol": 0.05,
+   "to": {
+    "a4": 1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "R_foot_pd",
+   "inputs": {
+    "obs[4]": 1.0,
+    "obs[13]": 0.05
+   },
+   "range": 1.5,
+   "tol": 0.05,
+   "to": {
+    "a2": -1.0
+   }
+  },
+  {
+   "type": "linear",
+   "name": "L_foot_pd",
+   "inputs": {
+    "obs[7]": 1.0,
+    "obs[16]": 0.05
+   },
+   "range": 1.5,
+   "tol": 0.05,
+   "to": {
+    "a5": -1.0
+   }
+  }
+ ]
+}

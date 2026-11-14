@@ -1,0 +1,31 @@
+This is an untested design: two coupled oscillators drive the legs in antiphase, with balance feedback on the thighs.
+
+- **Rhythm:** each leg's thigh gets +0.7·sin(phase), swinging forward in the first half-cycle and back during stance. Each knee gets −0.8·sin(phase), flexing during swing and extending during stance.
+- **Balance:** both thighs get −1.5·torso angle − 0.3·torso angular velocity.
+- **Feet:** a PD term holds each foot flat.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159265}
+ ],
+ "couplings": [
+  {"from": "L", "to": "R", "weight": 3.0, "phase_lag": 3.14159265},
+  {"from": "R", "to": "L", "weight": 3.0, "phase_lag": 3.14159265}
+ ],
+ "units": [
+  {"type": "linear", "name": "thigh_R", "inputs": {"sin(R)": 0.7, "obs[1]": -1.5, "obs[10]": -0.3},
+   "range": 4.0, "tol": 0.02, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "knee_R", "inputs": {"sin(R)": -0.8},
+   "range": 1.0, "tol": 0.02, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "foot_R", "inputs": {"obs[4]": -0.5, "obs[13]": -0.05},
+   "range": 2.0, "tol": 0.02, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "thigh_L", "inputs": {"sin(L)": 0.7, "obs[1]": -1.5, "obs[10]": -0.3},
+   "range": 4.0, "tol": 0.02, "to": {"a3": 1.0}},
+  {"type": "linear", "name": "knee_L", "inputs": {"sin(L)": -0.8},
+   "range": 1.0, "tol": 0.02, "to": {"a4": 1.0}},
+  {"type": "linear", "name": "foot_L", "inputs": {"obs[7]": -0.5, "obs[16]": -0.05},
+   "range": 2.0, "tol": 0.02, "to": {"a5": 1.0}}
+ ]}
+```

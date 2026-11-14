@@ -1,0 +1,16 @@
+Round 0 fell over backward after about 1 s, because the leg collapsed during the flexion half of the cycle and the torso drifted to -0.15 rad. For round 1 I'm keeping the leg mostly extended (bias 0.4 with a smaller rhythm), doubling the balance gains, and raising the forward thigh bias slightly.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.0, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.1, "a1": 0.4},
+ "units": [
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": -10.0, "obs[7]": -1.0},
+   "range": 6.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "leg_rhythm", "inputs": {"sin(hop)": 1.0},
+   "range": 1.2, "tol": 0.02, "to": {"a1": 0.5, "a2": 0.2}},
+  {"type": "linear", "name": "thigh_rhythm", "inputs": {"cos(hop)": 1.0},
+   "range": 1.2, "tol": 0.02, "to": {"a0": 0.3}}
+ ]}
+```

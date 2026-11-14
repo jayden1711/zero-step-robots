@@ -1,0 +1,22 @@
+This is an untested design, since I can't run anything. Each leg has an oscillator, and the two are coupled in antiphase at 1 Hz. While sin(phase) is positive the leg swings: the thigh torque is forward and the knee flexes. While it is negative the leg is in stance: the thigh pushes back and the knee extends. Torso-angle and angular-velocity feedback on both thighs keeps the torso upright. The feet get small torques in phase with their legs.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "A", "freq_hz": 1.0, "phase0": 1.0},
+  {"name": "B", "freq_hz": 1.0, "phase0": 4.1415927}
+ ],
+ "couplings": [
+  {"from": "A", "to": "B", "weight": 2.0, "phase_lag": 3.1415927},
+  {"from": "B", "to": "A", "weight": 2.0, "phase_lag": 3.1415927}
+ ],
+ "units": [
+  {"type": "linear", "name": "thighA", "inputs": {"sin(A)": 1.0}, "range": 1.2, "tol": 0.05, "to": {"a0": 0.6}},
+  {"type": "linear", "name": "thighB", "inputs": {"sin(B)": 1.0}, "range": 1.2, "tol": 0.05, "to": {"a3": 0.6}},
+  {"type": "reflex", "name": "kneeA", "inputs": {"sin(A)": 1.0}, "threshold": 0.0, "sharpness": 4.0, "to": {"a1": -0.4}},
+  {"type": "reflex", "name": "kneeB", "inputs": {"sin(B)": 1.0}, "threshold": 0.0, "sharpness": 4.0, "to": {"a4": -0.4}},
+  {"type": "linear", "name": "footA", "inputs": {"sin(A)": 1.0}, "range": 1.2, "tol": 0.05, "to": {"a2": 0.2}},
+  {"type": "linear", "name": "footB", "inputs": {"sin(B)": 1.0}, "range": 1.2, "tol": 0.05, "to": {"a5": 0.2}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 1.0, "obs[10]": 0.2}, "range": 3.0, "tol": 0.05, "to": {"a0": -1.5, "a3": -1.5}}
+ ]}
+```

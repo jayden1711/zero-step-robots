@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:12:41-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 117.86065816879272,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":116567,\"stop_reason\":\"end_turn\",\"session_id\":\"1adb5560-a913-4749-ab83-230465cb25e2\",\"total_cost_usd\":0.24339766000000004,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":170,\"cache_read_input_tokens\":2413,\"output_tokens\":10971,\"output_tokens_details\":{\"thinking_tokens\":9550},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":170,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":10971,\"cache_read_input_tokens\":2413,\"cache_creation_input_tokens\":170,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":170},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":10971,\"cacheReadInputTokens\":2413,\"cacheCreationInputTokens\":170,\"webSearchRequests\":0,\"costUSD\":0.24339766000000004,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":9550,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I went with a controller that balances the hopper standing still, and I haven't run it. A standing hopper earns about 1 per step, so roughly **1000 per episode**, minus a negligible control cost. A hand-tuned hopping gait could score more, but it can't be tuned without testing. If it falls early, an episode scores tens instead of about 1000.\\n\\n**Design notes (signs worked out from the Hopper XML: every joint axis is `0 -1 0`)**\\n- **Angle signs:** a positive world angle means a link's top tips toward \u2212x, i.e. it leans back. The thigh and knee joint limits are `[-150\u00b0, 0]`, so the upright pose sits exactly at those limits.\\n- **Knee:** a small constant positive torque plus PD keeps the knee pressed against its 0 limit. This locks the leg straight.\\n- **Hip:** the hip keeps the torso upright in the world frame. A positive thigh torque applies a negative reaction torque to the torso, so the hip torque is `+Kp\u00b7torso_angle + Kd\u00b7torso_angvel`.\\n- **Ankle:**\\n  - The ankle uses an \\\"ankle strategy\\\": it estimates where the centre of mass above the ankle sits horizontally, and how fast it moves, from the link angles and approximate link masses.\\n  - It pushes that point back over the ankle with a PD law. A positive foot torque rotates the leg forward.\\n  - The proportional gain (\u2248300 N\u00b7m/rad) is well above the gravitational toppling stiffness (\u224877 N\u00b7m/rad). The damping is near critical. Both are small enough that the foot shouldn't tip over at the tiny initial perturbations.\\n\\n```python\\nimport math\\n\\n# Approximate link masses (capsules, density 1000)\\nM_LEG = 2.78\\nM_THIGH = 4.06\\nM_TORSO = 3.67\\nM_ABOVE = M_LEG + M_THIGH + M_TORSO\\n\\nL_LEG = 0.5\\nL_THIGH = 0.45\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef _clip(v):\\n    return max(-1.0, min(1.0, v))\\n\\n\\ndef act(obs):\\n    torso_ang = obs[1]\\n    thigh_q = obs[2]\\n    leg_q = obs[3]\\n    torso_w = obs[7]\\n    thigh_w = obs[8]\\n    leg_w = obs[9]\\n\\n    # World angles of links (positive = top leans toward -x)\\n    th_t = torso_ang\\n    th_th = th_t + thigh_q\\n    th_l = th_th + leg_q\\n    w_t = torso_w\\n    w_th = w_t + thigh_w\\n    w_l = w_th + leg_w\\n\\n    s_t, s_th, s_l = math.sin(th_t), math.sin(th_th), math.sin(th_l)\\n    c_t, c_th, c_l = math.cos(th_t), math.cos(th_th), math.cos(th_l)\\n\\n    # Horizontal CoM position (relative to ankle) of everything above the ankle\\n    x_com = (M_LEG * (-0.25 * s_l)\\n             + M_THIGH * (-L_LEG * s_l - 0.225 * s_th)\\n             + M_TORSO * (-L_LEG * s_l - L_THIGH * s_th - 0.2 * s_t)) / M_ABOVE\\n    xd_com = (M_LEG * (-0.25 * c_l * w_l)\\n              + M_THIGH * (-L_LEG * c_l * w_l - 0.225 * c_th * w_th)\\n              + M_TORSO * (-L_LEG * c_l * w_l - L_THIGH * c_th * w_th\\n                           - 0.2 * c_t * w_t)) / M_ABOVE\\n\\n    # Ankle: keep CoM above the ankle (positive foot torque rotates leg forward)\\n    u_foot = -2.0 * x_com - 0.4 * xd_com\\n\\n    # Hip: keep torso upright in world frame\\n    u_thigh = 0.5 * torso_ang + 0.06 * torso_w\\n\\n    # Knee: lock straight against its 0 limit\\n    u_leg = 0.3 - 3.0 * leg_q - 0.2 * leg_w\\n\\n    return [_clip(u_thigh), _clip(u_leg), _clip(u_foot)]\\n```\",\"ttft_ms\":104870,\"type\":\"result\",\"duration_ms\":116635,\"uuid\":\"74ef83ea-3cc4-4543-bdac-777082786e42\",\"ttft_stream_ms\":789,\"time_to_request_ms\":66,\"first_content_frame_ms\":789,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 170,
+  "cache_read_input_tokens": 2413,
+  "output_tokens": 10971,
+  "output_tokens_details": {
+   "thinking_tokens": 9550
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 170,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 10971,
+    "cache_read_input_tokens": 2413,
+    "cache_creation_input_tokens": 170,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 170
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

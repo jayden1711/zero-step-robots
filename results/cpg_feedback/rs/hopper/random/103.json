@@ -1,0 +1,174 @@
+{
+ "seed": 103,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": -0.03225190093786364,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.025368223033790493,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.023548326940058074,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.03745950956672102,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.02506247679984584,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.037218607898885384,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "o0",
+    "freq_hz": 2.162070368391684,
+    "phase0": 0.5575692876672671
+   },
+   {
+    "name": "o1",
+    "freq_hz": 3.2431456853899148,
+    "phase0": 0.2996005263970357,
+    "feedback": {
+     "obs[3]": -0.3766074377944131
+    }
+   },
+   {
+    "name": "o2",
+    "freq_hz": 1.5893610539019665,
+    "phase0": 2.5951004566885763,
+    "feedback": {
+     "obs[5]": -0.7922307842679726
+    }
+   }
+  ],
+  "couplings": [
+   {
+    "from": "o0",
+    "to": "o2",
+    "weight": 0.10839894596972846,
+    "phase_lag": -1.5442285638854094
+   },
+   {
+    "from": "o1",
+    "to": "o0",
+    "weight": 2.319755685395652,
+    "phase_lag": 0.4841346484906239
+   },
+   {
+    "from": "o1",
+    "to": "o2",
+    "weight": -0.1406485292407735,
+    "phase_lag": 3.3146547000024897
+   },
+   {
+    "from": "o2",
+    "to": "o0",
+    "weight": 0.9346845319649004,
+    "phase_lag": 0.15389665417924814
+   },
+   {
+    "from": "o2",
+    "to": "o1",
+    "weight": 0.34320851645927514,
+    "phase_lag": -2.6307575376207892
+   }
+  ],
+  "bias": {
+   "a0": 0.22534986533066603,
+   "a1": -0.3875207524608023,
+   "a2": -0.31166626042336826
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "j0",
+    "inputs": {
+     "cos(o2)": -1.8639019607422056,
+     "sin(o2)": 0.31675143900125036,
+     "obs[9]": 0.47834527633192436
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.224374635712195
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j1",
+    "inputs": {
+     "cos(o1)": -0.844544669776996,
+     "sin(o1)": -0.6746118015017455
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 1.0054888518511516
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j2",
+    "inputs": {
+     "cos(o1)": 0.12556468072622753,
+     "sin(o1)": 1.2430652497358263,
+     "obs[9]": 0.11863581358057648
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 1.9128005992213821
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 3.2514702357545655,
+  "sem_return": 0.0041790589087481265,
+  "std_return": 0.04158111113132887,
+  "median_return": 3.255377829636782,
+  "min_return": 3.1232013562216685,
+  "max_return": 3.3313164980515846,
+  "mean_length": 8.08,
+  "frac_full_length": 0.0,
+  "mean_distance": -0.030497286931139848,
+  "mean_distance_healthy": -0.022699366644385703,
+  "median_distance_healthy": -0.022106913259736134,
+  "min_distance_healthy": -0.0299026539508988,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

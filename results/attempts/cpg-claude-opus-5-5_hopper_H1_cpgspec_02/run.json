@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-09T16:46:21-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 276.2664313316345,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":275531,\"stop_reason\":\"end_turn\",\"session_id\":\"9e20d8f2-a7e4-46f9-a885-bb55bc9de297\",\"total_cost_usd\":0.522695,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":4175,\"output_tokens\":26025,\"output_tokens_details\":{\"thinking_tokens\":24662},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":26025,\"cache_read_input_tokens\":4175,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":26025,\"cacheReadInputTokens\":4175,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.522695,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":24662,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This controller has not been run. It is a hand-reasoned design, so whether it reaches 3 m is uncertain.\\n\\n**How I read the joint conventions** (all Hopper joints rotate about \u2212y):\\n- A positive torso angle means the torso leans back.\\n- The thigh and knee can only fold backward from straight; 0 is their forward limit.\\n- A positive foot angle means toe up.\\n\\n**The design:**\\n- **Oscillator:** one 2 Hz oscillator, `hop`, sets the gait rhythm.\\n- **Thigh:** the target is \u22120.1 \u2212 0.15\u00b7cos(\u03c6). The thigh swings forward to its stop for landing, then sweeps back during stance to push the body forward.\\n- **Knee:** the target is \u22120.15 \u2212 0.2\u00b7sin(\u03c6). The knee bends during flight for foot clearance and straightens and pushes during stance.\\n- **Foot:** the target is 0.1\u00b7sin(\u03c6) \u2212 0.1\u00b7cos(\u03c6). The toe lifts before landing and pushes down in late stance.\\n- **Torso balance (through the hip):**\\n  - A PD loop on torso angle and angular rate holds a slight forward lean.\\n  - The lean target moves back as speed rises: \u03b8* = \u22120.07 + 0.05\u00b7v.\\n- **Ankle balance:**\\n  - A PD loop on the foot joint keeps the leg upright over the flat foot.\\n  - The torso angle and rate are also fed to the ankle.\\n  - A small speed term makes the ankle brake when the robot moves too fast.\\n- **Gain limits:** I kept the gains below the limit for stability, given that each action is held for the whole 8 ms step and the foot and torso inertias are small.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 3.14159}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": 0.08, \\\"a1\\\": -0.15, \\\"a2\\\": 0.04},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_torso_balance_and_thigh_pd\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 2.0, \\\"obs[2]\\\": -0.6, \\\"obs[5]\\\": -0.1}, \\\"range\\\": 1.5, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"hip_damping\\\", \\\"inputs\\\": {\\\"obs[7]\\\": 0.08, \\\"obs[8]\\\": -0.04}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_pd\\\", \\\"inputs\\\": {\\\"obs[3]\\\": -1.0}, \\\"range\\\": 1.5, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"knee_damping\\\", \\\"inputs\\\": {\\\"obs[9]\\\": -0.08}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_balance_pd\\\", \\\"inputs\\\": {\\\"obs[4]\\\": -1.0, \\\"obs[1]\\\": 0.3, \\\"obs[5]\\\": -0.05}, \\\"range\\\": 1.5, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankle_damping\\\", \\\"inputs\\\": {\\\"obs[10]\\\": -0.05, \\\"obs[7]\\\": 0.15}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"rhythm_cos\\\", \\\"inputs\\\": {\\\"cos(hop)\\\": 1.0}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": -0.09, \\\"a2\\\": -0.1}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"rhythm_sin\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": -0.2, \\\"a2\\\": 0.1}}\\n ]}\\n```\",\"ttft_ms\":265169,\"type\":\"result\",\"duration_ms\":275558,\"uuid\":\"a038c0ce-cb65-4d65-96d5-c89ce531abd9\",\"ttft_stream_ms\":1399,\"time_to_request_ms\":25,\"first_content_frame_ms\":1399,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 4175,
+  "output_tokens": 26025,
+  "output_tokens_details": {
+   "thinking_tokens": 24662
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 26025,
+    "cache_read_input_tokens": 4175,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

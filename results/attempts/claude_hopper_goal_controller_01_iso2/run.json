@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T20:22:13-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 19.323883771896362,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":18338,\"stop_reason\":\"end_turn\",\"session_id\":\"014fa374-441c-46b3-91d7-46f84867e299\",\"total_cost_usd\":0.047553660000000005,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":136,\"cache_read_input_tokens\":5373,\"output_tokens\":2053,\"output_tokens_details\":{\"thinking_tokens\":1525},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":136,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2053,\"cache_read_input_tokens\":5373,\"cache_creation_input_tokens\":136,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":136},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2053,\"cacheReadInputTokens\":5373,\"cacheCreationInputTokens\":136,\"webSearchRequests\":0,\"costUSD\":0.047553660000000005,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1525,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"I couldn't run anything, so this is a conservative balance controller built on a guess about the system. The 11-number observation, 3 torques and health limits look like a Hopper-style one-legged walker, so I assumed that layout:\\n\\n- **Layout:** obs[0] is torso height, obs[1] is torso pitch, obs[2:5] are the thigh, leg and foot joint angles, and obs[5:8] are x velocity, z velocity and pitch rate.\\n- **Strategy:** Surviving all 1000 steps is worth about 1000 reward, so the controller just stays upright rather than chasing speed.\\n- **Ankle feedback:** The foot joint torque is PD feedback on torso pitch.\\n- **Hold posture:** Thigh and leg joints are lightly damped back toward their zero pose.\\n- **Risk:** The sign of the ankle feedback is the main uncertainty. If forward and backward lean are the opposite way round from what I assumed, it will destabilise instead of balance.\\n\\n```python\\nimport numpy as np\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    ang = obs[1]\\n    angvel = obs[7]\\n    foot = 2.0 * ang + 0.4 * angvel + 0.3 * obs[5] * 0.0\\n    thigh = -1.0 * obs[2] - 0.1 * obs[8]\\n    leg = -1.0 * obs[3] - 0.1 * obs[9]\\n    a = np.clip([thigh, leg, foot], -1.0, 1.0)\\n    return [float(a[0]), float(a[1]), float(a[2])]\\n```\",\"ttft_ms\":14680,\"type\":\"result\",\"duration_ms\":18428,\"uuid\":\"6f5cbda7-c428-42d8-bdad-985c80cd7638\",\"ttft_stream_ms\":866,\"time_to_request_ms\":90,\"first_content_frame_ms\":867,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 136,
+  "cache_read_input_tokens": 5373,
+  "output_tokens": 2053,
+  "output_tokens_details": {
+   "thinking_tokens": 1525
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 136,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2053,
+    "cache_read_input_tokens": 5373,
+    "cache_creation_input_tokens": 136,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 136
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

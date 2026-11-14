@@ -1,0 +1,155 @@
+{
+ "seed": 2975346612,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": -0.2162011354537698,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.1868749601118567,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.2142960509633316,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.18617059063996916,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.2145061002875556,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.4404441622335555,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "R",
+    "freq_hz": 1.5410598817584655,
+    "phase0": -0.110056650658881
+   },
+   {
+    "name": "L",
+    "freq_hz": 1.6905630243984981,
+    "phase0": 5.142815708201537
+   }
+  ],
+  "couplings": [
+   {
+    "from": "L",
+    "to": "R",
+    "weight": 1.344337924404267,
+    "phase_lag": 1.953508695722322
+   },
+   {
+    "from": "R",
+    "to": "L",
+    "weight": 1.7846577815297424,
+    "phase_lag": 3.863115633350685
+   }
+  ],
+  "bias": {
+   "a1": 0.038830143883289925,
+   "a4": -0.2578118045776801
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "thighR",
+    "inputs": {
+     "obs[1]": -1.823414801003949,
+     "obs[10]": -0.15264330708047236,
+     "sin(R)": 0.18263443223552822
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.5584800310288343
+    }
+   },
+   {
+    "type": "linear",
+    "name": "thighL",
+    "inputs": {
+     "obs[1]": -1.8687742688081073,
+     "obs[10]": 0.10183274345753651,
+     "sin(L)": 0.6411520298252043
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a3": 1.0415726512495769
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "kneeR",
+    "inputs": {
+     "sin(R)": 0.23205353740599383
+    },
+    "threshold": -0.21379446251221265,
+    "sharpness": 4.563248532059345,
+    "to": {
+     "a1": -0.1268092127179809
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "kneeL",
+    "inputs": {
+     "sin(L)": 0.7691472067243781
+    },
+    "threshold": -0.05181041475511722,
+    "sharpness": 3.6795742406974097,
+    "to": {
+     "a4": -0.11748938578303748
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "walker2d",
+  "variant": "stock",
+  "env_id": "Walker2d-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 2.9626913058692264,
+  "sem_return": 0.019874741498116612,
+  "std_return": 0.1977511810636763,
+  "median_return": 3.000371927390173,
+  "min_return": 2.521211571712744,
+  "max_return": 3.389650102408732,
+  "mean_length": 28.0,
+  "frac_full_length": 0.0,
+  "mean_distance": -0.1919530711615563,
+  "mean_distance_healthy": -0.18632986769143794,
+  "median_distance_healthy": -0.18600960752457218,
+  "min_distance_healthy": -0.1900246271524864,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

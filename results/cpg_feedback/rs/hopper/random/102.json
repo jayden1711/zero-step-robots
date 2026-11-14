@@ -1,0 +1,140 @@
+{
+ "seed": 102,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": -0.02343573917348151,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": 0.0009137754189606585,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.030699695120826487,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": 0.04550880384798273,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.018469493178143708,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.002160470971980132,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "o0",
+    "freq_hz": 3.1543270855732377,
+    "phase0": 1.4467301929979879,
+    "feedback": {
+     "obs[1]": -0.2619162527994199
+    }
+   },
+   {
+    "name": "o1",
+    "freq_hz": 1.5872075435312194,
+    "phase0": 3.4771427910346797
+   }
+  ],
+  "couplings": [
+   {
+    "from": "o1",
+    "to": "o0",
+    "weight": 0.9348549525036431,
+    "phase_lag": -0.6421319928764635
+   }
+  ],
+  "bias": {
+   "a0": -0.060111599655912284,
+   "a1": 0.03178236581536971,
+   "a2": 0.18686524220594208
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "j0",
+    "inputs": {
+     "cos(o1)": 0.07952985625382097,
+     "sin(o1)": 0.3614202979085798
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 0.5697019990963186
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j1",
+    "inputs": {
+     "cos(o1)": -1.0510505571342021,
+     "sin(o1)": -0.02789007956398025
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 1.0030900105239662
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j2",
+    "inputs": {
+     "cos(o1)": -0.045118723925844095,
+     "sin(o1)": -1.5334360679896823
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 0.7175597785200043
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "hopper",
+  "variant": "stock",
+  "env_id": "Hopper-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": 21.56299177371716,
+  "sem_return": 0.01660449972634349,
+  "std_return": 0.16521268627152083,
+  "median_return": 21.58132773185997,
+  "min_return": 21.153624676865583,
+  "max_return": 21.865482980429768,
+  "mean_length": 16.0,
+  "frac_full_length": 0.0,
+  "mean_distance": 0.052682803875826724,
+  "mean_distance_healthy": 0.04573930780377367,
+  "median_distance_healthy": 0.04583443428069281,
+  "min_distance_healthy": 0.04284620921473967,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

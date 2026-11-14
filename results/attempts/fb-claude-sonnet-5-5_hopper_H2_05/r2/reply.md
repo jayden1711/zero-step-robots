@@ -1,0 +1,14 @@
+Round 1 showed the leg joint pinned straight at its limit, and the thigh slowly rotated back to -1.2 rad, which lowered the torso until it fell. For round 2 I'm adding thigh position and velocity feedback (a spring toward a slightly rearward set point) so the leg stays under the body, and I'm reducing the rhythmic pulses.
+
+```json
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.0, "phase0": 0.0}],
+ "couplings": [],
+ "bias": {"a0": 0.3, "a1": 0.5, "a2": 0.0},
+ "units": [
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": 3.0, "obs[7]": 0.3, "obs[2]": 3.0, "obs[8]": 0.1},
+   "range": 4.0, "tol": 0.05, "to": {"a0": -1.0}},
+  {"type": "linear", "name": "push", "inputs": {"sin(hop)": 1.0},
+   "range": 1.2, "tol": 0.02, "to": {"a1": 0.2, "a2": 0.2}}
+ ]}
+```

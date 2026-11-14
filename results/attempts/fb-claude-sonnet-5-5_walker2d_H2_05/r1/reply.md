@@ -1,0 +1,27 @@
+Round 0 fell backward within 0.8 s: the torso pitched back to about -0.64 rad and the knees collapsed (right leg down to -2.67 rad). This revision makes four changes:
+- Stronger torso-angle and angular-velocity feedback on the thighs.
+- Knee and ankle stiffness terms that hold the joints near straight.
+- Smaller rhythmic amplitudes.
+- Everything else unchanged.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a1": 0.1, "a4": 0.1},
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"sin(R)": 0.3}, "range": 1.0, "tol": 0.01, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "kneeR", "inputs": {"sin(R)": -0.4, "obs[3]": -1.5, "obs[12]": -0.05}, "range": 6.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "footR", "inputs": {"obs[4]": -1.0, "obs[13]": -0.05}, "range": 3.0, "tol": 0.05, "to": {"a2": 1.0}},
+  {"type": "linear", "name": "thighL", "inputs": {"sin(L)": 0.3}, "range": 1.0, "tol": 0.01, "to": {"a3": 1.0}},
+  {"type": "linear", "name": "kneeL", "inputs": {"sin(L)": -0.4, "obs[6]": -1.5, "obs[15]": -0.05}, "range": 6.0, "tol": 0.05, "to": {"a4": 1.0}},
+  {"type": "linear", "name": "footL", "inputs": {"obs[7]": -1.0, "obs[16]": -0.05}, "range": 3.0, "tol": 0.05, "to": {"a5": 1.0}},
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": -4.0, "obs[10]": -0.4}, "range": 6.0, "tol": 0.05, "to": {"a0": 1.0, "a3": 1.0}}
+ ]}
+```

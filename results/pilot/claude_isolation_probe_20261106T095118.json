@@ -1,0 +1,25 @@
+{
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ },
+ "cwd": "fresh empty tempfile.TemporaryDirectory",
+ "prompt": "Before anything else: list every tool you can call (names only, or say none), and list any files, directories, repository contents, memory or project instructions (e.g. CLAUDE.md) that you can see or that were given to you in this conversation. Then state the name of your current working directory if you know it. Be exact and brief.",
+ "seconds": 5.560386657714844,
+ "returncode": 0,
+ "stdout": "{\"duration_api_ms\":4232,\"stop_reason\":\"end_turn\",\"session_id\":\"83774444-65fe-42b5-9f88-4ea71475c813\",\"total_cost_usd\":0.023343540000000003,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":1337,\"cache_read_input_tokens\":3387,\"output_tokens\":492,\"output_tokens_details\":{\"thinking_tokens\":305},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":1337,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":492,\"cache_read_input_tokens\":3387,\"cache_creation_input_tokens\":1337,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":1337},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":492,\"cacheReadInputTokens\":3387,\"cacheCreationInputTokens\":1337,\"webSearchRequests\":0,\"costUSD\":0.023343540000000003,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":305,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"**Tools:** No tool definitions are attached to this conversation, so I can't call anything right now. The system prompt refers to Read, Edit, Write, Glob, Grep and PowerShell, but I haven't been given callable versions of them.\\n\\n**Files, directories, repo contents, CLAUDE.md or memory:** None. No file contents, directory listings or project instructions were provided. The only context I was given is your email address ([redacted-email]), and the environment is not a git repository.\\n\\n**Working directory:** /tmp/zsr_claude_rga_bq3s\",\"ttft_ms\":3098,\"type\":\"result\",\"duration_ms\":4303,\"uuid\":\"e3370b3a-d737-4051-8d5b-20ed4bfdedfa\",\"ttft_stream_ms\":640,\"time_to_request_ms\":67,\"first_content_frame_ms\":641,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n"
+}

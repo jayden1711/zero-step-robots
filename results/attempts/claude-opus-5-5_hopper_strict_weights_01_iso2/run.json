@@ -1,0 +1,61 @@
+{
+ "started": "2026-11-06T19:32:58-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 48.858070850372314,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":47659,\"stop_reason\":\"end_turn\",\"session_id\":\"2cdafbe4-64af-4328-a0a0-608e5017ad9a\",\"total_cost_usd\":0.10624042,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":167,\"cache_read_input_tokens\":2391,\"output_tokens\":4738,\"output_tokens_details\":{\"thinking_tokens\":3730},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":167,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":4738,\"cache_read_input_tokens\":2391,\"cache_creation_input_tokens\":167,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":167},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":4738,\"cacheReadInputTokens\":2391,\"cacheCreationInputTokens\":167,\"webSearchRequests\":0,\"costUSD\":0.10624042,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3730,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like a one-legged hopper: 11 observations and 3 joint torques. I wrote a conservative balancing controller. It aims to collect the healthy reward on every step for all 1000 steps, rather than gamble on a hopping gait it can't test.\\n\\n**What the observations probably mean** (inferred from the shapes and rules, not given):\\n- 0: height\\n- 1: torso pitch\\n- 2\u20134: thigh, knee and ankle angles\\n- 5\u201310: the matching velocities\\n\\n**How it balances:**\\n- **Ankle PD (holds the foot angle at 0):** While the foot is flat, the foot angle is just the leg's tilt with the sign flipped. So holding the foot at 0 keeps the leg vertical, and the whole body behaves like an inverted pendulum balanced on the ankle. The gains are Kp = 3, Kd = 0.5 in action units, which with a gear ratio of about 200 is well above the gravity torque of roughly 130 Nm/rad.\\n- **Hip and knee PD (hold both joints straight at 0):** With the leg vertical, this keeps the torso upright. The gains are Kp = 2, Kd = 0.2.\\n\\nEach hidden unit carries one signal and stays in the near-linear part of tanh. Angles are scaled \u00d71 and velocities \u00d70.1; the output weights undo that scaling. The other 10 hidden units are unused.\\n\\n```json\\n{\\\"W1\\\": [[0,0,0,0,1,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0.1],[0,0,1,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0.1,0,0],[0,0,0,1,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0.1,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,0,0,0,0,0,0,0]], \\\"b1\\\": [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], \\\"W2\\\": [[0,0,-2,-2,0,0,0,0,0,0,0,0,0,0,0,0],[0,0,0,0,-2,-2,0,0,0,0,0,0,0,0,0,0],[-3,-5,0,0,0,0,0,0,0,0,0,0,0,0,0,0]], \\\"b2\\\": [0,0,0]}\\n```\",\"ttft_ms\":39664,\"type\":\"result\",\"duration_ms\":47740,\"uuid\":\"0e97ecd0-a731-49e8-b2ba-07910b973e69\",\"ttft_stream_ms\":641,\"time_to_request_ms\":79,\"first_content_frame_ms\":642,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 167,
+  "cache_read_input_tokens": 2391,
+  "output_tokens": 4738,
+  "output_tokens_details": {
+   "thinking_tokens": 3730
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 167,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 4738,
+    "cache_read_input_tokens": 2391,
+    "cache_creation_input_tokens": 167,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 167
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

@@ -5,3 +5,4 @@
 No repo-specific imports; numpy only. See docs/circuit-spec.md for the language.
 """
 from .compiler import CompileError, compile_spec, evaluate_spec, forward  # noqa: F401
+from .cpg import compile_cpg, simulate_spec  # noqa: F401

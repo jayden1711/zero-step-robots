@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:21:04-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 14.474674701690674,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":13301,\"stop_reason\":\"end_turn\",\"session_id\":\"2b51e422-0fe1-4e2c-8c9f-2f689f950b0a\",\"total_cost_usd\":0.05762834000000001,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":2793,\"cache_read_input_tokens\":3387,\"output_tokens\":1468,\"output_tokens_details\":{\"thinking_tokens\":1171},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":2793,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1468,\"cache_read_input_tokens\":3387,\"cache_creation_input_tokens\":2793,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":2793},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1468,\"cacheReadInputTokens\":3387,\"cacheCreationInputTokens\":2793,\"webSearchRequests\":0,\"costUSD\":0.05762834000000001,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1171,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This looks like the standard cart-pole balancing task: `obs` is cart position, pole angle, cart velocity, and pole angular velocity. I haven't run it, so the gains come from rough dynamics estimates and are untuned.\\n\\nThe controller is a linear state-feedback law. A positive pole angle means the pole leans toward +x, so the cart has to push toward +x to get under it. The cart position and velocity terms have the same sign as the angle term. They are kept small so they only stop the cart drifting off.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, xd, thd = obs[0], obs[1], obs[2], obs[3]\\n    u = 0.05 * x + 1.2 * th + 0.15 * xd + 0.3 * thd\\n    if u > 3.0:\\n        u = 3.0\\n    elif u < -3.0:\\n        u = -3.0\\n    return [u]\\n```\",\"ttft_ms\":11408,\"type\":\"result\",\"duration_ms\":13359,\"uuid\":\"cc4342e2-e221-48f3-893a-49d16c067de2\",\"ttft_stream_ms\":908,\"time_to_request_ms\":57,\"first_content_frame_ms\":908,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 2793,
+  "cache_read_input_tokens": 3387,
+  "output_tokens": 1468,
+  "output_tokens_details": {
+   "thinking_tokens": 1171
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 2793,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1468,
+    "cache_read_input_tokens": 3387,
+    "cache_creation_input_tokens": 2793,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 2793
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

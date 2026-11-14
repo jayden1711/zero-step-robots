@@ -1,0 +1,51 @@
+Test results on 10 practice episodes (seeds 0 to 9; the scored episodes are different).
+
+Per episode:
+seed | d (m) | time survived (s) | how it ended
+0 | 6.32 | 8.00 | cut off at 1000 steps
+1 | 6.32 | 8.00 | cut off at 1000 steps
+2 | 6.31 | 8.00 | cut off at 1000 steps
+3 | 6.31 | 8.00 | cut off at 1000 steps
+4 | 6.31 | 8.00 | cut off at 1000 steps
+5 | 6.32 | 8.00 | cut off at 1000 steps
+6 | 6.32 | 8.00 | cut off at 1000 steps
+7 | 6.31 | 8.00 | cut off at 1000 steps
+8 | 6.32 | 8.00 | cut off at 1000 steps
+9 | 6.32 | 8.00 | cut off at 1000 steps
+
+Over the 10 episodes: mean d 6.32 m, min 6.31, max 6.32; mean time survived 8.00 s; mean forward speed 0.79 m/s; episodes with d >= 3 m: 10
+
+Episode seed 0 in detail:
+joint | min angle (rad) | max angle (rad) | mean |action| | fraction of steps with |action| >= 0.99
+thigh | -0.371 | 0.013 | 0.12 | 0.01
+leg | -0.411 | 0.029 | 0.23 | 0.00
+foot | -0.740 | 0.478 | 0.37 | 0.00
+torso angle min -0.105, max 0.112 rad; torso height min 1.12, max 1.43 m
+foot: on the ground 0.46 of the steps, 16 touchdowns
+
+First 1.5 s of episode seed 0, every 0.1 s:
+time (s) | x (m) | torso height (m) | torso angle (rad) | foot contact | oscillator phase(s) mod 2 pi
+0.00 | 0.00 | 1.25 | -0.005 | no | 0.00
+0.10 | 0.02 | 1.23 | -0.028 | yes | 1.31
+0.20 | 0.06 | 1.23 | 0.007 | no | 2.51
+0.30 | 0.06 | 1.19 | -0.096 | yes | 3.82
+0.40 | 0.10 | 1.18 | -0.065 | yes | 5.03
+0.50 | 0.17 | 1.19 | -0.049 | yes | 0.05
+0.60 | 0.24 | 1.17 | -0.020 | yes | 1.26
+0.70 | 0.30 | 1.20 | 0.050 | yes | 2.56
+0.80 | 0.30 | 1.28 | 0.080 | yes | 3.77
+0.90 | 0.31 | 1.30 | 0.044 | no | 5.08
+1.00 | 0.35 | 1.21 | 0.003 | no | 0.00
+1.10 | 0.45 | 1.14 | 0.013 | yes | 1.31
+1.20 | 0.54 | 1.22 | 0.074 | yes | 2.51
+1.30 | 0.60 | 1.35 | 0.102 | no | 3.82
+1.40 | 0.67 | 1.38 | 0.081 | no | 5.03
+
+Linear units, fraction of steps of episode seed 0 with |input sum| > declared range (saturated):
+torso_pd: 0.00
+thigh_posture: 0.00
+leg_pd: 0.00
+foot_pd: 0.00
+ankle_balance: 0.00
+rhythm_cos: 0.00
+rhythm_sin: 0.00

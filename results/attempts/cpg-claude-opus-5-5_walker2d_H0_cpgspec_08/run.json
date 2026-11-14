@@ -1,0 +1,62 @@
+{
+ "started": "2026-11-09T22:41:19-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 451.0352215766907,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":450303,\"stop_reason\":\"end_turn\",\"session_id\":\"c8a9f690-a461-42ba-9a13-5ee0f30fa2f6\",\"total_cost_usd\":0.8881132,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":169,\"cache_read_input_tokens\":3966,\"output_tokens\":44298,\"output_tokens_details\":{\"thinking_tokens\":42201},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":169,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":44298,\"cache_read_input_tokens\":3966,\"cache_creation_input_tokens\":169,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":169},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":44298,\"cacheReadInputTokens\":3966,\"cacheCreationInputTokens\":169,\"webSearchRequests\":0,\"costUSD\":0.8881132,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":42201,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a SIMBICON-style walker: a 1.2 Hz clock schedules swing and stance, and feedback provides the stability. I couldn't test it, so the gains are physics estimates, not tuned values. It also depends on two recalled details of the model file, listed at the end. If either is wrong, the robot will likely fall early.\\n\\n**Phase.** One oscillator `P` drives both legs. The right leg swings when \u03c6 is in (0, \u03c0), and the left leg is half a cycle behind. The gait speeds up slightly as forward speed rises.\\n\\n**Torso.** One unit adds a PD (proportional-derivative) term on torso angle to both hip torques, holding the torso about 0.25 rad leaned back. The hips can only swing the leg backward of the torso axis, so this lean is what lets the swing foot land ahead of the hip. The torso weighs only about 3.7 kg of 24 kg, so the lean barely moves the centre of mass.\\n\\n**Swing hips.** Each leg gets a PD controller on the leg's angle in the world frame. Its target uses a velocity correction: the faster the robot moves, the further ahead the foot is placed. The target is about 0.13 rad ahead at the design speed of 0.6 m/s.\\n- This torque is switched on only during that leg's swing. Each switch uses two reflex units, `\u00bd[tanh(b+x) \u2212 tanh(b\u2212x)]`, where `b = 1.2(cos(\u03c6\u2212\u03c6c) \u2212 1)`. This gives roughly `x \u00b7 sech\u00b2(b)`, a smooth swing-phase window.\\n- The same torque is subtracted from the stance hip, which cancels its reaction on the light torso.\\n\\n**Knees.** The knee target is \u22120.8\u00b7sin(\u03c6 + 0.3), which bends the knee during swing for ground clearance. During stance the target is positive, so the knee is held straight against its joint stop.\\n\\n**Ankles.** A PD controller keeps the foot about level, toe slightly up, assuming the torso is at its 0.25 rad lean. In stance this gives almost no torque (a passive ankle). In swing it keeps the toe from catching the ground.\\n\\n**Assumptions about the model file:**\\n- Every hinge, including the torso's `rooty`, rotates about axis (0, \u22121, 0). This means a positive torso angle is a backward lean, and a positive hip angle moves the foot forward.\\n- The hip range is [\u2212150\u00b0, 0\u00b0].\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"P\\\", \\\"freq_hz\\\": 1.057, \\\"phase0\\\": 0.0, \\\"feedback\\\": {\\\"obs[8]\\\": 1.5}}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": -0.25, \\\"a3\\\": -0.25, \\\"a2\\\": -0.075, \\\"a5\\\": -0.075},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_pd\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.0, \\\"obs[10]\\\": 0.08},\\n   \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0, \\\"a3\\\": 1.0}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swingR_A\\\", \\\"inputs\\\": {\\\"obs[8]\\\": 1.3, \\\"obs[1]\\\": -4.0, \\\"obs[2]\\\": -4.0, \\\"obs[10]\\\": -0.5, \\\"obs[11]\\\": -0.5, \\\"cos(P)\\\": -0.119, \\\"sin(P)\\\": 1.194},\\n   \\\"threshold\\\": 1.452, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": 0.5, \\\"a3\\\": -0.5}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swingR_B\\\", \\\"inputs\\\": {\\\"obs[8]\\\": -1.3, \\\"obs[1]\\\": 4.0, \\\"obs[2]\\\": 4.0, \\\"obs[10]\\\": 0.5, \\\"obs[11]\\\": 0.5, \\\"cos(P)\\\": -0.119, \\\"sin(P)\\\": 1.194},\\n   \\\"threshold\\\": 0.948, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a0\\\": -0.5, \\\"a3\\\": 0.5}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swingL_A\\\", \\\"inputs\\\": {\\\"obs[8]\\\": 1.3, \\\"obs[1]\\\": -4.0, \\\"obs[5]\\\": -4.0, \\\"obs[10]\\\": -0.5, \\\"obs[14]\\\": -0.5, \\\"cos(P)\\\": 0.119, \\\"sin(P)\\\": -1.194},\\n   \\\"threshold\\\": 1.452, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a3\\\": 0.5, \\\"a0\\\": -0.5}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"swingL_B\\\", \\\"inputs\\\": {\\\"obs[8]\\\": -1.3, \\\"obs[1]\\\": 4.0, \\\"obs[5]\\\": 4.0, \\\"obs[10]\\\": 0.5, \\\"obs[14]\\\": 0.5, \\\"cos(P)\\\": 0.119, \\\"sin(P)\\\": -1.194},\\n   \\\"threshold\\\": 0.948, \\\"sharpness\\\": 1.0, \\\"to\\\": {\\\"a3\\\": -0.5, \\\"a0\\\": 0.5}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"kneeR\\\", \\\"inputs\\\": {\\\"sin(P)\\\": -1.146, \\\"cos(P)\\\": -0.355, \\\"obs[3]\\\": -1.5, \\\"obs[12]\\\": -0.2},\\n   \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"kneeL\\\", \\\"inputs\\\": {\\\"sin(P)\\\": 1.146, \\\"cos(P)\\\": 0.355, \\\"obs[6]\\\": -1.5, \\\"obs[15]\\\": -0.2},\\n   \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a4\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankleR\\\", \\\"inputs\\\": {\\\"obs[2]\\\": -0.5, \\\"obs[3]\\\": -0.5, \\\"obs[4]\\\": -0.5, \\\"obs[13]\\\": -0.03},\\n   \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"ankleL\\\", \\\"inputs\\\": {\\\"obs[5]\\\": -0.5, \\\"obs[6]\\\": -0.5, \\\"obs[7]\\\": -0.5, \\\"obs[16]\\\": -0.03},\\n   \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a5\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":434232,\"type\":\"result\",\"duration_ms\":450326,\"uuid\":\"1b3beced-3890-436e-9af1-67b829fd6d32\",\"ttft_stream_ms\":1532,\"time_to_request_ms\":20,\"first_content_frame_ms\":1532,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 169,
+  "cache_read_input_tokens": 3966,
+  "output_tokens": 44298,
+  "output_tokens_details": {
+   "thinking_tokens": 42201
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 169,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 44298,
+    "cache_read_input_tokens": 3966,
+    "cache_creation_input_tokens": 169,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 169
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

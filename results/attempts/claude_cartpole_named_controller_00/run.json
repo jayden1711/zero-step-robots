@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T16:23:40-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 23.456088066101074,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":22052,\"stop_reason\":\"end_turn\",\"session_id\":\"7b37daee-eb60-450c-8a2f-7b993e1f3664\",\"total_cost_usd\":0.070378,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":1941,\"cache_read_input_tokens\":4320,\"output_tokens\":2379,\"output_tokens_details\":{\"thinking_tokens\":1993},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":1941,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":2379,\"cache_read_input_tokens\":4320,\"cache_creation_input_tokens\":1941,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":1941},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":2379,\"cacheReadInputTokens\":4320,\"cacheCreationInputTokens\":1941,\"webSearchRequests\":0,\"costUSD\":0.070378,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":1993,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is an untested linear state-feedback controller. I couldn't run it, and its gains come from a rough hand model of the cart and pole, not from the simulator itself.\\n\\n- **Pole loop:** push the cart toward the side the pole leans, using the pole angle and angular velocity. This is the fast loop.\\n- **Cart loop:** small gains on cart position and velocity, with the same sign as the pole terms. This is the standard fix for a cart that has to lean the pole before it can move back. The gains are small enough that this loop stays much slower than the pole loop, so it keeps the cart near the centre of the rail without upsetting balance.\\n- **Sign convention:** my model assumed a positive angle means the pole tips toward +x. If the simulator uses the opposite convention, the pole terms would have the wrong sign and the controller would fail.\\n\\n```python\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, xd, thd = obs\\n    u = 3.0 * th + 0.45 * thd + 0.1 * x + 0.25 * xd\\n    if u > 3.0:\\n        u = 3.0\\n    elif u < -3.0:\\n        u = -3.0\\n    return [u]\\n```\",\"ttft_ms\":19158,\"type\":\"result\",\"duration_ms\":22151,\"uuid\":\"1d7e0fe9-635c-4a50-ae39-68518c686d80\",\"ttft_stream_ms\":1058,\"time_to_request_ms\":100,\"first_content_frame_ms\":1061,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 1941,
+  "cache_read_input_tokens": 4320,
+  "output_tokens": 2379,
+  "output_tokens_details": {
+   "thinking_tokens": 1993
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 1941,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 2379,
+    "cache_read_input_tokens": 4320,
+    "cache_creation_input_tokens": 1941,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 1941
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

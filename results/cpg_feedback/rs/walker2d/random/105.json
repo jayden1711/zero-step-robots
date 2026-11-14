@@ -1,0 +1,173 @@
+{
+ "seed": 105,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": -0.07424264905176804,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.07553051149776968,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.22421573874020342,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.09616202958531718,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.06956887315578582,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.20218451779481036,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "o0",
+    "freq_hz": 6.239016238088725,
+    "phase0": 0.7086765854744349
+   },
+   {
+    "name": "o1",
+    "freq_hz": 2.061241371230007,
+    "phase0": 0.1298173046822646
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -0.11488045242924173,
+   "a1": -0.027186747269121986,
+   "a2": -0.3483470141701115,
+   "a3": -0.2098427423127945,
+   "a4": -0.07434769161859889,
+   "a5": -0.02248107544294431
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "j0",
+    "inputs": {
+     "cos(o1)": -0.40791651275020957,
+     "sin(o1)": 0.4236775449695842
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.5676386339728636
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j1",
+    "inputs": {
+     "cos(o0)": -0.34862636907255007,
+     "sin(o0)": 0.08162078083808841,
+     "obs[4]": -1.758890815635696
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 1.3263108169482518
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j2",
+    "inputs": {
+     "cos(o1)": 0.37795359562887,
+     "sin(o1)": 0.23415974956329985
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 1.1297713010422734
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j3",
+    "inputs": {
+     "cos(o1)": -0.2897701882073481,
+     "sin(o1)": -0.6756643271013812
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a3": 1.2990104019725548
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j4",
+    "inputs": {
+     "cos(o1)": 0.4203373155394842,
+     "sin(o1)": -0.7927981366493312
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a4": 0.7510841128815711
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j5",
+    "inputs": {
+     "cos(o0)": -0.0059282668574055924,
+     "sin(o0)": 0.17272778287920643
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a5": 1.0645060220060747
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "walker2d",
+  "variant": "stock",
+  "env_id": "Walker2d-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": -4.0837100147648915,
+  "sem_return": 0.005692914302105696,
+  "std_return": 0.05664378211119768,
+  "median_return": -4.086190377777909,
+  "min_return": -4.21788746744547,
+  "max_return": -3.9725438202329317,
+  "mean_length": 7.0,
+  "frac_full_length": 0.0,
+  "mean_distance": -0.08060871700046189,
+  "mean_distance_healthy": -0.06960947156269663,
+  "median_distance_healthy": -0.06958219415693409,
+  "min_distance_healthy": -0.07046332202256009,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}

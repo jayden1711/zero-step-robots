@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T13:01:09-0600",
+ "prompt_sha256": "9eb7b29bda05cf7e4e8557c7302ef462229cb3f49038e41637c612f7ed79df71",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 51.259010791778564,
+ "timeout_s": 1800,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":50566,\"stop_reason\":\"end_turn\",\"session_id\":\"2d4090c8-f960-4f58-b5fa-7c45c554a91c\",\"total_cost_usd\":0.16258,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":7683,\"cache_read_input_tokens\":1440,\"output_tokens\":5041,\"output_tokens_details\":{\"thinking_tokens\":3632},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":7683,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":5041,\"cache_read_input_tokens\":1440,\"cache_creation_input_tokens\":7683,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":7683},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":5041,\"cacheReadInputTokens\":1440,\"cacheCreationInputTokens\":7683,\"webSearchRequests\":0,\"costUSD\":0.16258,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3632,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"# Round 2: lower the balance gains\\n\\n## What round 1 showed\\n\\n- **The sign fix was correct.** Round 0 drifted slowly and monotonically negative, which is the signature of positive feedback. Round 1 behaved differently: the torso tipped positive (+0.055), then swung to \u22120.2 within about 0.1 s. That is a fast, growing oscillation, not a drift. So positive thigh torque does lower obs[1], and the brief's \\\"positive = forward lean\\\" is reversed, as the model file's `rooty` axis (0, \u22121, 0) indicates.\\n- **The gains were far too high.** Hopper's actuators have a gear ratio of 200, so an action of 1 means about 200 N\u00b7m.\\n  - Kp = 4 gives about 800 N\u00b7m/rad.\\n  - Kd = 0.6 gives about 120 N\u00b7m\u00b7s/rad.\\n  - The torque is held for 0.008 s per step. At that gain the damping term overshoots within one step: it reverses the angular velocity and makes it larger, so the loop goes unstable.\\n  - The thigh saturating on 10% of steps and the balance unit saturating on 4% fit this.\\n\\n## Round 2 changes\\n\\n- **Balance gains cut sharply:** a0 = 1.2\u00b7obs[1] + 0.12\u00b7obs[7] \u2212 0.05\u00b7obs[5] + 0.06.\\n  - The bias sets a target lean of \u22120.05 rad, which is forward in the corrected convention.\\n  - The speed term lowers a0 as speed rises, which reduces the forward lean.\\n- **Rhythm reduced:** thigh 0.15, leg 0.4, foot 0.15, at the same 2 Hz. The external periodic hip torque was probably helping drive the torso oscillation, so this round prioritises staying upright.\\n- **Foot speed damping halved** to \u22120.12\u00b7obs[5]. Positive foot torque raises the toe and pitches the body forward.\\n- **Leg PD unchanged.** It kept the leg near straight, which is fine for now.\\n\\nIf this survives, round 3 will increase the rhythm and lean for speed. If the torso still oscillates fast, I'll cut the gains further. If it drifts slowly, I'll raise Kp.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"cpg\\\", \\\"freq_hz\\\": 2.0, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a0\\\": 0.06},\\n \\\"units\\\": [\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"torso_balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 1.2, \\\"obs[7]\\\": 0.12, \\\"obs[5]\\\": -0.05},\\n    \\\"range\\\": 2.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thigh_rhythm\\\", \\\"inputs\\\": {\\\"cos(cpg)\\\": 0.15},\\n    \\\"range\\\": 0.25, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leg_pd\\\", \\\"inputs\\\": {\\\"obs[3]\\\": -2.0, \\\"obs[9]\\\": -0.2},\\n    \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leg_rhythm\\\", \\\"inputs\\\": {\\\"sin(cpg)\\\": 0.4},\\n    \\\"range\\\": 0.5, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_pd\\\", \\\"inputs\\\": {\\\"obs[4]\\\": -2.0, \\\"obs[10]\\\": -0.2},\\n    \\\"range\\\": 4.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_balance\\\", \\\"inputs\\\": {\\\"obs[5]\\\": -0.12},\\n    \\\"range\\\": 1.5, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a2\\\": 1.0}},\\n   {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_rhythm\\\", \\\"inputs\\\": {\\\"sin(cpg)\\\": 0.15},\\n    \\\"range\\\": 0.25, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":39225,\"type\":\"result\",\"duration_ms\":50595,\"uuid\":\"8aaaa15c-521a-4717-b250-2cc1c3330098\",\"ttft_stream_ms\":882,\"time_to_request_ms\":28,\"first_content_frame_ms\":882,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 7683,
+  "cache_read_input_tokens": 1440,
+  "output_tokens": 5041,
+  "output_tokens_details": {
+   "thinking_tokens": 3632
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 7683,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 5041,
+    "cache_read_input_tokens": 1440,
+    "cache_creation_input_tokens": 7683,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 7683
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

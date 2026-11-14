@@ -1,0 +1,24 @@
+Round 3 got worse than round 2, most likely because the foot hold stiffened both legs and the torso fell backward. For round 4 I'm going back to the round-2 structure, which was the best so far, and removing the foot units. I'm also adding a stronger forward-lean bias on the thighs, stiffer stance knees with a deeper swing flex, and a slightly faster rhythm of 1.3 Hz. I haven't run it.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "R", "freq_hz": 1.3, "phase0": 0.0},
+  {"name": "L", "freq_hz": 1.3, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "L", "to": "R", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "R", "to": "L", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {"a0": 0.2, "a3": 0.2, "a1": 0.3, "a4": 0.3},
+ "units": [
+  {"type": "linear", "name": "thighR", "inputs": {"obs[1]": -3.0, "obs[10]": -0.3, "sin(R)": 0.3},
+   "range": 4.0, "tol": 0.05, "to": {"a0": 1.0}},
+  {"type": "linear", "name": "thighL", "inputs": {"obs[1]": -3.0, "obs[10]": -0.3, "sin(L)": 0.3},
+   "range": 4.0, "tol": 0.05, "to": {"a3": 1.0}},
+  {"type": "reflex", "name": "kneeR", "inputs": {"sin(R)": 1.0}, "threshold": 0.3,
+   "sharpness": 4.0, "to": {"a1": -0.8}},
+  {"type": "reflex", "name": "kneeL", "inputs": {"sin(L)": 1.0}, "threshold": 0.3,
+   "sharpness": 4.0, "to": {"a4": -0.8}}
+ ]}
+```

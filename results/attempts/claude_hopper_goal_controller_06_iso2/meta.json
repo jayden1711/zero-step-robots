@@ -1,0 +1,37 @@
+{
+ "id": "claude_hopper_goal_controller_06_iso2",
+ "task": "hopper",
+ "mode": "controller",
+ "model": "claude-sonnet-5-5",
+ "interface": "claude -p (subscription CLI), fresh empty cwd under /var/tmp, no tools, no MCP",
+ "arm": "goal",
+ "prompt_version": "v2",
+ "prompt_sha256": "b416ed363829a7dda9d0b9b0903d5b74a6224628819bd364088d2bee86cefa1f",
+ "template_sha256": {
+  "template_v2.md": "8da32c51814786bd355110e296a7c8d97e8834f302d5852368919ea8338d5aa9",
+  "task_hopper_v2.md": "8d360aac79997468bedad986a9cc8397b25a522759c0c54ff283a7764184a4b2",
+  "format_controller_v2.md": "c9f5a7c783540dcd2b23f4198cccf7a6d1795dc49019cfa72a05116d5e203328",
+  "goal_hopper_v2.md": "f8cff7d5684b6e0aa93c6358a4821102fda0dc4aa826584b16b1d22f8a5a78fa"
+ },
+ "created": "2026-11-07T02:23:38.244875+00:00",
+ "attempt_index": 6,
+ "isolation": "fresh empty dir under /var/tmp; pre-flight: no CLAUDE.md / CLAUDE.local.md / .claude in cwd or any ancestor; batch pre-flight = isolation probe reported no instruction file and no email",
+ "claude_flags": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "claude_env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ }
+}

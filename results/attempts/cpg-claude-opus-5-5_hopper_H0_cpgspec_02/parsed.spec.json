@@ -1,0 +1,20 @@
+{"target": "cpg", "obs_dim": 11, "act_dim": 3, "hidden": 16,
+ "oscillators": [{"name": "hop", "freq_hz": 2.0, "phase0": 3.14159}],
+ "couplings": [],
+ "bias": {"a0": -0.06, "a1": 0.4, "a2": -0.15},
+ "units": [
+   {"type": "linear", "name": "hip_torso_pd",
+    "inputs": {"obs[1]": 2.0, "obs[7]": 0.12},
+    "range": 1.5, "tol": 0.03, "to": {"a0": 1.0}},
+   {"type": "linear", "name": "knee_lock",
+    "inputs": {"obs[3]": -2.0, "obs[9]": -0.1},
+    "range": 1.5, "tol": 0.05, "to": {"a1": 1.0}},
+   {"type": "linear", "name": "ankle_foot_placement_balance",
+    "inputs": {"obs[1]": -0.2, "obs[2]": -0.2, "obs[3]": -0.2, "obs[4]": -1.0,
+               "obs[5]": -0.3,
+               "obs[7]": -0.1, "obs[8]": -0.1, "obs[9]": -0.1, "obs[10]": -0.1},
+    "range": 2.0, "tol": 0.05, "to": {"a2": 1.0}},
+   {"type": "reflex", "name": "toe_push_pump",
+    "inputs": {"sin(hop)": 1.0, "obs[1]": -1.0, "obs[2]": -1.0, "obs[3]": -1.0, "obs[6]": 0.3},
+    "threshold": 0.35, "sharpness": 6.0, "to": {"a2": -0.25}}
+ ]}

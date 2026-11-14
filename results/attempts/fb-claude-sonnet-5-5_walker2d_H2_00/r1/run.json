@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T14:23:03-0600",
+ "prompt_sha256": "f7959795b31340cd6bbb28a140dd357f3fa39b13bbee9453da740cfc2317bff3",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 11.901026010513306,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":10995,\"stop_reason\":\"end_turn\",\"session_id\":\"e9816ed4-5823-412c-85d5-df3c8a0a9a04\",\"total_cost_usd\":0.074793,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":5373,\"cache_read_input_tokens\":4505,\"output_tokens\":1545,\"output_tokens_details\":{\"thinking_tokens\":667},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":5373,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1545,\"cache_read_input_tokens\":4505,\"cache_creation_input_tokens\":5373,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":5373},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1545,\"cacheReadInputTokens\":4505,\"cacheCreationInputTokens\":5373,\"webSearchRequests\":0,\"costUSD\":0.074793,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":667,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"Round 0 fell backward within 0.5 s. The stance leg's negative thigh torque (the swing-phase half of the cosine) pitched the torso back, and the balance feedback was too weak to counter it. This revision halves the rhythmic thigh amplitude, raises the balance gains roughly threefold, adds a small forward-torque bias on both thighs, and softens the knee and foot drives.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 17, \\\"act_dim\\\": 6, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [\\n  {\\\"name\\\": \\\"R\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 0.0},\\n  {\\\"name\\\": \\\"L\\\", \\\"freq_hz\\\": 1.0, \\\"phase0\\\": 3.14159}\\n ],\\n \\\"couplings\\\": [\\n  {\\\"from\\\": \\\"R\\\", \\\"to\\\": \\\"L\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159},\\n  {\\\"from\\\": \\\"L\\\", \\\"to\\\": \\\"R\\\", \\\"weight\\\": 2.0, \\\"phase_lag\\\": 3.14159}\\n ],\\n \\\"bias\\\": {\\\"a0\\\": 0.1, \\\"a3\\\": 0.1},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thighR\\\", \\\"inputs\\\": {\\\"cos(R)\\\": 1.0}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 0.3}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thighL\\\", \\\"inputs\\\": {\\\"cos(L)\\\": 1.0}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a3\\\": 0.3}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"kneeR\\\", \\\"inputs\\\": {\\\"cos(R)\\\": 1.0}, \\\"threshold\\\": 0.0, \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a1\\\": -0.3}},\\n  {\\\"type\\\": \\\"reflex\\\", \\\"name\\\": \\\"kneeL\\\", \\\"inputs\\\": {\\\"cos(L)\\\": 1.0}, \\\"threshold\\\": 0.0, \\\"sharpness\\\": 4.0, \\\"to\\\": {\\\"a4\\\": -0.3}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"footR\\\", \\\"inputs\\\": {\\\"sin(R)\\\": 1.0}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 0.1}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"footL\\\", \\\"inputs\\\": {\\\"sin(L)\\\": 1.0}, \\\"range\\\": 1.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a5\\\": 0.1}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": -3.0, \\\"obs[10]\\\": -0.3}, \\\"range\\\": 6.0, \\\"tol\\\": 0.05, \\\"to\\\": {\\\"a0\\\": 1.0, \\\"a3\\\": 1.0}}\\n ]}\\n```\",\"ttft_ms\":6572,\"type\":\"result\",\"duration_ms\":11034,\"uuid\":\"7bb8a4d8-9af8-4b4d-afa6-b5200b8e0f90\",\"ttft_stream_ms\":880,\"time_to_request_ms\":37,\"first_content_frame_ms\":881,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 5373,
+  "cache_read_input_tokens": 4505,
+  "output_tokens": 1545,
+  "output_tokens_details": {
+   "thinking_tokens": 667
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 5373,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1545,
+    "cache_read_input_tokens": 4505,
+    "cache_creation_input_tokens": 5373,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 5373
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

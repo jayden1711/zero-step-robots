@@ -1,0 +1,63 @@
+{
+ "started": "2026-11-10T13:07:13-0600",
+ "prompt_sha256": "e8a3881e9d4e47aa9e8f373d17536d584b2b82aefbf760b8366a1e10c234f4fa",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-sonnet-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 11.723974227905273,
+ "timeout_s": 1800,
+ "stderr": "[claude-code:unrecognized_model] {\"model\":\"claude-sonnet-5-5\",\"query_source\":\"sdk\"}\n",
+ "raw_stdout": "{\"duration_api_ms\":10889,\"stop_reason\":\"end_turn\",\"session_id\":\"f0ecffbc-8223-41cd-9ee3-0782962de4af\",\"total_cost_usd\":0.0298636,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":136,\"cache_read_input_tokens\":7638,\"output_tokens\":1362,\"output_tokens_details\":{\"thinking_tokens\":808},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":136,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"global\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":1362,\"cache_read_input_tokens\":7638,\"cache_creation_input_tokens\":136,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":136},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-sonnet-5-5\":{\"inputTokens\":2,\"outputTokens\":1362,\"cacheReadInputTokens\":7638,\"cacheCreationInputTokens\":136,\"webSearchRequests\":0,\"costUSD\":0.0298636,\"contextWindow\":200000,\"maxOutputTokens\":128000,\"thinkingTokens\":808,\"canonicalModel\":\"claude-sonnet-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"unknown\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a first-guess design for round 0, so I expect to tune it from the practice results. It has one 2.5 Hz oscillator driving all three joints. The thigh gets a sin drive and the leg and foot get cos drives, so they are out of phase. A constant positive leg bias helps hold the body up. Torso angle and angular velocity feed back to the thigh with negative gain to keep the torso upright.\\n\\n```json\\n{\\\"target\\\": \\\"cpg\\\", \\\"obs_dim\\\": 11, \\\"act_dim\\\": 3, \\\"hidden\\\": 16,\\n \\\"oscillators\\\": [{\\\"name\\\": \\\"hop\\\", \\\"freq_hz\\\": 2.5, \\\"phase0\\\": 0.0}],\\n \\\"couplings\\\": [],\\n \\\"bias\\\": {\\\"a1\\\": 0.3},\\n \\\"units\\\": [\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"thigh_rhythm\\\", \\\"inputs\\\": {\\\"sin(hop)\\\": 1.0},\\n   \\\"range\\\": 1.1, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": 0.4}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"leg_rhythm\\\", \\\"inputs\\\": {\\\"cos(hop)\\\": 1.0},\\n   \\\"range\\\": 1.1, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a1\\\": 0.6}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"foot_rhythm\\\", \\\"inputs\\\": {\\\"cos(hop)\\\": 1.0},\\n   \\\"range\\\": 1.1, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a2\\\": 0.3}},\\n  {\\\"type\\\": \\\"linear\\\", \\\"name\\\": \\\"balance\\\", \\\"inputs\\\": {\\\"obs[1]\\\": 3.0, \\\"obs[7]\\\": 0.3},\\n   \\\"range\\\": 3.0, \\\"tol\\\": 0.02, \\\"to\\\": {\\\"a0\\\": -1.0}}\\n ]}\\n```\",\"ttft_ms\":7841,\"type\":\"result\",\"duration_ms\":10921,\"uuid\":\"cfa67e8d-ef73-4973-9759-278d6680758f\",\"ttft_stream_ms\":935,\"time_to_request_ms\":31,\"first_content_frame_ms\":935,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-sonnet-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 136,
+  "cache_read_input_tokens": 7638,
+  "output_tokens": 1362,
+  "output_tokens_details": {
+   "thinking_tokens": 808
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 136,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "global",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 1362,
+    "cache_read_input_tokens": 7638,
+    "cache_creation_input_tokens": 136,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 136
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

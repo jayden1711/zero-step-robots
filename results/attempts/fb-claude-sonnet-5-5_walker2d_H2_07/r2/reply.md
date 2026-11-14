@@ -1,0 +1,30 @@
+Round 1 fixed the knee collapse, but the torso leaned further and further back (down to -0.84 rad) and both feet stayed planted, so the robot drifted backward. This revision strengthens the torso-upright feedback on both thighs, with more damping. It also gives the thigh swing and knee flexion more amplitude so the legs actually step. I have not verified the foot-joint sign, so the feet stay on simple damping.
+
+```json
+{"target": "cpg", "obs_dim": 17, "act_dim": 6, "hidden": 16,
+ "oscillators": [
+  {"name": "r", "freq_hz": 1.0, "phase0": 0.0},
+  {"name": "l", "freq_hz": 1.0, "phase0": 3.14159}
+ ],
+ "couplings": [
+  {"from": "r", "to": "l", "weight": 2.0, "phase_lag": 3.14159},
+  {"from": "l", "to": "r", "weight": 2.0, "phase_lag": 3.14159}
+ ],
+ "bias": {},
+ "units": [
+  {"type": "linear", "name": "balance", "inputs": {"obs[1]": -4.0, "obs[10]": -0.4},
+   "range": 6.0, "tol": 0.05, "to": {"a0": 1.0, "a3": 1.0}},
+  {"type": "linear", "name": "thigh_r", "inputs": {"sin(r)": 1.0},
+   "range": 1.0, "tol": 0.05, "to": {"a0": 0.5}},
+  {"type": "linear", "name": "thigh_l", "inputs": {"sin(l)": 1.0},
+   "range": 1.0, "tol": 0.05, "to": {"a3": 0.5}},
+  {"type": "linear", "name": "knee_r", "inputs": {"obs[3]": -1.0, "obs[12]": -0.1, "sin(r)": -0.8},
+   "range": 6.0, "tol": 0.05, "to": {"a1": 1.0}},
+  {"type": "linear", "name": "knee_l", "inputs": {"obs[6]": -1.0, "obs[15]": -0.1, "sin(l)": -0.8},
+   "range": 6.0, "tol": 0.05, "to": {"a4": 1.0}},
+  {"type": "linear", "name": "foot_r", "inputs": {"obs[4]": -1.0, "obs[13]": -0.05},
+   "range": 2.0, "tol": 0.05, "to": {"a2": 0.5}},
+  {"type": "linear", "name": "foot_l", "inputs": {"obs[7]": -1.0, "obs[16]": -0.05},
+   "range": 2.0, "tol": 0.05, "to": {"a5": 0.5}}
+ ]}
+```

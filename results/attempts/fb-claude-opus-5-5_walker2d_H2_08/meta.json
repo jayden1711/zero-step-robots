@@ -1,0 +1,42 @@
+{
+ "id": "fb-claude-opus-5-5_walker2d_H2_08",
+ "task": "walker2d",
+ "mode": "cpgspec-feedback",
+ "arm": "H2",
+ "level": "H2",
+ "model": "claude-opus-5-5",
+ "attempt_index": 8,
+ "rounds": 6,
+ "prompt_version": "v4fb",
+ "prompt_files_sha256": {
+  "template_v4fb.md": "6fe95a53150fda0c85808f72b03592460bf2163f9aef84894a692774b2a33d13",
+  "task_walker2d_v3.md": "aae4f12476941613cb9bfdb3b6f53660fe80831e65b83ab860d23a751443713f",
+  "format_cpgspec_v3.md": "dcb07c204f304582a03f781555e0a545f762cfee97eeb4186aa96ec245143bcc",
+  "hint_walker2d_H1_v3.md": "9c049ab708ba8d9d48781085d5df9c99025a7db20dab449a3c1332f999d1550a",
+  "hint_walker2d_H2_v3.md": "c5b8ff153fd201bb086c16ccd56a3a8d7d00c6088421aa1b2afb97d3e29d385e",
+  "feedback_history_v4fb.md": "56356961b8eacac368b70339706266a47646b153f006603e2503ed004e00d327",
+  "feedback_revise_v4fb.md": "0d5172c546043050176e47fdcd1850af5fba964e061cbe354d00cb4a6bd4677a",
+  "feedback_final_v4fb.md": "ade86ede002fac4d70f0c791325ba9e310fce5c3536461486fba4b766949bfdc"
+ },
+ "claude_flags": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--setting-sources",
+  "project,local",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "claude_env_extra": {
+  "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"
+ },
+ "interface": "claude -p (subscription CLI), fresh empty cwd under /var/tmp, no tools, no MCP",
+ "prereg": "docs/prereg-2026-11-10-cpg-feedback.md",
+ "created": "2026-11-10T22:38:12.672663+00:00"
+}

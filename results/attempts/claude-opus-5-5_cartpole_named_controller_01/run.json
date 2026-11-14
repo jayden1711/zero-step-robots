@@ -1,0 +1,59 @@
+{
+ "started": "2026-11-06T17:09:50-0600",
+ "cli_version": "2.1.282 (Claude Code)",
+ "command": [
+  "claude",
+  "-p",
+  "--tools",
+  "",
+  "--strict-mcp-config",
+  "--no-session-persistence",
+  "--disable-slash-commands",
+  "--output-format",
+  "json",
+  "--model",
+  "claude-opus-5-5"
+ ],
+ "returncode": 0,
+ "seconds": 40.290372371673584,
+ "stderr": "",
+ "raw_stdout": "{\"duration_api_ms\":38677,\"stop_reason\":\"end_turn\",\"session_id\":\"652c0ddf-385f-45d2-8a99-fd5ddd9a9f17\",\"total_cost_usd\":0.08627124,\"usage\":{\"input_tokens\":2,\"cache_creation_input_tokens\":166,\"cache_read_input_tokens\":3062,\"output_tokens\":3824,\"output_tokens_details\":{\"thinking_tokens\":3031},\"server_tool_use\":{\"web_search_requests\":0,\"web_fetch_requests\":0},\"service_tier\":\"standard\",\"cache_creation\":{\"ephemeral_1h_input_tokens\":166,\"ephemeral_5m_input_tokens\":0},\"inference_geo\":\"us\",\"iterations\":[{\"input_tokens\":2,\"output_tokens\":3824,\"cache_read_input_tokens\":3062,\"cache_creation_input_tokens\":166,\"cache_creation\":{\"ephemeral_5m_input_tokens\":0,\"ephemeral_1h_input_tokens\":166},\"type\":\"message\"}],\"speed\":\"standard\"},\"modelUsage\":{\"claude-opus-5-5\":{\"inputTokens\":2,\"outputTokens\":3824,\"cacheReadInputTokens\":3062,\"cacheCreationInputTokens\":166,\"webSearchRequests\":0,\"costUSD\":0.08627124,\"contextWindow\":1000000,\"maxOutputTokens\":128000,\"thinkingTokens\":3031,\"canonicalModel\":\"claude-opus-5-5\",\"provider\":\"firstParty\",\"costBasis\":\"list\"}},\"permission_denials\":[],\"terminal_reason\":\"completed\",\"fast_mode_state\":\"off\",\"fast_mode_disabled_reason\":\"sdk_opt_in_required\",\"subagent_stats\":{\"spawned\":0,\"requested\":{\"background\":0,\"foreground\":0,\"unset\":0},\"started_in_background\":0,\"max_depth\":0,\"spawned_by_subagents\":0,\"completed\":0,\"failed\":0,\"killed\":{\"parent\":0,\"user\":0,\"system\":0},\"refused\":{\"depth_limit\":0,\"concurrency_limit\":0,\"budget\":0},\"by_type\":{}},\"is_error\":false,\"num_turns\":1,\"subtype\":\"success\",\"api_error_status\":null,\"result\":\"This is a full-state linear feedback controller (pole placement) designed from a linearised model of the MuJoCo cart-pole.\\n\\n**Model.** I estimated the physical parameters from the standard `inverted_pendulum.xml` geometry:\\n\\n- Cart mass is about 10.5 kg and pole mass about 5 kg.\\n- The pole's centre of mass sits about 0.3 m above the hinge.\\n- The actuator gear is 100, so a control value `u` produces a force of 100\u00b7u N.\\n\\nLinearising around upright gives:\\n\\n- \u03b8'' \u2248 32.3\u00b7\u03b8 \u2212 21.3\u00b7u\\n- x'' \u2248 8.51\u00b7u \u2212 3.13\u00b7\u03b8\\n\\n**Sign convention.** A positive angle means the pole leans toward +x, so the cart must push toward +x to catch it.\\n\\n**Gains.** With `u = c\u00b7x + d\u00b7v + a\u00b7\u03b8 + b\u00b7\u03c9`, the closed-loop characteristic polynomial is:\\n\\ns\u2074 + (21.3b \u2212 8.51d)s\u00b3 + (21.3a \u2212 32.3 \u2212 8.51c)s\u00b2 + 208.2d\u00b7s + 208.2c\\n\\nI placed the poles as follows:\\n\\n- A fast, well-damped pair (\u03c9 = 7 rad/s, \u03b6 = 0.8) to balance the pole.\\n- A slow pair (\u03c9 = 1.5 rad/s, \u03b6 = 0.9) to bring the cart back to the centre.\\n\\nThis gives c \u2248 0.53, d \u2248 0.76, a \u2248 5.55 and b \u2248 0.955. The initial perturbations are tiny, so the \u00b13 limit on the action should not be reached during normal operation.\\n\\n```python\\nimport numpy as np\\n\\n# Linear state feedback: u = c*x + d*v + a*theta + b*omega\\n# Gains from pole placement on a linearised cart-pole model\\n# (fast pair: wn=7, zeta=0.8; slow pair: wn=1.5, zeta=0.9).\\nK_X = 0.53\\nK_V = 0.756\\nK_TH = 5.55\\nK_OM = 0.955\\n\\n\\ndef reset():\\n    pass\\n\\n\\ndef act(obs):\\n    x, th, v, om = (float(o) for o in obs[:4])\\n    u = K_X * x + K_V * v + K_TH * th + K_OM * om\\n    if not np.isfinite(u):\\n        u = 0.0\\n    u = max(-3.0, min(3.0, u))\\n    return [u]\\n```\",\"ttft_ms\":32449,\"type\":\"result\",\"duration_ms\":38800,\"uuid\":\"feca0fbf-35e4-40fc-afa0-dc2848462d1e\",\"ttft_stream_ms\":1664,\"time_to_request_ms\":121,\"first_content_frame_ms\":1664,\"queued_turn_count\":0,\"result_index\":0}\n",
+ "model_reported": [
+  "claude-opus-5-5"
+ ],
+ "usage": {
+  "input_tokens": 2,
+  "cache_creation_input_tokens": 166,
+  "cache_read_input_tokens": 3062,
+  "output_tokens": 3824,
+  "output_tokens_details": {
+   "thinking_tokens": 3031
+  },
+  "server_tool_use": {
+   "web_search_requests": 0,
+   "web_fetch_requests": 0
+  },
+  "service_tier": "standard",
+  "cache_creation": {
+   "ephemeral_1h_input_tokens": 166,
+   "ephemeral_5m_input_tokens": 0
+  },
+  "inference_geo": "us",
+  "iterations": [
+   {
+    "input_tokens": 2,
+    "output_tokens": 3824,
+    "cache_read_input_tokens": 3062,
+    "cache_creation_input_tokens": 166,
+    "cache_creation": {
+     "ephemeral_5m_input_tokens": 0,
+     "ephemeral_1h_input_tokens": 166
+    },
+    "type": "message"
+   }
+  ],
+  "speed": "standard"
+ },
+ "is_error": false,
+ "stop_reason": "end_turn"
+}

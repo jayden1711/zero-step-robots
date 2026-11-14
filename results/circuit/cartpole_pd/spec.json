@@ -1,0 +1,6 @@
+{"note": "Compiler test fixture written by the repo author, NOT an LLM output. Gains copied from controllers/cartpole_reference.py (a linear state feedback).",
+ "obs_dim": 4, "act_dim": 1, "hidden": 16,
+ "units": [
+  {"type": "linear", "name": "state_feedback", "inputs": {"obs[0]": 0.5, "obs[1]": 12.0, "obs[2]": 1.0, "obs[3]": 1.5},
+   "range": 3.0, "tol": 0.01, "to": {"a0": 1.0}}
+ ]}

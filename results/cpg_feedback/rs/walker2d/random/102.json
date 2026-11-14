@@ -1,0 +1,183 @@
+{
+ "seed": 102,
+ "history": [
+  {
+   "design": 0,
+   "dev_mean_d": -0.1950653048105517,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 1,
+   "dev_mean_d": -0.16007596809514124,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 2,
+   "dev_mean_d": -0.12875420335805493,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 3,
+   "dev_mean_d": -0.07220063009141875,
+   "accepted": true,
+   "error": null
+  },
+  {
+   "design": 4,
+   "dev_mean_d": -0.08651446985841713,
+   "accepted": false,
+   "error": null
+  },
+  {
+   "design": 5,
+   "dev_mean_d": -0.16595386317882643,
+   "accepted": false,
+   "error": null
+  }
+ ],
+ "final_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "o0",
+    "freq_hz": 2.9048760134580474,
+    "phase0": 11.762475306172682,
+    "feedback": {
+     "obs[2]": -0.1356974189018132
+    }
+   },
+   {
+    "name": "o1",
+    "freq_hz": 1.4445527003921919,
+    "phase0": 4.750474317367208
+   }
+  ],
+  "couplings": [
+   {
+    "from": "o1",
+    "to": "o0",
+    "weight": 0.7298370599020272,
+    "phase_lag": -1.815464523742253
+   }
+  ],
+  "bias": {
+   "a0": -0.09379453556228565,
+   "a1": -0.23299251746022115,
+   "a2": 0.2612459808461187,
+   "a3": 0.1296631079229899,
+   "a4": -0.22490731667561936,
+   "a5": 0.15795451592776621
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "j0",
+    "inputs": {
+     "cos(o1)": -0.15028520574705384,
+     "sin(o1)": 0.250717431887274
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.125058942963677
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j1",
+    "inputs": {
+     "cos(o1)": -0.6526283243991331,
+     "sin(o1)": 0.1917551858499279
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 0.2948956610718413
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j2",
+    "inputs": {
+     "cos(o1)": 0.5154114581960183,
+     "sin(o1)": -1.2743756541822024
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 0.43664388262279297
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j3",
+    "inputs": {
+     "cos(o0)": -2.7454752741704977,
+     "sin(o0)": -0.6248290588766222
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a3": 1.742560339461202
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j4",
+    "inputs": {
+     "cos(o0)": 0.6536608637736766,
+     "sin(o0)": 0.8372898433650984,
+     "obs[9]": 0.03657619717623793
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a4": 1.472745633452329
+    }
+   },
+   {
+    "type": "linear",
+    "name": "j5",
+    "inputs": {
+     "cos(o0)": -0.3120492980104163,
+     "sin(o0)": -0.38909958875791684
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a5": 2.0120104972233124
+    }
+   }
+  ]
+ },
+ "score": {
+  "task": "walker2d",
+  "variant": "stock",
+  "env_id": "Walker2d-v5",
+  "gymnasium": "1.4.0",
+  "n_episodes": 100,
+  "seed0": 10000,
+  "mean_return": -4.418935498093228,
+  "sem_return": 0.005915468395619008,
+  "std_return": 0.05885816738242166,
+  "median_return": -4.418555829018159,
+  "min_return": -4.564525653250831,
+  "max_return": -4.297746623290775,
+  "mean_length": 7.0,
+  "frac_full_length": 0.0,
+  "mean_distance": -0.08322725821223834,
+  "mean_distance_healthy": -0.07223437467951181,
+  "median_distance_healthy": -0.07224992717607441,
+  "min_distance_healthy": -0.07308949551985473,
+  "n_clean_3m": 0,
+  "passes_3m": false,
+  "n_faults": 0,
+  "first_fault": null
+ }
+}
