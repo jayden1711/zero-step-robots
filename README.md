@@ -8,16 +8,21 @@ Can an LLM write a robot's brain by hand? Zero training steps: the model writes 
 network controller that moves Gymnasium MuJoCo `Hopper-v5` and `Walker2d-v5` at least 3 m forward without falling,
 on 100 held-out episodes; a model meets the target when at least 5 of its 10 attempts pass.
 
+Every number below links to the file it comes from: the report table, or the attempt's own `score.json` (100 held-out
+episodes, seeds 10000-10099).
+
 | arm | Hopper-v5 | Walker2d-v5 |
 |---|---|---|
-| One reply, no feedback, 3 hint levels (Opus 5.5 and Sonnet 5.5, 10 attempts per cell) | 0 of 60 attempts pass (best 1.08 m) | 0 of 60 (best 1.30 m) |
-| Feedback: 5 revisions from a fixed practice-episode summary (H2 hint) | **Opus: 2 of 10 pass** (6.42 m and 6.90 m); Sonnet 0 of 10 (best 0.96 m) | 0 of 20 (best 0.97 m); Opus got worse with feedback |
-| Random-search proposer, same 6-design budget, random start | 0 of 10 (best 0.48 m) | 0 of 10 |
-| Hand-built CPG (structure by hand, parameters by search on practice seeds) | **passes** (3.27 m, 80 of 100 episodes >= 3 m) | does not pass (1.29 m) |
-| PPO, 1M environment steps, 16-unit MLP (upper reference) | passes (12.7 to 17.5 m) | passes (3.75 to 16.6 m) |
+| One reply, no feedback, 3 hint levels (Opus 5.5 and Sonnet 5.5, 10 attempts per cell; [120 Claude attempts in all, 0 pass](results/cpg_report.md#verdict-prereg-section-8)) | [0 of 60 attempts pass](results/cpg_report.md#hopper-llm-attempts-mode-cpgspec) (best [1.08 m](results/attempts/cpg-claude-opus-5-5_hopper_H0_cpgspec_06/score.json)) | [0 of 60](results/cpg_report.md#walker2d-llm-attempts-mode-cpgspec) (best [1.30 m](results/attempts/cpg-claude-opus-5-5_walker2d_H1_cpgspec_01/score.json)) |
+| Feedback: 5 revisions from a fixed practice-episode summary (H2 hint; [240 of 240 pre-registered calls ran, target not met](results/cpg_feedback_report.md#budget)) | [**Opus: 2 of 10 pass**](results/cpg_feedback_report.md#hopper) ([6.42 m](results/attempts/fb-claude-opus-5-5_hopper_H2_03/score.json) and [6.90 m](results/attempts/fb-claude-opus-5-5_hopper_H2_08/score.json)); Sonnet 0 of 10 (best [0.96 m](results/attempts/fb-claude-sonnet-5-5_hopper_H2_00/score.json)) | [0 of 20](results/cpg_feedback_report.md#walker2d) (best [0.97 m](results/attempts/fb-claude-sonnet-5-5_walker2d_H2_04/score.json)); Opus got worse with feedback ([round-5 median -1.10 m vs round 0 -0.81 m](results/cpg_feedback_report.md#walker2d)) |
+| Random-search proposer, same 6-design budget, random start | [0 of 10 (best 0.48 m)](results/cpg_feedback_report.md#hopper) ([runs](results/cpg_feedback/rs/hopper/random/)) | [0 of 10](results/cpg_feedback_report.md#walker2d) ([runs](results/cpg_feedback/rs/walker2d/random/)) |
+| Hand-built CPG (structure by hand, parameters by search on practice seeds) | **passes** ([3.27 m, 80 of 100 episodes >= 3 m](results/cpg/baselines/hopper/tuned_cpg.score.json)) | does not pass ([1.29 m](results/cpg/baselines/walker2d/tuned_cpg.score.json)) |
+| PPO, 1M environment steps, 16-unit MLP (upper reference) | passes ([12.7](results/cpg/ppo/hopper/hopper_ppo_seed0.score.json) to [17.5 m](results/cpg/ppo/hopper/hopper_ppo_seed1.score.json)) | passes ([3.75](results/cpg/ppo/walker2d/walker2d_ppo_seed2.score.json) to [16.6 m](results/cpg/ppo/walker2d/walker2d_ppo_seed0.score.json)) |
 
 - **No arm met the pre-registered target on either task.** On hopper, 2 of 10 Opus attempts with feedback pass; one of
-  them hops for all 1000 steps in every held-out episode. One of the two already passed before any feedback.
+  them [hops for all 1000 steps in every held-out episode](results/attempts/fb-claude-opus-5-5_hopper_H2_08/score.json)
+  (`frac_full_length` 1.0). One of the two [already passed before any feedback](results/attempts/fb-claude-opus-5-5_hopper_H2_03/r0/score.json)
+  (round 0: 6.12 m, [report](results/cpg_feedback_report.md#hopper)).
 - **On hopper the representation is not the limit:** the hand-built CPG of the same network passes, so the gap is in the
   LLM-written controllers. On Walker2d the hand-built CPG did not pass within its budget, so headroom for the CPG network
   there was not shown (PPO's plain 16-unit network does pass).
