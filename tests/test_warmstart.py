@@ -44,7 +44,8 @@ def nums(sp):
                         + [abs(v) for x in u for v in x["inputs"].values()]
                         + [abs(v) for x in u for v in x["to"].values()]),
             "e": sorted(sp["bias"].values()),
-            "f": sorted(x[k] for x in u if x["type"] == "reflex" for k in ("threshold", "sharpness"))}
+            "f": sorted(x["threshold"] for x in u if x["type"] == "reflex"),
+            "g": sorted(x["sharpness"] for x in u if x["type"] == "reflex")}
 
 
 def test_permute_keeps_structure_and_fixed_fields():

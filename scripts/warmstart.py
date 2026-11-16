@@ -57,7 +57,7 @@ def permute(spec, seed):
     then flip the sign of every gain with probability 0.5. Fixed fields (dims, names, range, tol, targets) untouched."""
     sp = copy.deepcopy(spec)
     rng = np.random.default_rng(seed)
-    kinds = {k: [] for k in "abcdef"}  # each slot = (container, key)
+    kinds = {k: [] for k in "abcdefg"}  # each slot = (container, key)
     for o in sp.get("oscillators", []):
         kinds["a"].append((o, "freq_hz"))
         if "phase0" in o:
@@ -75,12 +75,13 @@ def permute(spec, seed):
         for k in sorted(u.get("to") or {}):
             kinds["d"].append((u["to"], k))
         if u.get("type") == "reflex":
-            for k in ("threshold", "sharpness"):
-                if k in u:
-                    kinds["f"].append((u, k))
+            if "threshold" in u:
+                kinds["f"].append((u, "threshold"))
+            if "sharpness" in u:  # its own kind: the compiler requires sharpness > 0
+                kinds["g"].append((u, "sharpness"))
     for k in sorted(sp.get("bias") or {}):
         kinds["e"].append((sp["bias"], k))
-    for kind in "abcdef":
+    for kind in "abcdefg":
         slots = kinds[kind]
         vals = [float(c[k]) for c, k in slots]
         for (c, k), i in zip(slots, rng.permutation(len(slots))):

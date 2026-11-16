@@ -52,7 +52,7 @@ All designs are specs in the `cpg-v1` spec language, compiled by the unchanged `
   couplings present, the inputs of each unit, unit types, declared `range`/`tol`, `obs_dim`/`act_dim`/`hidden`. The
   numeric values are randomly permuted among the slots of the same kind *within that design*. The kinds are:
   (a) `freq_hz`; (b) `phase0` and coupling `phase_lag`; (c) coupling `weight`; (d) every gain (oscillator `feedback`
-  gains, unit `inputs` gains, unit `to` weights); (e) `bias` values; (f) reflex `threshold` and `sharpness`. Each gain in
+  gains, unit `inputs` gains, unit `to` weights); (e) `bias` values; (f) reflex `threshold`; (g) reflex `sharpness` (kept apart from (f) because the compiler requires sharpness > 0; corrected 2026-11-15 when the compile test failed, before any run). Each gain in
   kind (d) is then sign-flipped with probability 0.5. The RNG seed is the first 8 hex digits of SHA-256 of the L design's
   attempt id + `"/perm"`. P keeps the LLM's structure and its distribution of magnitudes but destroys which number goes
   where, and every sign.
