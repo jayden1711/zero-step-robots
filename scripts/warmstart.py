@@ -4,6 +4,7 @@
     python scripts/warmstart.py run   <task> H                        # Stage 0: 10 hand-start calibration runs
     python scripts/warmstart.py run   <task> LPR [--shard k/n]        # Stage 1/3: L_i, P_i, R_i interleaved by index i
     python scripts/warmstart.py run   <task> L|P|R [--only ID]        # one set, or one start
+    python scripts/warmstart.py headroom walker2d --seed S            # Stage B: tuned-CPG CEM, 50,000 dev episodes
 
 Start sets (prereg section 3): L = the 60 no-feedback CPG-track specs + the 20 feedback round-0 specs per task;
 P = each L spec with its numbers permuted within kind and gains sign-flipped; R = random_cpg_spec seeds 1000..1079;
@@ -174,15 +175,37 @@ def plan(task, sets, results: Path):
     return [(sets, *x) for x in starts(task, sets, results)]
 
 
+HEADROOM_BUDGET = 50_000
+HEADROOM_SEEDS = (0, 1, 2)
+
+
+def headroom(task, seed, results: Path):
+    """Stage B (prereg section 6): the track's tuned-CPG search (same hand structure, search and pick seeds), budget
+    raised from 20,000 to 50,000 dev episodes, CEM seed `seed`; the result is scored once on the held-out seeds."""
+    from cpg_baselines import cem, cpg, save, tuned_builder
+    from zsr.harness import evaluate
+    assert seed in HEADROOM_SEEDS
+    out = results / "warmstart" / task / "headroom"
+    name = f"tuned_cpg_50k_seed{seed}"
+    if (out / f"{name}.score.json").exists():
+        return
+    build, x0, s0 = tuned_builder(task)
+    sp, used = cem(task, build, x0, s0, HEADROOM_BUDGET, out, name, seed=seed)
+    save(out, name, evaluate(task, cpg(task, sp)), {"dev_episodes": used, "budget": HEADROOM_BUDGET, "cem_seed": seed})
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=("list", "run"))
+    ap.add_argument("cmd", choices=("list", "run", "headroom"))
     ap.add_argument("task", choices=("hopper", "walker2d"))
     ap.add_argument("sets", nargs="?", default="LPR", choices=("LPR",) + SETS)
     ap.add_argument("--results", type=Path, default=MAIN_RESULTS)
     ap.add_argument("--shard", default="0/1", help="k/n: run every n-th planned start, offset k")
     ap.add_argument("--only")
+    ap.add_argument("--seed", type=int, default=0)
     a = ap.parse_args()
+    if a.cmd == "headroom":
+        return headroom(a.task, a.seed, a.results)
     items = plan(a.task, a.sets, a.results)
     if a.cmd == "list":
         for w in SETS:

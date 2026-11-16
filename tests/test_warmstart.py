@@ -110,3 +110,52 @@ def test_checkpoint_6_reproduces_rs_from_llm(tmp_path):
     assert len(got) == 6
     assert all((w is None and g is None) or abs(w - g) < 1e-3 for w, g in zip(want, got))
     assert res["checkpoints"][0]["spec"] == ref["final_spec"]
+
+
+# ---------------------------------------------------------------- report statistics
+import warmstart_report as wr  # noqa: E402
+
+
+def test_fisher_matches_writeup_value():
+    assert abs(wr.fisher_one_sided(2, 10, 0, 10) - 45 / 190) < 1e-12
+    assert wr.fisher_one_sided(0, 80, 0, 80) == 1.0
+
+
+def test_mann_whitney_direction_and_ties():
+    x, y = [float(i) for i in range(40)], [float(i) - 30 for i in range(40)]
+    assert wr.mann_whitney_greater(x, y) < 1e-6
+    assert wr.mann_whitney_greater(y, x) > 0.999
+    same = [0.0] * 30 + [1.0] * 10
+    assert 0.4 < wr.mann_whitney_greater(same, list(same)) <= 0.6
+
+
+def _fake(task, s, i, T, d):
+    cps = [{"designs": k, "dev_mean_d": d, "spec": {},
+            "heldout": {"mean_distance_healthy": d if (T and k >= T) or k == 500 else 0.1,
+                        "passes_3m": bool(T and k >= T)}} for k in wr.CHECKPOINTS]
+    return {"task": task, "set": s, "start_id": f"{s}{i}", "T": T, "checkpoints": cps, "wall_s": 1.0}
+
+
+def test_report_end_to_end_primary_and_fallback(tmp_path):
+    def write(task, s, runs):
+        d = tmp_path / "warmstart" / task / s
+        d.mkdir(parents=True, exist_ok=True)
+        for r in runs:
+            (d / f"{r['start_id']}.json").write_text(json.dumps(r))
+    # hopper: H passes 5/10 (no fallback); L 30/80 pass, R 5/80 -> claim; P 28/80 -> L not above P
+    write("hopper", "H", [_fake("hopper", "H", i, 100 if i < 5 else None, 3.5 if i < 5 else 1.0) for i in range(10)])
+    write("hopper", "L", [_fake("hopper", "L", i, 200 if i < 30 else None, 4.0 if i < 30 else 0.5) for i in range(80)])
+    write("hopper", "P", [_fake("hopper", "P", i, 200 if i < 28 else None, 4.0 if i < 28 else 0.5) for i in range(80)])
+    write("hopper", "R", [_fake("hopper", "R", i, 500 if i < 5 else None, 3.2 if i < 5 else 0.2) for i in range(80)])
+    # walker2d: H 1/10 -> fallback in force
+    write("walker2d", "H", [_fake("walker2d", "H", i, 500 if i < 1 else None, 3.1 if i < 1 else 0.3) for i in range(10)])
+    sys.argv = ["warmstart_report.py", str(tmp_path)]
+    wr.main()
+    text = (tmp_path / "warmstart_report.md").read_text()
+    hop = text.split("## walker2d")[0]
+    assert "L vs R (primary), pass by checkpoint 500: 30/80 vs 5/80" in hop
+    assert "**measurable warm-start value**" in hop
+    assert "**L not measurably above P**" in hop
+    wal = text.split("## walker2d")[1]
+    assert "fallback primary outcome in force" in wal
+    assert "Stage B headroom: not run yet" in wal
