@@ -1,0 +1,2059 @@
+{
+ "task": "hopper",
+ "set": "P",
+ "start_id": "cpg-claude-opus-5-5_hopper_H1_cpgspec_02__perm",
+ "seed": 3655016094,
+ "designs": 500,
+ "checkpoints": [
+  {
+   "designs": 6,
+   "dev_mean_d": -0.0089,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "hop",
+      "freq_hz": 1.9452011835305418,
+      "phase0": 0.9618870686479771
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.015448673793764828,
+     "a1": -0.13247274096750733,
+     "a2": 0.05779920804246965
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_torso_balance_and_thigh_pd",
+      "inputs": {
+       "obs[1]": -2.1564185197936983,
+       "obs[2]": 0.9968367852707584,
+       "obs[5]": -0.8668547637773707
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.4856213876155802
+      }
+     },
+     {
+      "type": "linear",
+      "name": "hip_damping",
+      "inputs": {
+       "obs[7]": 0.012352520570225234,
+       "obs[8]": -1.5716243662376166
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.38193078523903945
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": -0.26539012748342405
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a1": 0.5289971739074282
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_damping",
+      "inputs": {
+       "obs[9]": -0.007866602352550017
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": -0.47840277172054607
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_balance_pd",
+      "inputs": {
+       "obs[4]": -0.5404985823861126,
+       "obs[1]": -0.22891045030819213,
+       "obs[5]": 0.666081011771994
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.0957308084409512
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_damping",
+      "inputs": {
+       "obs[10]": 0.4076523370247251,
+       "obs[7]": 0.03191391846040799
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.10703174222370747
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_cos",
+      "inputs": {
+       "cos(hop)": -0.8039154101526242
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.07929653645646606,
+       "a2": -0.23821699799855475
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_sin",
+      "inputs": {
+       "sin(hop)": -0.1927503991575734
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": -0.8488488184824182,
+       "a2": 0.20358659199235843
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 9.647946028200233,
+    "sem_return": 0.04111849144033666,
+    "std_return": 0.4091238241591107,
+    "median_return": 9.522164662822759,
+    "min_return": 9.153573539580657,
+    "max_return": 11.425034989300062,
+    "mean_length": 12.2,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.01236949644797263,
+    "mean_distance_healthy": -0.009178130947568017,
+    "median_distance_healthy": -0.009201788131130428,
+    "min_distance_healthy": -0.010988806424466379,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 25,
+   "dev_mean_d": 0.2346,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "hop",
+      "freq_hz": 1.5781701842631723,
+      "phase0": 0.9358824261036125
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.13556792367377343,
+     "a1": 0.16850810860597623,
+     "a2": 0.33047820280220014
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_torso_balance_and_thigh_pd",
+      "inputs": {
+       "obs[1]": -2.8961497683481725,
+       "obs[2]": 0.857152122716609,
+       "obs[5]": -1.8200533773965897
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.024114640629838546
+      }
+     },
+     {
+      "type": "linear",
+      "name": "hip_damping",
+      "inputs": {
+       "obs[7]": 0.08246807701063631,
+       "obs[8]": -0.39573082224583295
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.13580660220302748
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": 0.05872985134405287
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a1": 0.8947443693298031
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_damping",
+      "inputs": {
+       "obs[9]": 0.09111470435746993
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": -0.6541908668856985
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_balance_pd",
+      "inputs": {
+       "obs[4]": -0.07577252858309352,
+       "obs[1]": -0.13202881448363507,
+       "obs[5]": 2.123157058003243
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a2": -0.7562197823699421
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_damping",
+      "inputs": {
+       "obs[10]": 0.45941997494742226,
+       "obs[7]": 0.36238530741232167
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.032112454597109
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_cos",
+      "inputs": {
+       "cos(hop)": -0.38373708584042154
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.10678313462485577,
+       "a2": -0.06201836740151858
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_sin",
+      "inputs": {
+       "sin(hop)": -0.12006900739170995
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 0.0484163506028249,
+       "a2": -0.0109601958839958
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 155.42844774759672,
+    "sem_return": 0.3571396434924387,
+    "std_return": 3.5534945856771354,
+    "median_return": 155.6822213699378,
+    "min_return": 147.21630703209388,
+    "max_return": 164.12585097710325,
+    "mean_length": 126.78,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.23728614467202175,
+    "mean_distance_healthy": 0.23513247280913685,
+    "median_distance_healthy": 0.23539737443701297,
+    "min_distance_healthy": 0.22373246885269735,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 50,
+   "dev_mean_d": 0.7599,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "hop",
+      "freq_hz": 0.5553193998483776,
+      "phase0": 0.5844780330455691
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.7300145860423679,
+     "a1": -0.07205512128510294,
+     "a2": 0.27795419444423797
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_torso_balance_and_thigh_pd",
+      "inputs": {
+       "obs[1]": -0.9408053499474065,
+       "obs[2]": 1.2780886551690358,
+       "obs[5]": -3.126075047796174
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.21739765877178943
+      }
+     },
+     {
+      "type": "linear",
+      "name": "hip_damping",
+      "inputs": {
+       "obs[7]": -0.013692521655506343,
+       "obs[8]": -0.39662906901242545
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.1744527942031882
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": 0.023551538648414208
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.1058793321572484
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_damping",
+      "inputs": {
+       "obs[9]": 0.17819065378048313
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": -0.6124407160503426
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_balance_pd",
+      "inputs": {
+       "obs[4]": 0.13654747580176327,
+       "obs[1]": -0.39776437075956705,
+       "obs[5]": 1.2744824763462734
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a2": -0.7066640616320696
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_damping",
+      "inputs": {
+       "obs[10]": 0.1581241753730466,
+       "obs[7]": 0.12839189771063592
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a2": -0.12766597762718027
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_cos",
+      "inputs": {
+       "cos(hop)": -0.1990258601612241
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.27195443615675985,
+       "a2": -0.22720355212770738
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_sin",
+      "inputs": {
+       "sin(hop)": 0.1768280096095564
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 0.12456217886669621,
+       "a2": 0.09663509320384263
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 358.27943704380516,
+    "sem_return": 0.23211386496687675,
+    "std_return": 2.3095037962030474,
+    "median_return": 358.59568533223563,
+    "min_return": 347.7339065325236,
+    "max_return": 362.03431709113545,
+    "mean_length": 264.2,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.762530782781325,
+    "mean_distance_healthy": 0.7551309136757278,
+    "median_distance_healthy": 0.7571339564208206,
+    "min_distance_healthy": 0.6175363533132661,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 100,
+   "dev_mean_d": 1.2858,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "hop",
+      "freq_hz": 0.9461176439476622,
+      "phase0": 0.6556360690579639
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 1.205914060277189,
+     "a1": -0.16293823216672682,
+     "a2": 0.34188372397335903
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_torso_balance_and_thigh_pd",
+      "inputs": {
+       "obs[1]": -0.9564666224433267,
+       "obs[2]": 1.1380794132178575,
+       "obs[5]": -4.030678316847416
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.3771523575322555
+      }
+     },
+     {
+      "type": "linear",
+      "name": "hip_damping",
+      "inputs": {
+       "obs[7]": -0.020347109015851753,
+       "obs[8]": -0.4508940564208447
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.21433149041815608
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": -0.01719894392732254
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.2900899308056324
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_damping",
+      "inputs": {
+       "obs[9]": 0.22453921126560444
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": -0.7933357459311823
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_balance_pd",
+      "inputs": {
+       "obs[4]": 0.2752390070196481,
+       "obs[1]": -0.6055014400073013,
+       "obs[5]": 0.5512305722214074
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a2": -1.1624067990201337
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_damping",
+      "inputs": {
+       "obs[10]": 0.2733535685170546,
+       "obs[7]": 0.30721628860265615
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.08312139944849611
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_cos",
+      "inputs": {
+       "cos(hop)": -0.008205907520507233
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.3704726814948653,
+       "a2": -0.3055317088276129
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_sin",
+      "inputs": {
+       "sin(hop)": 0.17865901405324036
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 0.043985753183256995,
+       "a2": 0.03280312756744837
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 401.4066049798475,
+    "sem_return": 2.7356633570934785,
+    "std_return": 27.219506724609325,
+    "median_return": 412.44716167771423,
+    "min_return": 333.81169620312284,
+    "max_return": 426.0644338220956,
+    "mean_length": 235.7,
+    "frac_full_length": 0.0,
+    "mean_distance": 1.3357379741773479,
+    "mean_distance_healthy": 1.3186758487645116,
+    "median_distance_healthy": 1.392836762489956,
+    "min_distance_healthy": 0.8322907713509975,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 200,
+   "dev_mean_d": 1.2858,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "hop",
+      "freq_hz": 0.9461176439476622,
+      "phase0": 0.6556360690579639
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 1.205914060277189,
+     "a1": -0.16293823216672682,
+     "a2": 0.34188372397335903
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_torso_balance_and_thigh_pd",
+      "inputs": {
+       "obs[1]": -0.9564666224433267,
+       "obs[2]": 1.1380794132178575,
+       "obs[5]": -4.030678316847416
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.3771523575322555
+      }
+     },
+     {
+      "type": "linear",
+      "name": "hip_damping",
+      "inputs": {
+       "obs[7]": -0.020347109015851753,
+       "obs[8]": -0.4508940564208447
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.21433149041815608
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": -0.01719894392732254
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.2900899308056324
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_damping",
+      "inputs": {
+       "obs[9]": 0.22453921126560444
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": -0.7933357459311823
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_balance_pd",
+      "inputs": {
+       "obs[4]": 0.2752390070196481,
+       "obs[1]": -0.6055014400073013,
+       "obs[5]": 0.5512305722214074
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a2": -1.1624067990201337
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_damping",
+      "inputs": {
+       "obs[10]": 0.2733535685170546,
+       "obs[7]": 0.30721628860265615
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.08312139944849611
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_cos",
+      "inputs": {
+       "cos(hop)": -0.008205907520507233
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.3704726814948653,
+       "a2": -0.3055317088276129
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_sin",
+      "inputs": {
+       "sin(hop)": 0.17865901405324036
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 0.043985753183256995,
+       "a2": 0.03280312756744837
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 401.4066049798475,
+    "sem_return": 2.7356633570934785,
+    "std_return": 27.219506724609325,
+    "median_return": 412.44716167771423,
+    "min_return": 333.81169620312284,
+    "max_return": 426.0644338220956,
+    "mean_length": 235.7,
+    "frac_full_length": 0.0,
+    "mean_distance": 1.3357379741773479,
+    "mean_distance_healthy": 1.3186758487645116,
+    "median_distance_healthy": 1.392836762489956,
+    "min_distance_healthy": 0.8322907713509975,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 500,
+   "dev_mean_d": 1.2858,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "hop",
+      "freq_hz": 0.9461176439476622,
+      "phase0": 0.6556360690579639
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 1.205914060277189,
+     "a1": -0.16293823216672682,
+     "a2": 0.34188372397335903
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_torso_balance_and_thigh_pd",
+      "inputs": {
+       "obs[1]": -0.9564666224433267,
+       "obs[2]": 1.1380794132178575,
+       "obs[5]": -4.030678316847416
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.3771523575322555
+      }
+     },
+     {
+      "type": "linear",
+      "name": "hip_damping",
+      "inputs": {
+       "obs[7]": -0.020347109015851753,
+       "obs[8]": -0.4508940564208447
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.21433149041815608
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": -0.01719894392732254
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.2900899308056324
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_damping",
+      "inputs": {
+       "obs[9]": 0.22453921126560444
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": -0.7933357459311823
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_balance_pd",
+      "inputs": {
+       "obs[4]": 0.2752390070196481,
+       "obs[1]": -0.6055014400073013,
+       "obs[5]": 0.5512305722214074
+      },
+      "range": 1.5,
+      "tol": 0.02,
+      "to": {
+       "a2": -1.1624067990201337
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_damping",
+      "inputs": {
+       "obs[10]": 0.2733535685170546,
+       "obs[7]": 0.30721628860265615
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.08312139944849611
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_cos",
+      "inputs": {
+       "cos(hop)": -0.008205907520507233
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.3704726814948653,
+       "a2": -0.3055317088276129
+      }
+     },
+     {
+      "type": "linear",
+      "name": "rhythm_sin",
+      "inputs": {
+       "sin(hop)": 0.17865901405324036
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 0.043985753183256995,
+       "a2": 0.03280312756744837
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 401.4066049798475,
+    "sem_return": 2.7356633570934785,
+    "std_return": 27.219506724609325,
+    "median_return": 412.44716167771423,
+    "min_return": 333.81169620312284,
+    "max_return": 426.0644338220956,
+    "mean_length": 235.7,
+    "frac_full_length": 0.0,
+    "mean_distance": 1.3357379741773479,
+    "mean_distance_healthy": 1.3186758487645116,
+    "median_distance_healthy": 1.392836762489956,
+    "min_distance_healthy": 0.8322907713509975,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  }
+ ],
+ "T": null,
+ "censored": true,
+ "dev_history": [
+  -0.0126,
+  -0.1093,
+  -0.0183,
+  -0.0131,
+  -0.0123,
+  -0.0089,
+  -0.0595,
+  0.0165,
+  -0.1372,
+  0.0019,
+  -0.0079,
+  -0.0099,
+  0.0105,
+  0.0112,
+  0.0063,
+  0.1205,
+  0.198,
+  0.2306,
+  0.228,
+  0.2268,
+  0.2271,
+  0.0287,
+  -0.0223,
+  0.2346,
+  0.2323,
+  0.0166,
+  0.2421,
+  0.2332,
+  0.232,
+  0.4058,
+  0.2272,
+  0.1482,
+  0.2112,
+  0.195,
+  0.0595,
+  0.2596,
+  0.3682,
+  0.2726,
+  0.2268,
+  0.2974,
+  -0.0018,
+  -0.0314,
+  0.3522,
+  0.0052,
+  0.7599,
+  0.2271,
+  0.3059,
+  0.3549,
+  0.2251,
+  -0.003,
+  0.0325,
+  -0.023,
+  -0.0233,
+  0.2255,
+  0.6715,
+  0.0811,
+  0.0037,
+  0.3798,
+  0.3846,
+  -0.018,
+  1.2858,
+  0.1921,
+  -0.0038,
+  0.234,
+  0.0587,
+  0.2003,
+  0.1355,
+  -0.0332,
+  0.3277,
+  0.2274,
+  0.0824,
+  0.1779,
+  0.4354,
+  0.4898,
+  0.3603,
+  0.1621,
+  0.2682,
+  0.3835,
+  0.1728,
+  0.0561,
+  0.3897,
+  0.6017,
+  0.3016,
+  0.0727,
+  0.2334,
+  0.388,
+  0.1992,
+  0.2164,
+  0.3735,
+  0.2239,
+  0.0493,
+  0.1437,
+  -0.0486,
+  0.3059,
+  0.4295,
+  -0.0989,
+  0.1602,
+  -0.0047,
+  0.2941,
+  0.1973,
+  0.2048,
+  0.257,
+  0.0814,
+  0.447,
+  0.3327,
+  0.267,
+  0.221,
+  0.1674,
+  0.2934,
+  -0.0141,
+  0.4648,
+  0.2316,
+  0.1481,
+  -0.0737,
+  -0.0252,
+  0.1506,
+  0.0139,
+  -0.0319,
+  0.2186,
+  0.123,
+  0.2456,
+  0.031,
+  0.2142,
+  0.2329,
+  0.0177,
+  -0.0169,
+  -0.0307,
+  0.0195,
+  -0.0586,
+  0.3054,
+  0.21,
+  0.2237,
+  -0.0326,
+  0.1348,
+  0.2471,
+  0.0174,
+  0.0503,
+  0.7596,
+  -0.0334,
+  -0.0227,
+  0.3654,
+  0.3,
+  0.1483,
+  0.2262,
+  1.1318,
+  0.2472,
+  -0.0251,
+  0.2239,
+  0.1331,
+  0.0745,
+  -0.0307,
+  0.1913,
+  -0.0047,
+  0.3877,
+  -0.0166,
+  -0.0188,
+  0.1914,
+  0.1361,
+  0.256,
+  0.3252,
+  0.4155,
+  0.2213,
+  0.3257,
+  0.2126,
+  0.0067,
+  0.7042,
+  0.2519,
+  -0.0727,
+  -0.035,
+  0.0261,
+  -0.1381,
+  -0.0049,
+  0.37,
+  0.0314,
+  0.2418,
+  0.7335,
+  0.2915,
+  -0.0175,
+  0.0156,
+  0.0857,
+  0.0028,
+  -0.088,
+  0.0185,
+  0.4255,
+  -0.0044,
+  -0.0225,
+  0.2412,
+  -0.0126,
+  0.0028,
+  0.476,
+  -0.0121,
+  0.1513,
+  0.2232,
+  0.1532,
+  -0.038,
+  0.3283,
+  0.423,
+  0.2227,
+  0.6725,
+  -0.0301,
+  -0.0066,
+  0.503,
+  0.0186,
+  0.2516,
+  0.2101,
+  0.0509,
+  0.2721,
+  0.0653,
+  0.2679,
+  0.1175,
+  0.2251,
+  -0.023,
+  0.2233,
+  0.1032,
+  -0.0364,
+  0.2237,
+  0.9235,
+  0.0777,
+  0.0351,
+  0.2262,
+  0.0054,
+  -0.0236,
+  0.2028,
+  -0.008,
+  0.0368,
+  0.6832,
+  0.3076,
+  0.0062,
+  0.2965,
+  0.2201,
+  0.0245,
+  0.575,
+  -0.0032,
+  0.0109,
+  0.1083,
+  0.2024,
+  0.2012,
+  0.4538,
+  0.0731,
+  0.205,
+  0.0024,
+  1.0252,
+  0.2297,
+  0.2323,
+  0.0302,
+  0.2242,
+  -0.0421,
+  0.0062,
+  0.0151,
+  0.5002,
+  0.1682,
+  0.6229,
+  0.6627,
+  0.0532,
+  0.2566,
+  0.3119,
+  0.317,
+  0.0326,
+  0.0403,
+  0.0482,
+  0.0104,
+  0.0261,
+  0.0209,
+  0.4681,
+  0.4289,
+  0.2279,
+  0.1408,
+  0.2885,
+  0.0135,
+  -0.0188,
+  0.3885,
+  -0.022,
+  0.3705,
+  -0.0098,
+  0.2936,
+  0.082,
+  -0.0041,
+  -0.0019,
+  0.2471,
+  0.3016,
+  0.2442,
+  0.2277,
+  0.488,
+  0.9149,
+  0.4885,
+  0.2293,
+  0.265,
+  0.1068,
+  0.1048,
+  0.3112,
+  0.5372,
+  0.2173,
+  0.3512,
+  0.4064,
+  0.0067,
+  -0.0019,
+  0.0053,
+  -0.089,
+  0.0774,
+  0.4197,
+  -0.023,
+  0.2322,
+  -0.0224,
+  0.211,
+  -0.0574,
+  0.1946,
+  0.0682,
+  0.2208,
+  0.0387,
+  0.226,
+  0.2644,
+  -0.025,
+  0.1871,
+  0.0153,
+  0.0304,
+  0.5485,
+  0.0883,
+  0.2212,
+  0.2057,
+  0.1726,
+  0.6571,
+  0.3982,
+  -0.0282,
+  0.1081,
+  0.1791,
+  -0.0295,
+  0.2285,
+  0.1604,
+  0.1385,
+  -0.0079,
+  0.2575,
+  0.199,
+  0.6115,
+  0.2343,
+  0.1398,
+  0.0106,
+  0.1629,
+  0.2755,
+  0.2252,
+  0.1546,
+  0.5699,
+  0.306,
+  0.2273,
+  0.2296,
+  0.0028,
+  -0.002,
+  0.2099,
+  -0.0189,
+  0.2263,
+  0.2408,
+  0.2473,
+  0.663,
+  0.1513,
+  0.2264,
+  -0.0147,
+  0.5281,
+  0.0709,
+  0.0879,
+  -0.0745,
+  -0.0117,
+  -0.0416,
+  0.856,
+  0.166,
+  -0.236,
+  -0.0123,
+  -0.0176,
+  0.0455,
+  0.2163,
+  0.1796,
+  -0.0652,
+  0.0168,
+  0.5376,
+  -0.1108,
+  0.3513,
+  0.4486,
+  0.234,
+  0.0049,
+  0.2921,
+  0.093,
+  0.3674,
+  0.228,
+  0.3179,
+  0.0214,
+  0.0226,
+  -0.0223,
+  -0.23,
+  -0.0174,
+  0.1981,
+  0.6863,
+  0.444,
+  0.2271,
+  0.1531,
+  0.2703,
+  0.0075,
+  0.1938,
+  0.4516,
+  0.1056,
+  0.1516,
+  0.3545,
+  0.4583,
+  0.1955,
+  0.0626,
+  0.0158,
+  0.2396,
+  0.0641,
+  0.1402,
+  0.2202,
+  0.1747,
+  -0.0123,
+  0.2684,
+  0.1941,
+  0.0011,
+  -0.0323,
+  -0.0298,
+  0.0012,
+  1.2239,
+  0.1857,
+  -0.0275,
+  0.3142,
+  0.2466,
+  0.2245,
+  -0.013,
+  0.271,
+  0.0672,
+  0.0738,
+  0.0052,
+  0.3916,
+  -0.0153,
+  0.0107,
+  0.0142,
+  -0.0028,
+  0.0575,
+  0.2816,
+  0.2701,
+  0.037,
+  0.0214,
+  -0.009,
+  -0.0034,
+  -0.118,
+  -0.0331,
+  0.2249,
+  0.7097,
+  0.2178,
+  0.0471,
+  0.2306,
+  0.1687,
+  0.4077,
+  0.1387,
+  0.0372,
+  0.018,
+  0.0186,
+  0.4385,
+  0.4927,
+  -0.0392,
+  0.2252,
+  0.064,
+  0.1815,
+  -0.0128,
+  -0.0972,
+  0.3204,
+  0.2228,
+  -0.1855,
+  0.095,
+  0.2637,
+  0.2361,
+  0.0605,
+  -0.006,
+  0.3815,
+  0.0079,
+  -0.0771,
+  0.2498,
+  -0.0098,
+  0.0618,
+  0.4204,
+  0.017,
+  -0.0113,
+  0.0818,
+  0.0944,
+  0.2229,
+  0.1632,
+  0.1882,
+  0.1994,
+  0.0195,
+  0.0097,
+  0.0577,
+  0.6002,
+  0.0423,
+  0.2379,
+  0.1745,
+  0.3931,
+  0.8965,
+  0.3259,
+  0.2234,
+  0.224,
+  0.9554,
+  0.193,
+  0.1747,
+  -0.0216,
+  0.0033,
+  -0.0055
+ ],
+ "accepted": [
+  true,
+  false,
+  false,
+  false,
+  true,
+  true,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false
+ ],
+ "wall_s": 29.6,
+ "start_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "hop",
+    "freq_hz": 2.0,
+    "phase0": 3.14159
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -0.15,
+   "a1": 0.04,
+   "a2": 0.08
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "hip_torso_balance_and_thigh_pd",
+    "inputs": {
+     "obs[1]": -2.0,
+     "obs[2]": 1.0,
+     "obs[5]": -1.0
+    },
+    "range": 1.5,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.1
+    }
+   },
+   {
+    "type": "linear",
+    "name": "hip_damping",
+    "inputs": {
+     "obs[7]": -0.08,
+     "obs[8]": -1.0
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a0": -0.08
+    }
+   },
+   {
+    "type": "linear",
+    "name": "knee_pd",
+    "inputs": {
+     "obs[3]": -0.2
+    },
+    "range": 1.5,
+    "tol": 0.02,
+    "to": {
+     "a1": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "knee_damping",
+    "inputs": {
+     "obs[9]": 0.04
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a1": -0.6
+    }
+   },
+   {
+    "type": "linear",
+    "name": "ankle_balance_pd",
+    "inputs": {
+     "obs[4]": -1.0,
+     "obs[1]": -1.0,
+     "obs[5]": 1.0
+    },
+    "range": 1.5,
+    "tol": 0.02,
+    "to": {
+     "a2": 0.15
+    }
+   },
+   {
+    "type": "linear",
+    "name": "ankle_damping",
+    "inputs": {
+     "obs[10]": 1.0,
+     "obs[7]": -0.3
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a2": -0.1
+    }
+   },
+   {
+    "type": "linear",
+    "name": "rhythm_cos",
+    "inputs": {
+     "cos(hop)": -1.0
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a0": -0.1,
+     "a2": -0.05
+    }
+   },
+   {
+    "type": "linear",
+    "name": "rhythm_sin",
+    "inputs": {
+     "sin(hop)": -0.05
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a1": -1.0,
+     "a2": 0.09
+    }
+   }
+  ]
+ }
+}

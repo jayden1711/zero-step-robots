@@ -1,0 +1,2423 @@
+{
+ "task": "walker2d",
+ "set": "L",
+ "start_id": "cpg-claude-opus-5-5_walker2d_H0_cpgspec_09",
+ "seed": 2734703504,
+ "designs": 500,
+ "checkpoints": [
+  {
+   "designs": 6,
+   "dev_mean_d": -0.069,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "p",
+      "freq_hz": 0.6,
+      "phase0": -1.0,
+      "feedback": {
+       "obs[8]": 2.5
+      }
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.28,
+     "a3": -0.28,
+     "a1": -0.425,
+     "a4": -0.425,
+     "a2": 0.0,
+     "a5": 0.0
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_pd",
+      "inputs": {
+       "obs[1]": 1.0,
+       "obs[10]": 0.07
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.8,
+       "a3": 0.8
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_pd",
+      "inputs": {
+       "obs[2]": 1.0,
+       "obs[5]": -1.0,
+       "obs[11]": 0.15,
+       "obs[14]": -0.15
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -2.0,
+       "a3": 2.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_ff",
+      "inputs": {
+       "sin(p)": 0.5403,
+       "cos(p)": 0.8415
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.8,
+       "a3": -0.8
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_r_pd",
+      "inputs": {
+       "obs[3]": 1.0,
+       "obs[12]": 0.15
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -1.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_l_pd",
+      "inputs": {
+       "obs[6]": 1.0,
+       "obs[15]": 0.15
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -1.0
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_r_flex",
+      "inputs": {
+       "cos(p)": 0.955,
+       "sin(p)": -0.296
+      },
+      "threshold": 0.2,
+      "sharpness": 4.0,
+      "to": {
+       "a1": -0.575,
+       "a2": 0.08
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_l_flex",
+      "inputs": {
+       "cos(p)": -0.955,
+       "sin(p)": 0.296
+      },
+      "threshold": 0.2,
+      "sharpness": 4.0,
+      "to": {
+       "a4": -0.575,
+       "a5": 0.08
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_r_pd",
+      "inputs": {
+       "obs[4]": 1.0,
+       "obs[13]": 0.1
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": -0.4
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_l_pd",
+      "inputs": {
+       "obs[7]": 1.0,
+       "obs[16]": 0.1
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.4
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_r",
+      "inputs": {
+       "sin(p)": -0.955,
+       "cos(p)": -0.296
+      },
+      "threshold": 0.7,
+      "sharpness": 5.0,
+      "to": {
+       "a2": -0.08
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_l",
+      "inputs": {
+       "sin(p)": 0.955,
+       "cos(p)": 0.296
+      },
+      "threshold": 0.7,
+      "sharpness": 5.0,
+      "to": {
+       "a5": -0.08
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.359843627475245,
+    "sem_return": 0.011898025362116104,
+    "std_return": 0.11838385761681466,
+    "median_return": -4.367671745272403,
+    "min_return": -4.578402446746633,
+    "max_return": -4.131816869713075,
+    "mean_length": 7.18,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.08421022884539361,
+    "mean_distance_healthy": -0.06725753935513701,
+    "median_distance_healthy": -0.06472573434318628,
+    "min_distance_healthy": -0.08147001394382646,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 25,
+   "dev_mean_d": -0.0498,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "p",
+      "freq_hz": 0.4041268986545898,
+      "phase0": -1.7305394440369013,
+      "feedback": {
+       "obs[8]": 1.9125322384987735
+      }
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.6182544870262188,
+     "a3": 0.1302149392179129,
+     "a1": 0.16299833738412794,
+     "a4": -0.20797229722570865,
+     "a2": -0.004432665943250654,
+     "a5": -0.0008899237858728537
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_pd",
+      "inputs": {
+       "obs[1]": 1.2877375237146518,
+       "obs[10]": -0.14024515942048948
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.7488554324037846,
+       "a3": 0.482076281638638
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_pd",
+      "inputs": {
+       "obs[2]": 0.9040544459859482,
+       "obs[5]": -1.9827084877277945,
+       "obs[11]": 0.4498171671217527,
+       "obs[14]": -0.009877276492030213
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.7965037977702917,
+       "a3": 0.3165176617088139
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_ff",
+      "inputs": {
+       "sin(p)": 0.32536941079683485,
+       "cos(p)": 0.9392865866166746
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.07431782687503208,
+       "a3": -1.1697584011727007
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_r_pd",
+      "inputs": {
+       "obs[3]": 1.726846145682539,
+       "obs[12]": 0.02070072608456174
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -0.20365475183647802
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_l_pd",
+      "inputs": {
+       "obs[6]": 1.0634066778341416,
+       "obs[15]": -0.15921425334038217
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -0.5798988578185275
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_r_flex",
+      "inputs": {
+       "cos(p)": 0.475070828503445,
+       "sin(p)": -0.1354018377433678
+      },
+      "threshold": 0.7439346456154068,
+      "sharpness": 3.394428333033825,
+      "to": {
+       "a1": -0.38912188150757,
+       "a2": -0.11221105711210433
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_l_flex",
+      "inputs": {
+       "cos(p)": -0.7008056527469747,
+       "sin(p)": 0.6323560074252821
+      },
+      "threshold": 0.017572366374102227,
+      "sharpness": 5.061038940331513,
+      "to": {
+       "a4": -0.22242572993132304,
+       "a5": 0.014931056361195617
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_r_pd",
+      "inputs": {
+       "obs[4]": 0.13604355032833804,
+       "obs[13]": -0.06836341781843075
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.1820175315221481
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_l_pd",
+      "inputs": {
+       "obs[7]": 1.3086608580484,
+       "obs[16]": 0.007523505443541075
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.5318570646871325
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_r",
+      "inputs": {
+       "sin(p)": -0.9008808014482806,
+       "cos(p)": -0.7170054353951112
+      },
+      "threshold": 0.977911318480948,
+      "sharpness": 4.318044994475731,
+      "to": {
+       "a2": -0.14306531570432388
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_l",
+      "inputs": {
+       "sin(p)": 1.225388166857014,
+       "cos(p)": 0.3460420653559692
+      },
+      "threshold": 0.394042412258492,
+      "sharpness": 2.684071004441498,
+      "to": {
+       "a5": -0.23192043064449905
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 29.34858655740592,
+    "sem_return": 0.06900232832229683,
+    "std_return": 0.6865644981179166,
+    "median_return": 29.371742794511214,
+    "min_return": 27.533755924842573,
+    "max_return": 30.81290797013845,
+    "mean_length": 38.24,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.06275827364977236,
+    "mean_distance_healthy": -0.05085400586924397,
+    "median_distance_healthy": -0.05161107176832942,
+    "min_distance_healthy": -0.06310372980303172,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 50,
+   "dev_mean_d": 0.4921,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "p",
+      "freq_hz": 0.4704561564189679,
+      "phase0": -1.8830227131008133,
+      "feedback": {
+       "obs[8]": 4.6732021180925685
+      }
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.4119399171904867,
+     "a3": 0.4241694737387206,
+     "a1": -0.03901356467020958,
+     "a4": -0.051839173723082485,
+     "a2": -0.06501326746224272,
+     "a5": 0.12847613018479165
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_pd",
+      "inputs": {
+       "obs[1]": 1.5285762906047193,
+       "obs[10]": -0.12253401164134761
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.4579961380682672,
+       "a3": -0.09913166727900774
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_pd",
+      "inputs": {
+       "obs[2]": -0.0119238177398856,
+       "obs[5]": -2.206643323526874,
+       "obs[11]": 0.36758616763076,
+       "obs[14]": -0.012391263674598047
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -1.053313710430878,
+       "a3": 0.10426274536650665
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_ff",
+      "inputs": {
+       "sin(p)": 0.24195440239194171,
+       "cos(p)": 1.0978445355899933
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.29209456704253617,
+       "a3": 0.2379338855860773
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_r_pd",
+      "inputs": {
+       "obs[3]": 1.5645471907608006,
+       "obs[12]": -0.11085054371309325
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -0.4952733610230048
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_l_pd",
+      "inputs": {
+       "obs[6]": 1.9816054350976857,
+       "obs[15]": 0.03244995586467178
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -0.514886262634247
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_r_flex",
+      "inputs": {
+       "cos(p)": 0.48517051762796415,
+       "sin(p)": -0.08467308278830366
+      },
+      "threshold": 0.6882057939527362,
+      "sharpness": 3.1662438957963746,
+      "to": {
+       "a1": -0.19751621082614607,
+       "a2": -0.04300644301218908
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_l_flex",
+      "inputs": {
+       "cos(p)": -1.247153273051018,
+       "sin(p)": 0.4662769319899072
+      },
+      "threshold": -0.06399814205959199,
+      "sharpness": 3.3641594761918654,
+      "to": {
+       "a4": 0.11236345263557747,
+       "a5": 0.1489839315174722
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_r_pd",
+      "inputs": {
+       "obs[4]": 0.16887921462148525,
+       "obs[13]": 0.16603863536333874
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.10910170036715895
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_l_pd",
+      "inputs": {
+       "obs[7]": 1.8041973369621227,
+       "obs[16]": 0.22193868521737048
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.4293680129998969
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_r",
+      "inputs": {
+       "sin(p)": -0.5042824677927382,
+       "cos(p)": -0.5541428364877923
+      },
+      "threshold": 0.16323797463605055,
+      "sharpness": 4.526119094846208,
+      "to": {
+       "a2": 0.04845210093485521
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_l",
+      "inputs": {
+       "sin(p)": 2.2891039787336,
+       "cos(p)": 0.3709270157105178
+      },
+      "threshold": 0.8125749597445422,
+      "sharpness": 2.6101928522105884,
+      "to": {
+       "a5": -0.2886241422878821
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 213.37624106510285,
+    "sem_return": 0.7050549669779804,
+    "std_return": 7.015208346127133,
+    "median_return": 211.85482439424484,
+    "min_return": 200.90018754162327,
+    "max_return": 228.3090023106222,
+    "mean_length": 154.2,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.4818897170392743,
+    "mean_distance_healthy": 0.48627317375186685,
+    "median_distance_healthy": 0.48367781155942746,
+    "min_distance_healthy": 0.3912719909496655,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 100,
+   "dev_mean_d": 0.4921,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "p",
+      "freq_hz": 0.4704561564189679,
+      "phase0": -1.8830227131008133,
+      "feedback": {
+       "obs[8]": 4.6732021180925685
+      }
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.4119399171904867,
+     "a3": 0.4241694737387206,
+     "a1": -0.03901356467020958,
+     "a4": -0.051839173723082485,
+     "a2": -0.06501326746224272,
+     "a5": 0.12847613018479165
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_pd",
+      "inputs": {
+       "obs[1]": 1.5285762906047193,
+       "obs[10]": -0.12253401164134761
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.4579961380682672,
+       "a3": -0.09913166727900774
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_pd",
+      "inputs": {
+       "obs[2]": -0.0119238177398856,
+       "obs[5]": -2.206643323526874,
+       "obs[11]": 0.36758616763076,
+       "obs[14]": -0.012391263674598047
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -1.053313710430878,
+       "a3": 0.10426274536650665
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_ff",
+      "inputs": {
+       "sin(p)": 0.24195440239194171,
+       "cos(p)": 1.0978445355899933
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.29209456704253617,
+       "a3": 0.2379338855860773
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_r_pd",
+      "inputs": {
+       "obs[3]": 1.5645471907608006,
+       "obs[12]": -0.11085054371309325
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -0.4952733610230048
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_l_pd",
+      "inputs": {
+       "obs[6]": 1.9816054350976857,
+       "obs[15]": 0.03244995586467178
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -0.514886262634247
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_r_flex",
+      "inputs": {
+       "cos(p)": 0.48517051762796415,
+       "sin(p)": -0.08467308278830366
+      },
+      "threshold": 0.6882057939527362,
+      "sharpness": 3.1662438957963746,
+      "to": {
+       "a1": -0.19751621082614607,
+       "a2": -0.04300644301218908
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_l_flex",
+      "inputs": {
+       "cos(p)": -1.247153273051018,
+       "sin(p)": 0.4662769319899072
+      },
+      "threshold": -0.06399814205959199,
+      "sharpness": 3.3641594761918654,
+      "to": {
+       "a4": 0.11236345263557747,
+       "a5": 0.1489839315174722
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_r_pd",
+      "inputs": {
+       "obs[4]": 0.16887921462148525,
+       "obs[13]": 0.16603863536333874
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.10910170036715895
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_l_pd",
+      "inputs": {
+       "obs[7]": 1.8041973369621227,
+       "obs[16]": 0.22193868521737048
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.4293680129998969
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_r",
+      "inputs": {
+       "sin(p)": -0.5042824677927382,
+       "cos(p)": -0.5541428364877923
+      },
+      "threshold": 0.16323797463605055,
+      "sharpness": 4.526119094846208,
+      "to": {
+       "a2": 0.04845210093485521
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_l",
+      "inputs": {
+       "sin(p)": 2.2891039787336,
+       "cos(p)": 0.3709270157105178
+      },
+      "threshold": 0.8125749597445422,
+      "sharpness": 2.6101928522105884,
+      "to": {
+       "a5": -0.2886241422878821
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 213.37624106510285,
+    "sem_return": 0.7050549669779804,
+    "std_return": 7.015208346127133,
+    "median_return": 211.85482439424484,
+    "min_return": 200.90018754162327,
+    "max_return": 228.3090023106222,
+    "mean_length": 154.2,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.4818897170392743,
+    "mean_distance_healthy": 0.48627317375186685,
+    "median_distance_healthy": 0.48367781155942746,
+    "min_distance_healthy": 0.3912719909496655,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 200,
+   "dev_mean_d": 1.1,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "p",
+      "freq_hz": 0.3834439282684442,
+      "phase0": -0.7625857421924923,
+      "feedback": {
+       "obs[8]": 0.19694639245487688
+      }
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.014181519134895272,
+     "a3": 0.24617109209834578,
+     "a1": -0.4326046495248709,
+     "a4": -0.04503123268611987,
+     "a2": 0.5915226564114655,
+     "a5": -0.04825031625555137
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_pd",
+      "inputs": {
+       "obs[1]": 1.3042504269209607,
+       "obs[10]": -0.05313537727904413
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.09109448919106683,
+       "a3": -0.3270343739485242
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_pd",
+      "inputs": {
+       "obs[2]": -0.06842136751144338,
+       "obs[5]": -1.3423016087316386,
+       "obs[11]": 0.44480833778182505,
+       "obs[14]": 0.11283261038279385
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -2.118942466099246,
+       "a3": 0.02039583164898135
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_ff",
+      "inputs": {
+       "sin(p)": 0.2358407180430214,
+       "cos(p)": 1.2829676729779156
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.15994002471404545,
+       "a3": 0.0036953319481060117
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_r_pd",
+      "inputs": {
+       "obs[3]": 3.4967315637531433,
+       "obs[12]": 0.18281873450542793
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -0.33724438357631836
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_l_pd",
+      "inputs": {
+       "obs[6]": 1.474292168152022,
+       "obs[15]": -0.037369898766169744
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -1.76312566265065
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_r_flex",
+      "inputs": {
+       "cos(p)": 1.2474116095320187,
+       "sin(p)": -0.6151056327112012
+      },
+      "threshold": 0.844188634052302,
+      "sharpness": 3.2630351561167106,
+      "to": {
+       "a1": -0.3111452116209648,
+       "a2": -0.12536322796477162
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_l_flex",
+      "inputs": {
+       "cos(p)": -0.5758657623172148,
+       "sin(p)": 0.03316118358998055
+      },
+      "threshold": -0.08530956737959519,
+      "sharpness": 2.7901695393597494,
+      "to": {
+       "a4": 0.4756949015066931,
+       "a5": -0.004322667463226446
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_r_pd",
+      "inputs": {
+       "obs[4]": 0.3522948696908086,
+       "obs[13]": 0.5560523887148013
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.021113618815643165
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_l_pd",
+      "inputs": {
+       "obs[7]": 0.7247830413666114,
+       "obs[16]": 0.06788497398247871
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.9280978899853755
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_r",
+      "inputs": {
+       "sin(p)": -0.8052178919757033,
+       "cos(p)": 0.097093589622086
+      },
+      "threshold": -0.08900174376761436,
+      "sharpness": 3.5237355882586447,
+      "to": {
+       "a2": 0.095507193214082
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_l",
+      "inputs": {
+       "sin(p)": 1.077301751049705,
+       "cos(p)": 0.6399808387888416
+      },
+      "threshold": 0.6823354435752782,
+      "sharpness": 2.342475383788864,
+      "to": {
+       "a5": -1.047615608156233
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 282.187858877943,
+    "sem_return": 3.718729773774869,
+    "std_return": 37.00089406900337,
+    "median_return": 278.7259618760827,
+    "min_return": 216.09693722652798,
+    "max_return": 381.02957214011445,
+    "mean_length": 139.11,
+    "frac_full_length": 0.0,
+    "mean_distance": 1.1551266414595063,
+    "mean_distance_healthy": 1.1344594236207262,
+    "median_distance_healthy": 1.1323014007736718,
+    "min_distance_healthy": 0.7875546428848081,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 500,
+   "dev_mean_d": 1.16,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "p",
+      "freq_hz": 0.40569376033500887,
+      "phase0": -0.7695676632778637,
+      "feedback": {
+       "obs[8]": 0.17527893953454127
+      }
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.08909988183817541,
+     "a3": 0.22782129175233673,
+     "a1": -0.23366014536746788,
+     "a4": 0.037086923286430894,
+     "a2": 0.7239213068270406,
+     "a5": 0.010278397035288094
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_pd",
+      "inputs": {
+       "obs[1]": 0.9005883604894694,
+       "obs[10]": -0.02506056967283841
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.1753523728780521,
+       "a3": -0.45343496808156103
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_pd",
+      "inputs": {
+       "obs[2]": -0.04970025466115222,
+       "obs[5]": -0.7630907923235765,
+       "obs[11]": 0.5695880039456116,
+       "obs[14]": 0.15625290391595492
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.9250000806747463,
+       "a3": -0.08014172168405886
+      }
+     },
+     {
+      "type": "linear",
+      "name": "scissor_ff",
+      "inputs": {
+       "sin(p)": 0.12064410373159036,
+       "cos(p)": 1.7108490749170984
+      },
+      "range": 1.0,
+      "tol": 0.02,
+      "to": {
+       "a0": -0.2714607059419081,
+       "a3": 0.07987796266227684
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_r_pd",
+      "inputs": {
+       "obs[3]": 4.175743934043181,
+       "obs[12]": 0.32888740791195814
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -0.0919464277387908
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_l_pd",
+      "inputs": {
+       "obs[6]": 0.6403545406914851,
+       "obs[15]": -0.058790804247299336
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -2.1169470168029143
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_r_flex",
+      "inputs": {
+       "cos(p)": 1.8540637081349733,
+       "sin(p)": -0.06244554877569375
+      },
+      "threshold": 0.6838228761905271,
+      "sharpness": 4.113235983545767,
+      "to": {
+       "a1": -0.000622836136367988,
+       "a2": -0.14164952012619333
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "knee_l_flex",
+      "inputs": {
+       "cos(p)": -0.5736259635518579,
+       "sin(p)": 0.036810462136116544
+      },
+      "threshold": -0.1393370003797328,
+      "sharpness": 2.1228077437286244,
+      "to": {
+       "a4": 0.3052812585217861,
+       "a5": -0.03751178408270695
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_r_pd",
+      "inputs": {
+       "obs[4]": 0.6174655373784386,
+       "obs[13]": 0.2985676769229921
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": -0.05661641409542198
+      }
+     },
+     {
+      "type": "linear",
+      "name": "foot_l_pd",
+      "inputs": {
+       "obs[7]": 0.9234496022216947,
+       "obs[16]": 0.10766166870699084
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.8859196490350599
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_r",
+      "inputs": {
+       "sin(p)": -0.5034937608936901,
+       "cos(p)": 0.11609351770788018
+      },
+      "threshold": -0.18980873328593284,
+      "sharpness": 3.005998045535197,
+      "to": {
+       "a2": -0.1267498032978963
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_l",
+      "inputs": {
+       "sin(p)": 0.7010626329895586,
+       "cos(p)": 0.3860601980952972
+      },
+      "threshold": 0.5549688525191665,
+      "sharpness": 2.0054197459012135,
+      "to": {
+       "a5": -0.34661488245224037
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 279.15209232197435,
+    "sem_return": 1.0482126467915847,
+    "std_return": 10.429584149739053,
+    "median_return": 280.1355261897003,
+    "min_return": 241.1606035216784,
+    "max_return": 308.88656604315327,
+    "mean_length": 131.67,
+    "frac_full_length": 0.0,
+    "mean_distance": 1.1901412719307842,
+    "mean_distance_healthy": 1.1754809360844363,
+    "median_distance_healthy": 1.178362057354227,
+    "min_distance_healthy": 0.970457043354211,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  }
+ ],
+ "T": null,
+ "censored": true,
+ "dev_history": [
+  -0.069,
+  -0.088,
+  -0.079,
+  -0.1222,
+  -0.0738,
+  -0.1526,
+  -0.1041,
+  -0.123,
+  -0.1069,
+  -0.1164,
+  -0.1,
+  -0.1392,
+  -0.1128,
+  -0.1214,
+  -0.1011,
+  -0.0886,
+  -0.0787,
+  -0.0852,
+  -0.0649,
+  -0.0498,
+  -0.0746,
+  -0.1044,
+  -0.1251,
+  -0.1332,
+  -0.8792,
+  -0.11,
+  -0.2017,
+  -0.0435,
+  -0.0695,
+  -0.522,
+  -0.0637,
+  -0.1114,
+  -0.1559,
+  -0.0903,
+  -0.1138,
+  -0.0524,
+  -0.1324,
+  -0.0685,
+  -0.0837,
+  -0.3444,
+  -0.1012,
+  0.4921,
+  -0.3471,
+  -0.1847,
+  -0.6174,
+  -0.1658,
+  -0.0887,
+  0.0515,
+  -0.1512,
+  -0.6563,
+  -0.8933,
+  -0.6499,
+  -0.4549,
+  -0.1562,
+  -0.0179,
+  -0.1317,
+  -0.5972,
+  -0.7443,
+  -0.3599,
+  -0.5724,
+  -0.1592,
+  0.0572,
+  -0.1121,
+  -0.0744,
+  -0.0872,
+  -0.4294,
+  -0.5701,
+  -0.156,
+  -0.9201,
+  -0.1771,
+  -0.2214,
+  0.3834,
+  0.2947,
+  -0.5239,
+  -0.1842,
+  -0.9409,
+  -0.8919,
+  -0.1532,
+  -0.8364,
+  -0.1294,
+  -0.2575,
+  -0.2762,
+  0.3735,
+  -0.9273,
+  -0.171,
+  -0.678,
+  -0.1815,
+  -0.7445,
+  -0.0937,
+  -0.1685,
+  -0.2728,
+  -0.0687,
+  -0.6838,
+  0.0014,
+  -0.4554,
+  -0.2938,
+  -0.2257,
+  -0.9145,
+  -0.864,
+  -0.0658,
+  -0.376,
+  0.2072,
+  -0.5209,
+  0.3398,
+  -0.0533,
+  -0.4267,
+  0.5082,
+  -0.238,
+  -0.5039,
+  -0.0845,
+  -0.149,
+  -0.1911,
+  -0.929,
+  -0.6602,
+  -0.765,
+  0.3048,
+  -0.1011,
+  -0.1944,
+  -0.1082,
+  -0.1552,
+  -0.1915,
+  -0.1396,
+  -0.2235,
+  -0.1417,
+  0.4716,
+  -0.1403,
+  -0.2083,
+  -0.1696,
+  -0.6194,
+  -0.0766,
+  -0.126,
+  -0.1954,
+  -0.1146,
+  -0.1717,
+  -0.6957,
+  -0.1983,
+  0.0178,
+  0.5435,
+  -0.2291,
+  -0.1976,
+  -0.2111,
+  -0.1953,
+  -0.3002,
+  0.8074,
+  0.56,
+  0.628,
+  -0.0586,
+  0.7091,
+  -0.1622,
+  -1.4371,
+  0.4494,
+  0.4695,
+  -0.1916,
+  0.8885,
+  0.5044,
+  1.1,
+  -0.7339,
+  -0.292,
+  -0.7684,
+  -1.225,
+  0.4371,
+  -0.4427,
+  -0.761,
+  0.433,
+  -0.0881,
+  -0.2881,
+  1.039,
+  0.4477,
+  0.3806,
+  -1.9358,
+  -0.3353,
+  1.0365,
+  -0.9664,
+  0.0022,
+  -0.0998,
+  -0.9006,
+  -0.2014,
+  -0.1056,
+  -1.0622,
+  -1.1545,
+  0.826,
+  -1.0942,
+  null,
+  -0.7684,
+  -0.1517,
+  -0.2036,
+  0.4844,
+  0.2578,
+  -0.1369,
+  -0.7196,
+  -0.6301,
+  -0.2007,
+  0.9006,
+  -0.0885,
+  0.0022,
+  0.9011,
+  -0.5801,
+  0.2882,
+  -0.1977,
+  1.0058,
+  -0.1655,
+  -0.192,
+  -0.3561,
+  -0.216,
+  -0.1032,
+  -0.7314,
+  0.0105,
+  0.1784,
+  0.8138,
+  -0.7027,
+  0.5454,
+  -1.2297,
+  -0.1741,
+  -0.4657,
+  0.6885,
+  -0.0084,
+  -0.2674,
+  -1.242,
+  -0.5347,
+  -0.8933,
+  -1.001,
+  0.4926,
+  0.9255,
+  -0.9843,
+  -1.0802,
+  0.5581,
+  -1.1575,
+  0.9467,
+  0.4731,
+  0.2281,
+  -0.2176,
+  -0.3596,
+  0.6474,
+  -0.2497,
+  -1.7348,
+  -0.9862,
+  -0.8861,
+  0.4648,
+  -0.691,
+  -0.2047,
+  -1.1369,
+  0.2309,
+  -0.2688,
+  -0.4622,
+  -0.199,
+  -0.9727,
+  -0.1261,
+  -1.0312,
+  -1.4312,
+  0.8202,
+  -0.1996,
+  0.613,
+  -0.2032,
+  -0.0706,
+  0.2531,
+  0.0081,
+  0.2509,
+  -0.9867,
+  -0.575,
+  -0.3008,
+  -0.0869,
+  -1.006,
+  0.0377,
+  0.095,
+  -0.2457,
+  1.0083,
+  -0.8667,
+  -0.1978,
+  -1.03,
+  -0.1434,
+  -0.1496,
+  -0.9531,
+  0.3797,
+  -0.1944,
+  -0.179,
+  -0.5071,
+  -1.2387,
+  -0.3115,
+  -1.0563,
+  -0.1976,
+  0.8133,
+  1.16,
+  -0.194,
+  -0.2021,
+  -0.2046,
+  1.0878,
+  -0.0819,
+  -1.1644,
+  -0.1998,
+  0.0218,
+  0.835,
+  -0.081,
+  -1.1598,
+  -0.1997,
+  -0.9735,
+  -0.9747,
+  -0.206,
+  -0.2105,
+  -0.7003,
+  -0.0889,
+  -1.0685,
+  -0.2037,
+  -0.052,
+  -0.1917,
+  -0.8782,
+  -0.208,
+  -0.1779,
+  -0.1915,
+  -0.079,
+  -0.7454,
+  0.8959,
+  null,
+  -0.0841,
+  0.3395,
+  -0.8476,
+  -0.1907,
+  -0.1135,
+  -0.1773,
+  -0.9809,
+  -0.208,
+  -0.1947,
+  0.1045,
+  -0.2047,
+  -0.6444,
+  -0.9221,
+  -0.846,
+  -1.2074,
+  -0.2908,
+  0.0375,
+  0.3496,
+  -0.9676,
+  -0.2006,
+  -0.1976,
+  -0.197,
+  -0.4121,
+  -0.2033,
+  -0.2099,
+  -0.0685,
+  -1.2432,
+  0.5082,
+  -0.3465,
+  -0.2972,
+  -0.2283,
+  -0.1975,
+  -0.2167,
+  -1.0699,
+  null,
+  -0.1956,
+  0.8129,
+  -0.7961,
+  -0.9553,
+  -1.1139,
+  -0.1081,
+  -0.2052,
+  -0.1233,
+  -1.0213,
+  -0.2253,
+  -0.6668,
+  -0.2072,
+  0.4742,
+  -0.4177,
+  -0.1884,
+  0.277,
+  -0.1779,
+  -0.8653,
+  -0.1786,
+  -0.2097,
+  -0.0924,
+  -0.2025,
+  1.0946,
+  -0.2044,
+  -0.1813,
+  -0.1734,
+  -0.1951,
+  -0.196,
+  0.4702,
+  -0.1994,
+  -0.1943,
+  0.2158,
+  -0.9188,
+  -0.1927,
+  -0.1949,
+  -0.237,
+  -0.1878,
+  -0.179,
+  0.4571,
+  -0.1372,
+  -0.1763,
+  -0.264,
+  -0.9277,
+  -1.0294,
+  -0.9673,
+  -0.1968,
+  -0.8856,
+  -0.8313,
+  -0.3808,
+  -0.1719,
+  0.0712,
+  -0.1789,
+  -0.9042,
+  0.7678,
+  -0.1541,
+  0.7288,
+  -0.1125,
+  -0.8067,
+  -0.1977,
+  -0.1134,
+  -0.0202,
+  0.751,
+  -0.2019,
+  -1.1093,
+  -0.1942,
+  -0.2307,
+  -0.6988,
+  -0.1824,
+  -0.2021,
+  -0.8744,
+  -0.9146,
+  -0.2032,
+  -0.0611,
+  -0.198,
+  -0.2018,
+  -0.4416,
+  -0.747,
+  -0.2006,
+  -0.1867,
+  -0.2136,
+  -0.1999,
+  -0.2406,
+  -0.6055,
+  -0.1872,
+  -0.1515,
+  -0.9508,
+  -0.837,
+  -0.1895,
+  -0.193,
+  -0.8926,
+  0.1623,
+  -0.1319,
+  -0.2031,
+  -0.2088,
+  -0.21,
+  -0.1573,
+  -0.2086,
+  -0.1891,
+  -0.1644,
+  0.4433,
+  -0.312,
+  -0.1312,
+  -0.1566,
+  -0.1979,
+  0.1884,
+  -0.2082,
+  0.0472,
+  0.557,
+  -0.1703,
+  -0.2048,
+  -0.2202,
+  -0.1959,
+  -0.3377,
+  0.4642,
+  -0.2053,
+  -0.333,
+  -0.873,
+  -0.2228,
+  -0.1652,
+  0.0838,
+  -0.555,
+  -0.1729,
+  -0.0658,
+  -0.1973,
+  -0.1995,
+  -0.935,
+  -0.8981,
+  1.0037,
+  -0.1493,
+  -0.1794,
+  -0.1977,
+  -0.2017,
+  -0.0673,
+  -0.8938,
+  -0.1922,
+  -0.9894,
+  -0.1909,
+  -0.1825,
+  -0.1964,
+  0.6565,
+  -0.1962,
+  -0.2081,
+  -0.0205,
+  -0.9376,
+  -0.1359,
+  -0.2061,
+  -0.0716,
+  -0.9228,
+  -0.2209,
+  -0.482,
+  -0.1736,
+  null,
+  -0.1926
+ ],
+ "accepted": [
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false
+ ],
+ "wall_s": 35.3,
+ "start_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "p",
+    "freq_hz": 0.6,
+    "phase0": -1.0,
+    "feedback": {
+     "obs[8]": 2.5
+    }
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -0.28,
+   "a3": -0.28,
+   "a1": -0.425,
+   "a4": -0.425,
+   "a2": 0.0,
+   "a5": 0.0
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "torso_pd",
+    "inputs": {
+     "obs[1]": 1.0,
+     "obs[10]": 0.07
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 0.8,
+     "a3": 0.8
+    }
+   },
+   {
+    "type": "linear",
+    "name": "scissor_pd",
+    "inputs": {
+     "obs[2]": 1.0,
+     "obs[5]": -1.0,
+     "obs[11]": 0.15,
+     "obs[14]": -0.15
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": -2.0,
+     "a3": 2.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "scissor_ff",
+    "inputs": {
+     "sin(p)": 0.5403,
+     "cos(p)": 0.8415
+    },
+    "range": 1.0,
+    "tol": 0.02,
+    "to": {
+     "a0": 0.8,
+     "a3": -0.8
+    }
+   },
+   {
+    "type": "linear",
+    "name": "knee_r_pd",
+    "inputs": {
+     "obs[3]": 1.0,
+     "obs[12]": 0.15
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a1": -1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "knee_l_pd",
+    "inputs": {
+     "obs[6]": 1.0,
+     "obs[15]": 0.15
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a4": -1.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "knee_r_flex",
+    "inputs": {
+     "cos(p)": 0.955,
+     "sin(p)": -0.296
+    },
+    "threshold": 0.2,
+    "sharpness": 4.0,
+    "to": {
+     "a1": -0.575,
+     "a2": 0.08
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "knee_l_flex",
+    "inputs": {
+     "cos(p)": -0.955,
+     "sin(p)": 0.296
+    },
+    "threshold": 0.2,
+    "sharpness": 4.0,
+    "to": {
+     "a4": -0.575,
+     "a5": 0.08
+    }
+   },
+   {
+    "type": "linear",
+    "name": "foot_r_pd",
+    "inputs": {
+     "obs[4]": 1.0,
+     "obs[13]": 0.1
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a2": -0.4
+    }
+   },
+   {
+    "type": "linear",
+    "name": "foot_l_pd",
+    "inputs": {
+     "obs[7]": 1.0,
+     "obs[16]": 0.1
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a5": -0.4
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "pushoff_r",
+    "inputs": {
+     "sin(p)": -0.955,
+     "cos(p)": -0.296
+    },
+    "threshold": 0.7,
+    "sharpness": 5.0,
+    "to": {
+     "a2": -0.08
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "pushoff_l",
+    "inputs": {
+     "sin(p)": 0.955,
+     "cos(p)": 0.296
+    },
+    "threshold": 0.7,
+    "sharpness": 5.0,
+    "to": {
+     "a5": -0.08
+    }
+   }
+  ]
+ }
+}
