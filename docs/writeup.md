@@ -1,6 +1,6 @@
 # Can an LLM write a walking controller without training? A pre-registered negative / partial result
 
-*Draft write-up, 2026-11-15 (CST). Not published. Blog / workshop length. Simulation only: no real robot is involved anywhere.*
+*Draft write-up, 2026-11-15 (CST); section 7 added 2026-11-16 after the follow-up ran. Not published. Blog / workshop length. Simulation only: no real robot is involved anywhere.*
 
 Every measured number below links to the file it comes from: a report section in `results/`, an attempt's own
 `score.json`, or, for the few derived statistics (bounds, a p-value, episode-length medians), the script that computes
@@ -26,10 +26,15 @@ cell, the 5-of-10 rule) come from the pre-registrations linked in the Setup sect
 - **The network can do it on hopper.** A hand-structured CPG of the same form, with parameters searched on practice seeds,
   passes ([3.27 m](../results/cpg/baselines/hopper/tuned_cpg.score.json)), so on hopper the gap is in the written
   parameters, not the representation. On Walker2d the same search [did not pass](../results/cpg/baselines/walker2d/tuned_cpg.score.json),
-  so there the negative result is weaker.
-- **What we did not learn:** whether zero-step LLM designs carry *any* useful information. A binary 3 m bar that no attempt
-  clears cannot measure that. The follow-up pre-registration ([`docs/prereg-followup-draft.md`](prereg-followup-draft.md))
-  measures it with no new LLM calls.
+  so there the negative result was weaker. A longer search in the follow-up
+  [did pass (5.06 m)](../results/warmstart/walker2d/headroom/tuned_cpg_50k_seed2.score.json).
+- **But the zero-step designs are worth something (follow-up, no LLM calls).** Used as starting points for a fixed
+  random search (500 designs on practice seeds), the LLM's hopper designs reach the 3 m pass in
+  [39 of 80 runs, against 2 of 80 from random CPGs](../results/warmstart_report.md#hopper) (one-sided Fisher [p < 0.001](../scripts/writeup_numbers.py)).
+  They also beat the same designs with their numbers permuted and signs flipped,
+  [39 vs 27 of 80](../results/warmstart_report.md#hopper) ([p = 0.038](../scripts/writeup_numbers.py), secondary). On Walker2d there is no measurable
+  advantage over random starts. A longer search there [did show headroom (5.06 m)](../results/warmstart/walker2d/headroom/tuned_cpg_50k_seed2.score.json).
+  See section 7.
 
 ## 1. Why this question
 
@@ -186,10 +191,10 @@ practice seeds.
 **Does not show.**
 - That LLMs "cannot" do this. There were two models, one network family, two tasks and 10 attempts per cell. The CLI
   exposes no sampling seed, so hosted-model runs are not exactly reproducible ([CRITIQUES.md item 13](../CRITIQUES.md)).
-- Anything about Walker2d headroom: the tuned CPG did not pass there, so a Walker2d failure may be the network's, not the
-  model's.
-- Whether the zero-step designs are *close*. A design at 1 m might be one parameter away from 3 m, or nowhere near it.
-  The binary bar cannot tell, which is the motivation for the follow-up.
+- That Walker2d is out of reach for this network. The original tuned CPG did not pass there, but the follow-up's longer
+  search did (section 7), so the Walker2d failure is now clearly the written parameters', not the network's.
+- Whether the zero-step designs are *close*, from the binary bar alone. A design at 1 m might be one parameter away from
+  3 m, or nowhere near it. Section 7 measures this directly.
 - Anything about real robots. Everything here is simulation.
 
 ## 6. Limitations
@@ -205,18 +210,69 @@ practice seeds.
 - **Prior-work coverage.** LLM-as-optimiser work with rollout feedback is related and has not been checked at source (TO
   VERIFY in the [README](../README.md#related-work)).
 
-## 7. What would make zero-step success measurable
+## 7. Result 3: zero-step designs as search starts (follow-up, no LLM calls)
 
-Running more LLM attempts against the same binary bar would buy little. At the observed rate it would most likely return
-more zeros. The follow-up ([`docs/prereg-followup-draft.md`](prereg-followup-draft.md), draft) uses **no new LLM calls**.
-It replays the 160 existing zero-step designs (120 no-feedback designs plus the 40 feedback round-0 designs) and asks a
-continuous question: **how much black-box search does starting from the LLM's design save, compared with a random design
-of the same kind, or with the LLM's own numbers shuffled within its structure?** It also gives Walker2d the headroom test
-it lacks. Every number in it is a fixed-budget CPU computation, and each start condition has a pre-registered bar.
+The binary bar cannot say whether a zero-step design is close to working. The follow-up
+([pre-registration](prereg-followup-draft.md), accepted by the organizer's 6-hour default on 2026-11-16 05:43 CST, not
+by an owner answer) asks how much search a zero-step LLM design saves. It runs no model.
+
+- **Starts, per task.** L: the 80 existing zero-step LLM designs (the 60 one-reply designs plus the 20 feedback round-0
+  designs, written before any feedback). P: each L design with its numbers permuted within kind and every gain's sign
+  flipped at random, so structure and magnitudes stay but assignment is destroyed. R: 80 random CPGs from the track's
+  fixed distribution. H: the hand-structure start of the tuned baseline, 10 runs, as a calibration.
+- **Search.** The random-search proposer already pre-registered for the feedback arm, unchanged except for the budget:
+  500 designs, scored on practice seeds 0-9. The best-so-far design at checkpoints 6 to 500 is scored on the held-out
+  seeds, which never feed the search. The pass rule is unchanged.
+- **Bars (fixed before any run).** The primary claim (hopper) requires the L-R pass-rate difference to be at least 10
+  points and one-sided Fisher p < 0.05. If fewer than 3 of 10 H runs pass, the outcome switches to median held-out d,
+  compared with Mann-Whitney U, and the median gap must be at least 0.5 m.
+
+### Hopper
+
+| start set | passes by checkpoint 6 / 100 / 500 | median d at 500 |
+|---|---|---|
+| L, LLM zero-step designs | [1 / 20 / **39 of 80**](../results/warmstart_report.md#hopper) | [3.00 m](../results/warmstart_report.md#hopper) |
+| P, LLM structure, permuted numbers | [0 / 4 / 27 of 80](../results/warmstart_report.md#hopper) | [2.20 m](../results/warmstart_report.md#hopper) |
+| R, random CPGs | [0 / 0 / 2 of 80](../results/warmstart_report.md#hopper) | [0.87 m](../results/warmstart_report.md#hopper) |
+| H, hand structure (calibration) | [0 / 1 / 5 of 10](../results/warmstart_report.md#hopper) | [3.13 m](../results/warmstart_report.md#hopper) |
+
+- **Primary: measurable warm-start value.** L passes in 39 of 80 runs, R in 2 of 80: a difference of
+  [46 points, one-sided Fisher p < 0.001](../scripts/writeup_numbers.py). The result does not depend on the feedback arm's
+  designs. The 60 one-reply designs alone give [23 passing runs](../results/warmstart/hopper/L/).
+- **Secondary: the specific numbers matter.** L beats P, [39 vs 27 of 80, p = 0.038](../scripts/writeup_numbers.py).
+  Structure and scale explain much of the gain (P is far above R), but the LLM's assignment of numbers and signs adds to it.
+  This is a secondary test, labelled as such.
+- **Calibration.** The hand-structured start passes in [5 of 10 runs](../results/warmstart_report.md#hopper), so the LLM's starts do about as well as
+  a hand-designed structure, and the budget was large enough (the fallback rule was not triggered).
+- **Context.** At 6 designs (the feedback arm's budget), only [1 of 80 L runs passes](../results/warmstart_report.md#hopper), the start that already
+  passed. Most of the value appears after 50-500 designs, which is why the 6-design baseline could not see it.
+
+### Walker2d
+
+- **Headroom: shown.** The track's tuned-CPG search, rerun with 50,000 practice episodes, passes for 1 of 3 CEM seeds:
+  [5.06 m, 96 of 100 clean episodes](../results/warmstart/walker2d/headroom/tuned_cpg_50k_seed2.score.json). The other two
+  seeds reached [1.29 m](../results/warmstart/walker2d/headroom/tuned_cpg_50k_seed0.score.json) and
+  [1.09 m](../results/warmstart/walker2d/headroom/tuned_cpg_50k_seed1.score.json). So `cpg-v1` can walk 3 m on Walker2d,
+  and the zero-step failures there are the parameters', not the network's.
+- **The fallback rule applied.** The hand start passed in [0 of 10 runs](../results/warmstart_report.md#walker2d) at the 500-design budget, so the
+  outcome is median held-out d at checkpoint 500.
+- **Primary: no measurable warm-start value.** The L median is [0.92 m](../results/warmstart_report.md#walker2d) and the R median
+  [0.76 m](../results/warmstart_report.md#walker2d), with [one-sided p = 0.267](../scripts/writeup_numbers.py). Passes: [2 L, 1 P, 0 R of 80 each](../results/warmstart_report.md#walker2d).
+- **Secondary:** L beats P ([median -0.05 m](../results/warmstart_report.md#walker2d), [p < 0.001](../scripts/writeup_numbers.py)). Permuting a
+  walker design mostly breaks it, but the intact designs are no better starts than random ones.
+
+**Cost.** All 500 runs took [3.8 CPU-hours](../scripts/writeup_numbers.py), on CPU through `sim-run` with 2 processes at a
+time. The pre-registered worst case was 41 CPU-hours.
+
+**What this changes.** The one-reply result stays a clean negative against the 3 m bar. Measured as search starts, though,
+the zero-step hopper designs carry real, usable information: about as much as a hand-designed structure, and more than
+their own numbers shuffled. On Walker2d they carry none that this search can use. Limits: one search method and one
+budget. The P control flips signs as well as permuting values, so "assignment" here includes signs. Every run is in
+[`results/warmstart/`](../results/warmstart/), and the tables are in [`results/warmstart_report.md`](../results/warmstart_report.md).
 
 ## Reproduce
 
-- Tables: `scripts/cpg_report.py results` and `scripts/cpg_feedback_report.py results`. Numbers in this write-up:
+- Tables: `scripts/cpg_report.py results`, `scripts/cpg_feedback_report.py results` and `scripts/warmstart_report.py results`. Numbers in this write-up:
   `python scripts/writeup_numbers.py results` (reads files only, runs nothing).
 - Every attempt, failures included (prompt, reply, compiled design, per-episode scores):
   [`results/attempts/`](../results/attempts/), layout in [`results/README.md`](../results/README.md).

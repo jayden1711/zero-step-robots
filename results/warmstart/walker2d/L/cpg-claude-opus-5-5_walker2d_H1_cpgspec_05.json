@@ -1,0 +1,2136 @@
+{
+ "task": "walker2d",
+ "set": "L",
+ "start_id": "cpg-claude-opus-5-5_walker2d_H1_cpgspec_05",
+ "seed": 2286477244,
+ "designs": 500,
+ "checkpoints": [
+  {
+   "designs": 6,
+   "dev_mean_d": -0.0793,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "gait",
+      "freq_hz": 0.49167593378638474,
+      "phase0": 0.5582320087981661
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -1.9322184335534573,
+     "a1": -0.7669525448471733,
+     "a3": -1.3602130331309221,
+     "a4": -1.951152949325197
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "right_hip",
+      "inputs": {
+       "obs[1]": -1.6580808325303087,
+       "obs[10]": 0.08872926662646569,
+       "obs[2]": -2.404216469617309,
+       "obs[11]": -0.35193460131859367,
+       "obs[8]": 0.03037346868587662,
+       "cos(gait)": 0.2472604807156021,
+       "sin(gait)": -0.44867226312188424
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.45450843039883004
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_hip",
+      "inputs": {
+       "obs[1]": -0.2440354990119511,
+       "obs[10]": 0.297998724305922,
+       "obs[5]": -4.593957623945771,
+       "obs[14]": -0.27532878268049565,
+       "obs[8]": 0.17883964062751273,
+       "cos(gait)": -1.2142983775868896,
+       "sin(gait)": 0.8590293538053954
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a3": 0.8315111190422211
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_knee_pd",
+      "inputs": {
+       "obs[3]": -4.0808126155121895,
+       "obs[12]": -0.1729855637645275
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": 0.9664041129443632
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_knee_pd",
+      "inputs": {
+       "obs[6]": -0.999267956432653,
+       "obs[15]": -0.8636501963697787
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": 2.0806794258977015
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "right_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": -0.3177599115255727,
+       "cos(gait)": -0.7480745072453128
+      },
+      "threshold": 0.3012301550421468,
+      "sharpness": 12.19263183953927,
+      "to": {
+       "a1": -1.5998172519537417
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "left_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": 1.2398521317806386,
+       "cos(gait)": 0.41260233660248874
+      },
+      "threshold": 0.2477914020895986,
+      "sharpness": 4.997920677764551,
+      "to": {
+       "a4": -2.6543399369638725
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_ankle_pd",
+      "inputs": {
+       "obs[4]": -2.7080054088937007,
+       "obs[13]": -0.14276960439170833
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 1.3898241949207792
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_ankle_pd",
+      "inputs": {
+       "obs[7]": -1.714939974608738,
+       "obs[16]": -0.007109455752011239
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": 0.15268859531601175
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.885550960128061,
+    "sem_return": 0.013476369744308492,
+    "std_return": 0.13408818593390703,
+    "median_return": -4.925404413806946,
+    "min_return": -5.034838950639615,
+    "max_return": -4.480162870130623,
+    "mean_length": 7.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.08692369860799318,
+    "mean_distance_healthy": -0.07911171876243221,
+    "median_distance_healthy": -0.07938648786261221,
+    "min_distance_healthy": -0.08015622051583383,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 25,
+   "dev_mean_d": -0.066,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "gait",
+      "freq_hz": 0.11410334083848771,
+      "phase0": 0.004689000429367124
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -4.120208648446358,
+     "a1": -1.1649096934024847,
+     "a3": -1.2862280338116516,
+     "a4": -1.5465655095644621
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "right_hip",
+      "inputs": {
+       "obs[1]": -1.3938509814622275,
+       "obs[10]": -0.022041837429485657,
+       "obs[2]": -3.29235899756878,
+       "obs[11]": -0.35697160591530636,
+       "obs[8]": 0.00992480053141695,
+       "cos(gait)": 0.2671946574231857,
+       "sin(gait)": -0.03255178018388627
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.016488118790896955
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_hip",
+      "inputs": {
+       "obs[1]": -0.5194283967085571,
+       "obs[10]": 0.08005055140620343,
+       "obs[5]": -2.743826711315082,
+       "obs[14]": -0.37096337593015105,
+       "obs[8]": 0.3951128965822934,
+       "cos(gait)": -1.6006824840247045,
+       "sin(gait)": 0.45860472578177014
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a3": 0.5829613049722636
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_knee_pd",
+      "inputs": {
+       "obs[3]": -2.4998140013239074,
+       "obs[12]": -0.37926022781293645
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": 0.7075768715284856
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_knee_pd",
+      "inputs": {
+       "obs[6]": -0.9286007484902873,
+       "obs[15]": -1.2519520664245807
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": 1.1972555253200392
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "right_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": -0.07147105981387128,
+       "cos(gait)": -0.25826932204502584
+      },
+      "threshold": 0.06408565995752352,
+      "sharpness": 11.06870880284136,
+      "to": {
+       "a1": -1.1622413182661049
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "left_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": 0.7775081784694382,
+       "cos(gait)": -0.09148272184096717
+      },
+      "threshold": 0.2871555149420204,
+      "sharpness": 5.427501321475993,
+      "to": {
+       "a4": -2.4942669754733013
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_ankle_pd",
+      "inputs": {
+       "obs[4]": -3.8929443438489173,
+       "obs[13]": 0.02435517124846452
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 1.3438600320472598
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_ankle_pd",
+      "inputs": {
+       "obs[7]": -1.4795959108051413,
+       "obs[16]": -0.3042190107429476
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": 0.019349387084907067
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.953029440308606,
+    "sem_return": 0.0075991823697658415,
+    "std_return": 0.07561090990199126,
+    "median_return": -4.946533266802118,
+    "min_return": -5.150012057193461,
+    "max_return": -4.772144120640792,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.07952713357411448,
+    "mean_distance_healthy": -0.06599032031695702,
+    "median_distance_healthy": -0.06599475964385121,
+    "min_distance_healthy": -0.06695405212019348,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 50,
+   "dev_mean_d": -0.0628,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "gait",
+      "freq_hz": -0.14488554545024862,
+      "phase0": 0.14509830409233246
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -4.248818324797178,
+     "a1": -0.7002920338023655,
+     "a3": -1.6043802918171073,
+     "a4": -0.8672977958156222
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "right_hip",
+      "inputs": {
+       "obs[1]": -2.3370688070024315,
+       "obs[10]": -0.18041382317668606,
+       "obs[2]": -3.0818506632958584,
+       "obs[11]": -0.6324214839206401,
+       "obs[8]": 0.2249296163062106,
+       "cos(gait)": 0.25253641866644483,
+       "sin(gait)": 0.005857202285328197
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.06569016555224824
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_hip",
+      "inputs": {
+       "obs[1]": -0.9930649301860113,
+       "obs[10]": 0.16359890505439334,
+       "obs[5]": -1.7485902509009845,
+       "obs[14]": -0.4157074947395481,
+       "obs[8]": 0.15128326712595022,
+       "cos(gait)": -0.6037279062921295,
+       "sin(gait)": 1.0504289604802586
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a3": 0.5414813561018815
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_knee_pd",
+      "inputs": {
+       "obs[3]": -1.9874886307202897,
+       "obs[12]": 0.04813646866793575
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": 0.28610358741234937
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_knee_pd",
+      "inputs": {
+       "obs[6]": -0.8349024385979485,
+       "obs[15]": -1.1882887666556037
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": 0.803081803593057
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "right_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": -0.04849885977348412,
+       "cos(gait)": -0.26622247605477223
+      },
+      "threshold": 0.20736045614859075,
+      "sharpness": 9.238384652974922,
+      "to": {
+       "a1": -1.1582692445462652
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "left_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": 1.0946698700114679,
+       "cos(gait)": -0.22289102824423643
+      },
+      "threshold": 0.4065690298021308,
+      "sharpness": 3.392420919076252,
+      "to": {
+       "a4": -3.4014268499428284
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_ankle_pd",
+      "inputs": {
+       "obs[4]": -4.947667063098919,
+       "obs[13]": -0.04438791132780945
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 1.394778911977065
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_ankle_pd",
+      "inputs": {
+       "obs[7]": -2.850982375242479,
+       "obs[16]": -0.1505440497924367
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.10344898942027934
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.56852100916237,
+    "sem_return": 0.0067854368330240306,
+    "std_return": 0.0675142440413944,
+    "median_return": -4.561078532165823,
+    "min_return": -4.7134769865919415,
+    "max_return": -4.429840423037409,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.07643129745982828,
+    "mean_distance_healthy": -0.06289153631571552,
+    "median_distance_healthy": -0.06286173846008863,
+    "min_distance_healthy": -0.06394586355391839,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 100,
+   "dev_mean_d": -0.0628,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "gait",
+      "freq_hz": -0.14488554545024862,
+      "phase0": 0.14509830409233246
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -4.248818324797178,
+     "a1": -0.7002920338023655,
+     "a3": -1.6043802918171073,
+     "a4": -0.8672977958156222
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "right_hip",
+      "inputs": {
+       "obs[1]": -2.3370688070024315,
+       "obs[10]": -0.18041382317668606,
+       "obs[2]": -3.0818506632958584,
+       "obs[11]": -0.6324214839206401,
+       "obs[8]": 0.2249296163062106,
+       "cos(gait)": 0.25253641866644483,
+       "sin(gait)": 0.005857202285328197
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.06569016555224824
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_hip",
+      "inputs": {
+       "obs[1]": -0.9930649301860113,
+       "obs[10]": 0.16359890505439334,
+       "obs[5]": -1.7485902509009845,
+       "obs[14]": -0.4157074947395481,
+       "obs[8]": 0.15128326712595022,
+       "cos(gait)": -0.6037279062921295,
+       "sin(gait)": 1.0504289604802586
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a3": 0.5414813561018815
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_knee_pd",
+      "inputs": {
+       "obs[3]": -1.9874886307202897,
+       "obs[12]": 0.04813646866793575
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": 0.28610358741234937
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_knee_pd",
+      "inputs": {
+       "obs[6]": -0.8349024385979485,
+       "obs[15]": -1.1882887666556037
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": 0.803081803593057
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "right_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": -0.04849885977348412,
+       "cos(gait)": -0.26622247605477223
+      },
+      "threshold": 0.20736045614859075,
+      "sharpness": 9.238384652974922,
+      "to": {
+       "a1": -1.1582692445462652
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "left_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": 1.0946698700114679,
+       "cos(gait)": -0.22289102824423643
+      },
+      "threshold": 0.4065690298021308,
+      "sharpness": 3.392420919076252,
+      "to": {
+       "a4": -3.4014268499428284
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_ankle_pd",
+      "inputs": {
+       "obs[4]": -4.947667063098919,
+       "obs[13]": -0.04438791132780945
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 1.394778911977065
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_ankle_pd",
+      "inputs": {
+       "obs[7]": -2.850982375242479,
+       "obs[16]": -0.1505440497924367
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.10344898942027934
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.56852100916237,
+    "sem_return": 0.0067854368330240306,
+    "std_return": 0.0675142440413944,
+    "median_return": -4.561078532165823,
+    "min_return": -4.7134769865919415,
+    "max_return": -4.429840423037409,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.07643129745982828,
+    "mean_distance_healthy": -0.06289153631571552,
+    "median_distance_healthy": -0.06286173846008863,
+    "min_distance_healthy": -0.06394586355391839,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 200,
+   "dev_mean_d": -0.0628,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "gait",
+      "freq_hz": -0.14488554545024862,
+      "phase0": 0.14509830409233246
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -4.248818324797178,
+     "a1": -0.7002920338023655,
+     "a3": -1.6043802918171073,
+     "a4": -0.8672977958156222
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "right_hip",
+      "inputs": {
+       "obs[1]": -2.3370688070024315,
+       "obs[10]": -0.18041382317668606,
+       "obs[2]": -3.0818506632958584,
+       "obs[11]": -0.6324214839206401,
+       "obs[8]": 0.2249296163062106,
+       "cos(gait)": 0.25253641866644483,
+       "sin(gait)": 0.005857202285328197
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.06569016555224824
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_hip",
+      "inputs": {
+       "obs[1]": -0.9930649301860113,
+       "obs[10]": 0.16359890505439334,
+       "obs[5]": -1.7485902509009845,
+       "obs[14]": -0.4157074947395481,
+       "obs[8]": 0.15128326712595022,
+       "cos(gait)": -0.6037279062921295,
+       "sin(gait)": 1.0504289604802586
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a3": 0.5414813561018815
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_knee_pd",
+      "inputs": {
+       "obs[3]": -1.9874886307202897,
+       "obs[12]": 0.04813646866793575
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": 0.28610358741234937
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_knee_pd",
+      "inputs": {
+       "obs[6]": -0.8349024385979485,
+       "obs[15]": -1.1882887666556037
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": 0.803081803593057
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "right_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": -0.04849885977348412,
+       "cos(gait)": -0.26622247605477223
+      },
+      "threshold": 0.20736045614859075,
+      "sharpness": 9.238384652974922,
+      "to": {
+       "a1": -1.1582692445462652
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "left_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": 1.0946698700114679,
+       "cos(gait)": -0.22289102824423643
+      },
+      "threshold": 0.4065690298021308,
+      "sharpness": 3.392420919076252,
+      "to": {
+       "a4": -3.4014268499428284
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_ankle_pd",
+      "inputs": {
+       "obs[4]": -4.947667063098919,
+       "obs[13]": -0.04438791132780945
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 1.394778911977065
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_ankle_pd",
+      "inputs": {
+       "obs[7]": -2.850982375242479,
+       "obs[16]": -0.1505440497924367
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.10344898942027934
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.56852100916237,
+    "sem_return": 0.0067854368330240306,
+    "std_return": 0.0675142440413944,
+    "median_return": -4.561078532165823,
+    "min_return": -4.7134769865919415,
+    "max_return": -4.429840423037409,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.07643129745982828,
+    "mean_distance_healthy": -0.06289153631571552,
+    "median_distance_healthy": -0.06286173846008863,
+    "min_distance_healthy": -0.06394586355391839,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 500,
+   "dev_mean_d": -0.0596,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "gait",
+      "freq_hz": 0.005401155379775037,
+      "phase0": 0.0057227759238426545
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -3.566416759483398,
+     "a1": -0.5856962339391528,
+     "a3": -0.6166596427555623,
+     "a4": -0.08399308269250005
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "right_hip",
+      "inputs": {
+       "obs[1]": -3.3863093222348923,
+       "obs[10]": 0.1022338351546773,
+       "obs[2]": -2.664920576848743,
+       "obs[11]": -0.1982867899297921,
+       "obs[8]": 0.42532530669540036,
+       "cos(gait)": 0.4039553235595449,
+       "sin(gait)": 0.46351847325579326
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.41675462225165594
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_hip",
+      "inputs": {
+       "obs[1]": -0.822929227939298,
+       "obs[10]": -0.03452861058302949,
+       "obs[5]": -3.2444995920654427,
+       "obs[14]": -0.07733021843308457,
+       "obs[8]": 0.30720113751072287,
+       "cos(gait)": -0.6037849676155199,
+       "sin(gait)": 0.5760638931275552
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a3": 0.20483891014796507
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_knee_pd",
+      "inputs": {
+       "obs[3]": -2.3768804155285643,
+       "obs[12]": -0.19759423378108926
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a1": 0.5304520476288543
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_knee_pd",
+      "inputs": {
+       "obs[6]": -0.22242947985883516,
+       "obs[15]": -1.5239556420224527
+      },
+      "range": 3.0,
+      "tol": 0.05,
+      "to": {
+       "a4": 1.4896098626249525
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "right_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": -0.0073365427973704645,
+       "cos(gait)": -0.14385833050456734
+      },
+      "threshold": 0.042202252154796505,
+      "sharpness": 0.8023641194284328,
+      "to": {
+       "a1": -1.487973761846456
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "left_knee_swing_flex",
+      "inputs": {
+       "sin(gait)": 1.934448434101808,
+       "cos(gait)": -0.030771753177952804
+      },
+      "threshold": 0.3854963638072212,
+      "sharpness": 2.173941363967287,
+      "to": {
+       "a4": -3.8693505304471
+      }
+     },
+     {
+      "type": "linear",
+      "name": "right_ankle_pd",
+      "inputs": {
+       "obs[4]": -5.815715079524777,
+       "obs[13]": 0.6313415447959219
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.17205695889958952
+      }
+     },
+     {
+      "type": "linear",
+      "name": "left_ankle_pd",
+      "inputs": {
+       "obs[7]": -1.6950183290825178,
+       "obs[16]": -0.14997720983545276
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.8434288698806092
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.0841436697204845,
+    "sem_return": 0.005114087294836594,
+    "std_return": 0.05088452610628991,
+    "median_return": -4.081917576287855,
+    "min_return": -4.1921360742611204,
+    "max_return": -3.9678751336597893,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.07252887303523702,
+    "mean_distance_healthy": -0.05952159104041784,
+    "median_distance_healthy": -0.059556489507103016,
+    "min_distance_healthy": -0.06024530563726861,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  }
+ ],
+ "T": null,
+ "censored": true,
+ "dev_history": [
+  -0.1035,
+  -0.1433,
+  -0.322,
+  -0.0818,
+  -0.0793,
+  -0.2603,
+  -0.3722,
+  -0.0745,
+  -0.066,
+  -0.0779,
+  -0.0692,
+  -0.0807,
+  -0.0711,
+  -0.0947,
+  -0.0678,
+  -0.0753,
+  -0.0721,
+  -0.073,
+  -0.0752,
+  -0.0831,
+  -0.0663,
+  -0.0783,
+  -0.0759,
+  -0.0787,
+  -0.0712,
+  -0.0792,
+  -0.0628,
+  -0.068,
+  -0.0727,
+  -0.0732,
+  -0.0756,
+  -0.0662,
+  -0.0723,
+  -0.0755,
+  -0.0675,
+  -0.0723,
+  -0.0677,
+  -0.0748,
+  -0.0733,
+  -0.0763,
+  -0.0767,
+  -0.0781,
+  -0.0723,
+  -0.0631,
+  -0.0684,
+  -0.0754,
+  -0.0829,
+  -0.0729,
+  -0.0745,
+  -0.0719,
+  -0.0775,
+  -0.0851,
+  -0.0729,
+  -0.0861,
+  -0.0712,
+  -0.0651,
+  -0.0708,
+  -0.0742,
+  -0.0745,
+  -0.073,
+  -0.0692,
+  -0.0777,
+  -0.0751,
+  -0.0762,
+  -0.0731,
+  -0.0744,
+  -0.0717,
+  -0.0715,
+  -0.0706,
+  -0.075,
+  -0.0655,
+  -0.0654,
+  -0.0795,
+  -0.0728,
+  -0.0698,
+  -0.077,
+  -0.0722,
+  -0.0689,
+  -0.0727,
+  -0.0773,
+  -0.0665,
+  -0.0942,
+  -0.0797,
+  -0.0815,
+  -0.0725,
+  -0.0749,
+  -0.0727,
+  -0.0714,
+  -0.072,
+  -0.0764,
+  -0.0714,
+  -0.0871,
+  -0.0732,
+  -0.0679,
+  -0.0715,
+  -0.0691,
+  -0.0745,
+  -0.0751,
+  -0.0727,
+  -0.0712,
+  -0.0723,
+  -0.0727,
+  -0.0795,
+  -0.0728,
+  -0.0728,
+  -0.0709,
+  -0.0733,
+  -0.0835,
+  -0.0693,
+  -0.0738,
+  -0.0726,
+  -0.0732,
+  -0.0764,
+  -0.0635,
+  -0.0706,
+  -0.072,
+  -0.071,
+  -0.0748,
+  -0.0707,
+  -0.0799,
+  -0.0831,
+  -0.0807,
+  -0.0768,
+  -0.0729,
+  -0.0804,
+  -0.0708,
+  -0.073,
+  -0.078,
+  -0.0697,
+  -0.0734,
+  -0.0663,
+  -0.0725,
+  -0.0779,
+  -0.0725,
+  -0.072,
+  -0.0744,
+  -0.076,
+  -0.0662,
+  -0.0723,
+  -0.0732,
+  -0.0688,
+  -0.0767,
+  -0.0726,
+  -0.0746,
+  -0.075,
+  -0.0713,
+  -0.0704,
+  -0.0777,
+  -0.0731,
+  -0.0728,
+  -0.0729,
+  -0.0714,
+  -0.0645,
+  -0.074,
+  -0.0728,
+  -0.0749,
+  -0.0683,
+  -0.0672,
+  -0.0676,
+  -0.0728,
+  -0.0771,
+  -0.1322,
+  -0.0714,
+  -0.0659,
+  -0.0746,
+  -0.0727,
+  -0.0927,
+  -0.0722,
+  -0.0705,
+  -0.0683,
+  -0.0813,
+  -0.0728,
+  -0.0742,
+  -0.0662,
+  -0.0729,
+  -0.0708,
+  -0.0705,
+  -0.0702,
+  -0.1098,
+  -0.0716,
+  -0.0696,
+  -0.0728,
+  -0.0721,
+  -0.0724,
+  -0.0708,
+  -0.1076,
+  -0.0764,
+  -0.071,
+  -0.0859,
+  -0.0632,
+  -0.0797,
+  null,
+  -0.0723,
+  -0.0727,
+  -0.0721,
+  -0.0687,
+  -0.0737,
+  -0.0732,
+  -0.071,
+  -0.0733,
+  -0.0881,
+  -0.0746,
+  -0.0658,
+  -0.072,
+  -0.0694,
+  -0.0696,
+  -0.0794,
+  -0.0789,
+  -0.1568,
+  -0.0635,
+  -0.0708,
+  -0.0788,
+  -0.0668,
+  -0.0704,
+  -0.0692,
+  -0.0729,
+  -0.0667,
+  -0.0952,
+  -0.0694,
+  -0.0726,
+  -0.0727,
+  -0.0723,
+  -0.0719,
+  -0.0678,
+  -0.0768,
+  -0.0731,
+  -0.0724,
+  -0.0764,
+  -0.0729,
+  -0.0784,
+  -0.0728,
+  -0.0713,
+  -0.073,
+  -0.0711,
+  -0.0709,
+  -0.0721,
+  -0.0849,
+  -0.0753,
+  -0.0714,
+  -0.114,
+  -0.0727,
+  -0.0724,
+  -0.0718,
+  -0.0811,
+  -0.0722,
+  -0.0685,
+  -0.0654,
+  -0.073,
+  -0.073,
+  -0.0733,
+  -0.0714,
+  -0.0694,
+  -0.0726,
+  -0.0727,
+  -0.0781,
+  -0.0789,
+  -0.0738,
+  -0.0737,
+  -0.0712,
+  -0.0831,
+  -0.0724,
+  -0.0751,
+  -0.0741,
+  -0.0685,
+  -0.0784,
+  -0.0727,
+  -0.0725,
+  -0.0815,
+  -0.0769,
+  -0.0858,
+  -0.0724,
+  -0.1223,
+  -0.0687,
+  -0.0757,
+  -0.0722,
+  -0.0691,
+  -0.0731,
+  -0.0783,
+  -0.0705,
+  -0.0703,
+  -0.0723,
+  -0.0726,
+  -0.0733,
+  -0.0736,
+  -0.0798,
+  -0.0724,
+  -0.0627,
+  -0.0813,
+  -0.1109,
+  -0.0716,
+  -0.0625,
+  -0.0739,
+  -0.105,
+  -0.0727,
+  -0.0718,
+  -0.1051,
+  -0.0732,
+  -0.0802,
+  -0.0702,
+  -0.0863,
+  -0.0725,
+  -0.0783,
+  -0.0781,
+  -0.1038,
+  -0.0721,
+  -0.0731,
+  -0.081,
+  -0.0734,
+  -0.0857,
+  -0.0765,
+  -0.0833,
+  -0.0744,
+  -0.067,
+  -0.1003,
+  -0.0709,
+  -0.0708,
+  -0.086,
+  -0.0705,
+  -0.0848,
+  -0.0756,
+  -0.0604,
+  -0.0713,
+  -0.0687,
+  -0.0678,
+  -0.0727,
+  -0.0736,
+  -0.0756,
+  -0.0828,
+  -0.0761,
+  -0.0709,
+  -0.0662,
+  -0.0709,
+  -0.0704,
+  -0.0754,
+  -0.0758,
+  -0.0654,
+  -0.0783,
+  -0.0786,
+  -0.0801,
+  -0.0711,
+  -0.0788,
+  -0.0642,
+  -0.0711,
+  -0.0635,
+  -0.0685,
+  -0.0706,
+  -0.07,
+  -0.0662,
+  -0.0751,
+  -0.0682,
+  -0.0673,
+  -0.0682,
+  -0.0649,
+  -0.0751,
+  -0.07,
+  -0.069,
+  -0.0659,
+  -0.0654,
+  -0.0822,
+  -0.0743,
+  -0.0675,
+  -0.0691,
+  -0.0739,
+  -0.0691,
+  -0.067,
+  -0.0617,
+  -0.0639,
+  -0.0702,
+  -0.0696,
+  -0.0668,
+  -0.0724,
+  -0.0723,
+  -0.0657,
+  -0.0645,
+  -0.0705,
+  -0.0856,
+  -0.0662,
+  -0.0742,
+  -0.1346,
+  -0.0698,
+  -0.0705,
+  -0.0655,
+  null,
+  -0.068,
+  -0.0737,
+  -0.0682,
+  -0.0637,
+  -0.0722,
+  -0.0649,
+  -0.0697,
+  -0.0809,
+  -0.0649,
+  -0.0613,
+  -0.0712,
+  -0.073,
+  -0.0644,
+  -0.0761,
+  -0.0723,
+  -0.071,
+  -0.0676,
+  -0.0703,
+  null,
+  -0.0684,
+  -0.0734,
+  -0.0596,
+  -0.0626,
+  -0.0639,
+  -0.0662,
+  -0.0597,
+  -0.0645,
+  -0.0691,
+  -0.0742,
+  -0.0608,
+  -0.0705,
+  -0.0674,
+  -0.0638,
+  -0.0655,
+  -0.0633,
+  -0.085,
+  -0.0604,
+  -0.0664,
+  -0.0707,
+  -0.0715,
+  -0.0773,
+  -0.0726,
+  -0.0713,
+  -0.0704,
+  -0.0659,
+  -0.0626,
+  -0.0712,
+  -0.0718,
+  -0.0692,
+  -0.072,
+  -0.0687,
+  -0.0886,
+  -0.0663,
+  -0.0708,
+  -0.0717,
+  -0.066,
+  -0.0676,
+  -0.069,
+  -0.0747,
+  -0.0684,
+  -0.0701,
+  -0.0666,
+  -0.0666,
+  -0.0839,
+  -0.0668,
+  -0.079,
+  -0.1074,
+  -0.0728,
+  -0.0615,
+  -0.065,
+  -0.0752,
+  -0.0758,
+  -0.0695,
+  -0.0932,
+  -0.0614,
+  -0.0789,
+  -0.0698,
+  -0.0724,
+  -0.0728,
+  -0.1212,
+  -0.0672,
+  -0.0626,
+  -0.0699,
+  -0.0646,
+  -0.0639,
+  -0.0783,
+  -0.0828,
+  -0.0729,
+  -0.0967,
+  -0.0718,
+  -0.0695,
+  -0.0641,
+  -0.072,
+  -0.0678,
+  -0.0697,
+  -0.0693,
+  -0.0622,
+  -0.0718,
+  -0.0718,
+  -0.0731,
+  -0.0668,
+  -0.2819,
+  -0.0712,
+  -0.0635,
+  -0.0673,
+  -0.0634,
+  -0.073,
+  -0.0698,
+  -0.069,
+  -0.0692,
+  -0.071,
+  -0.0702,
+  -0.0753,
+  -0.0662,
+  -0.0694,
+  -0.0664,
+  -0.0713
+ ],
+ "accepted": [
+  true,
+  false,
+  false,
+  true,
+  true,
+  false,
+  false,
+  true,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false
+ ],
+ "wall_s": 5.0,
+ "start_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "gait",
+    "freq_hz": 0.8,
+    "phase0": 1.5708
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -1.29,
+   "a1": -1.5,
+   "a3": -1.29,
+   "a4": -1.5
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "right_hip",
+    "inputs": {
+     "obs[1]": -1.0,
+     "obs[10]": 0.28,
+     "obs[2]": -2.0,
+     "obs[11]": -0.4,
+     "obs[8]": 0.3,
+     "cos(gait)": 0.54,
+     "sin(gait)": -0.5429
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "left_hip",
+    "inputs": {
+     "obs[1]": -1.0,
+     "obs[10]": 0.28,
+     "obs[5]": -2.0,
+     "obs[14]": -0.4,
+     "obs[8]": 0.3,
+     "cos(gait)": -0.54,
+     "sin(gait)": 0.5429
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a3": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "right_knee_pd",
+    "inputs": {
+     "obs[3]": -3.0,
+     "obs[12]": -0.35
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a1": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "left_knee_pd",
+    "inputs": {
+     "obs[6]": -3.0,
+     "obs[15]": -0.35
+    },
+    "range": 3.0,
+    "tol": 0.05,
+    "to": {
+     "a4": 1.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "right_knee_swing_flex",
+    "inputs": {
+     "sin(gait)": -1.0,
+     "cos(gait)": -0.4
+    },
+    "threshold": 0.3,
+    "sharpness": 5.0,
+    "to": {
+     "a1": -1.35
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "left_knee_swing_flex",
+    "inputs": {
+     "sin(gait)": 1.0,
+     "cos(gait)": 0.4
+    },
+    "threshold": 0.3,
+    "sharpness": 5.0,
+    "to": {
+     "a4": -1.35
+    }
+   },
+   {
+    "type": "linear",
+    "name": "right_ankle_pd",
+    "inputs": {
+     "obs[4]": -1.5,
+     "obs[13]": -0.06
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "left_ankle_pd",
+    "inputs": {
+     "obs[7]": -1.5,
+     "obs[16]": -0.06
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a5": 1.0
+    }
+   }
+  ]
+ }
+}

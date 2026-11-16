@@ -1,0 +1,2115 @@
+{
+ "task": "hopper",
+ "set": "L",
+ "start_id": "cpg-claude-opus-5-5_hopper_H0_cpgspec_04",
+ "seed": 477502913,
+ "designs": 500,
+ "checkpoints": [
+  {
+   "designs": 6,
+   "dev_mean_d": 0.182,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "P",
+      "freq_hz": 1.5058027285905125,
+      "phase0": 3.561926940268009
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.005416140843209377,
+     "a1": -0.23942710463709704,
+     "a2": -0.24517117198363686
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_base",
+      "inputs": {
+       "obs[1]": -0.9240142718522899,
+       "obs[7]": 0.09790951541806771
+      },
+      "range": 2.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 1.170212684669088
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_gated",
+      "inputs": {
+       "obs[5]": 0.1610196307494734,
+       "obs[2]": -0.6386132693218881,
+       "obs[8]": -0.048440551360065004,
+       "cos(P)": 1.515956650996861,
+       "sin(P)": 0.7023355758961388
+      },
+      "threshold": 3.9447104360699137,
+      "sharpness": 0.8270866658668344,
+      "to": {
+       "a0": 0.6462557272407359
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_cancel",
+      "inputs": {
+       "cos(P)": 0.18556884241940586,
+       "sin(P)": 0.9723005882155289
+      },
+      "threshold": 0.7628024475067341,
+      "sharpness": 1.4162215142176189,
+      "to": {
+       "a0": -7.883362071097656
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_gated",
+      "inputs": {
+       "obs[1]": -0.5709751873986791,
+       "obs[7]": 0.011335146199299567,
+       "cos(P)": -0.8403693034250629,
+       "sin(P)": -0.7383890163134887
+      },
+      "threshold": 0.8701737783200825,
+      "sharpness": 1.095874949649254,
+      "to": {
+       "a0": 2.12114907564652
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_cancel",
+      "inputs": {
+       "cos(P)": -0.9215795568991396,
+       "sin(P)": -0.12184296028336458
+      },
+      "threshold": 0.7388779833672591,
+      "sharpness": 0.9987501857018026,
+      "to": {
+       "a0": -1.171625355243692
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": -0.46452782141220356,
+       "obs[9]": -0.08687112965382324
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.5971710931646568
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_speed",
+      "inputs": {
+       "obs[1]": 1.0412584504381632,
+       "obs[2]": -0.520804984378682,
+       "obs[3]": -1.308495947204862,
+       "obs[4]": -1.0970786704915845,
+       "obs[10]": 0.02720690642777405,
+       "obs[5]": -0.017040367752356247
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 1.501998494949978
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "toe_pushoff",
+      "inputs": {
+       "cos(P)": 0.23096703019566506
+      },
+      "threshold": 0.3846845806696339,
+      "sharpness": 2.730727785518945,
+      "to": {
+       "a2": -0.45592021143798034
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 73.28263624929058,
+    "sem_return": 0.0751180097769185,
+    "std_return": 0.7474147602848616,
+    "median_return": 73.2646124490972,
+    "min_return": 71.3289728657898,
+    "max_return": 74.45091893078957,
+    "mean_length": 51.0,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.18666184439060213,
+    "mean_distance_healthy": 0.18243384103041177,
+    "median_distance_healthy": 0.18226445482580605,
+    "min_distance_healthy": 0.16704190284349277,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 25,
+   "dev_mean_d": 0.2223,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "P",
+      "freq_hz": 2.185317551321539,
+      "phase0": 2.5628086810554827
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.23664445454087307,
+     "a1": 0.016166111670339427,
+     "a2": 0.11671590605704879
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_base",
+      "inputs": {
+       "obs[1]": -0.2574501015135374,
+       "obs[7]": 0.24275003664604264
+      },
+      "range": 2.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.8364977654010401
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_gated",
+      "inputs": {
+       "obs[5]": 0.01971959716045496,
+       "obs[2]": -0.8841247608274718,
+       "obs[8]": -0.11417141224083985,
+       "cos(P)": 2.3253226965340525,
+       "sin(P)": 0.33002049032374314
+      },
+      "threshold": 10.533354120609033,
+      "sharpness": 0.6774210650278738,
+      "to": {
+       "a0": 0.6452306567699349
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_cancel",
+      "inputs": {
+       "cos(P)": 0.04707594049606692,
+       "sin(P)": 0.7826861112459205
+      },
+      "threshold": 1.3638888254163533,
+      "sharpness": 1.8052298884242197,
+      "to": {
+       "a0": -7.875393412893328
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_gated",
+      "inputs": {
+       "obs[1]": -0.13273260043609264,
+       "obs[7]": 0.3170193655478881,
+       "cos(P)": -1.1833207495962423,
+       "sin(P)": -0.8040701244445525
+      },
+      "threshold": 1.1842852615378856,
+      "sharpness": 1.566576992887737,
+      "to": {
+       "a0": 2.166111336921368
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_cancel",
+      "inputs": {
+       "cos(P)": -1.1819862010524178,
+       "sin(P)": -0.1255477697842498
+      },
+      "threshold": 1.6117768146445972,
+      "sharpness": 0.11911813564621379,
+      "to": {
+       "a0": -1.9801356605882814
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": -0.9574829102350157,
+       "obs[9]": -0.09900993383067941
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.4971874859368384
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_speed",
+      "inputs": {
+       "obs[1]": 1.1331258280857477,
+       "obs[2]": -0.41754467101713644,
+       "obs[3]": -2.6529781664154637,
+       "obs[4]": -1.4622446425585323,
+       "obs[10]": -0.08212151107872082,
+       "obs[5]": -0.06604414545319093
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 1.5915213887031587
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "toe_pushoff",
+      "inputs": {
+       "cos(P)": 0.2963600121531339
+      },
+      "threshold": 0.5871552679197283,
+      "sharpness": 0.10545437135582858,
+      "to": {
+       "a2": -0.325299694413108
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 101.51399826290638,
+    "sem_return": 0.17320832886370902,
+    "std_return": 1.7234011122162243,
+    "median_return": 101.31451813185683,
+    "min_return": 98.16338696650233,
+    "max_return": 105.67161619081608,
+    "mean_length": 74.15,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.22750730556268942,
+    "mean_distance_healthy": 0.2229836854780327,
+    "median_distance_healthy": 0.2225845517962702,
+    "min_distance_healthy": 0.21340366181973372,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 50,
+   "dev_mean_d": 0.2259,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "P",
+      "freq_hz": 1.2901368484839006,
+      "phase0": 1.5387365005060913
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.03456231592925939,
+     "a1": 0.39151111883997103,
+     "a2": 0.32109990897003454
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_base",
+      "inputs": {
+       "obs[1]": -0.44796925660536796,
+       "obs[7]": 0.06783701686756635
+      },
+      "range": 2.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.22589560791093743
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_gated",
+      "inputs": {
+       "obs[5]": 0.11425432721746966,
+       "obs[2]": -1.1198313405123987,
+       "obs[8]": -0.5449323721623534,
+       "cos(P)": 0.9344737535761809,
+       "sin(P)": 1.5849293455554292
+      },
+      "threshold": 10.704935871809187,
+      "sharpness": 0.03736119291480253,
+      "to": {
+       "a0": 0.5892435727062513
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_cancel",
+      "inputs": {
+       "cos(P)": 0.06866652255915577,
+       "sin(P)": 1.2439854607613485
+      },
+      "threshold": 1.4180415011746819,
+      "sharpness": 1.8627614907310637,
+      "to": {
+       "a0": -5.141007265627215
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_gated",
+      "inputs": {
+       "obs[1]": 0.012203780810990689,
+       "obs[7]": 1.736099435021679,
+       "cos(P)": -0.7268331464289275,
+       "sin(P)": -0.4232989195592035
+      },
+      "threshold": 1.1871657021441238,
+      "sharpness": 4.528282410371922,
+      "to": {
+       "a0": 0.9302908967269504
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_cancel",
+      "inputs": {
+       "cos(P)": -1.4939747948072906,
+       "sin(P)": -0.19449155531498297
+      },
+      "threshold": 2.094946591603638,
+      "sharpness": 1.2493009393577015,
+      "to": {
+       "a0": -0.9964156561197834
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": -0.0323632745255662,
+       "obs[9]": 0.1361662705700415
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.8799257928430335
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_speed",
+      "inputs": {
+       "obs[1]": 0.22601837355285315,
+       "obs[2]": -0.040250088789960406,
+       "obs[3]": -1.783641425472974,
+       "obs[4]": -2.3276373813137305,
+       "obs[10]": -0.025929191195975698,
+       "obs[5]": -0.4600220790002098
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.582642138722024
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "toe_pushoff",
+      "inputs": {
+       "cos(P)": 1.9987724319855886
+      },
+      "threshold": 0.6933677175030329,
+      "sharpness": 0.1759647200322053,
+      "to": {
+       "a2": -0.2497022568941832
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 80.33780229670687,
+    "sem_return": 0.17352345068396224,
+    "std_return": 1.7265365347393253,
+    "median_return": 80.00703547289478,
+    "min_return": 76.1481507528008,
+    "max_return": 84.3974328687815,
+    "mean_length": 52.43,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.23175309976745345,
+    "mean_distance_healthy": 0.22554688954143085,
+    "median_distance_healthy": 0.2257159420753582,
+    "min_distance_healthy": 0.21148858062132114,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 100,
+   "dev_mean_d": 0.2289,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "P",
+      "freq_hz": 1.7074946091008696,
+      "phase0": 1.981426044250519
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.2344936908289773,
+     "a1": 0.2690927381181246,
+     "a2": 0.3926389245798139
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_base",
+      "inputs": {
+       "obs[1]": 0.11870206623999441,
+       "obs[7]": 0.16054839667655135
+      },
+      "range": 2.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.3913152683427086
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_gated",
+      "inputs": {
+       "obs[5]": -0.07987003980492101,
+       "obs[2]": -1.7369492457370788,
+       "obs[8]": -0.8229514690141754,
+       "cos(P)": 1.440255950491478,
+       "sin(P)": 2.0495621133813433
+      },
+      "threshold": 14.57546782585332,
+      "sharpness": 0.10020329591208582,
+      "to": {
+       "a0": 1.006278280388956
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_cancel",
+      "inputs": {
+       "cos(P)": 0.3213515050404957,
+       "sin(P)": 0.736413694047098
+      },
+      "threshold": 0.9523544076677903,
+      "sharpness": 3.1484147445567747,
+      "to": {
+       "a0": -3.033367556178485
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_gated",
+      "inputs": {
+       "obs[1]": 0.03832143397925859,
+       "obs[7]": 1.8592671125323939,
+       "cos(P)": -0.7598615460610426,
+       "sin(P)": -0.42260379791518304
+      },
+      "threshold": 1.3226842418367954,
+      "sharpness": 4.372424290824066,
+      "to": {
+       "a0": 0.8879911731447669
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_cancel",
+      "inputs": {
+       "cos(P)": -1.8259487699213854,
+       "sin(P)": -0.08406768749343299
+      },
+      "threshold": 1.1373960634835703,
+      "sharpness": 0.980156137113833,
+      "to": {
+       "a0": -1.302752534518759
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": 0.0368924106641154,
+       "obs[9]": 0.39590276814475495
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.711009512924977
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_speed",
+      "inputs": {
+       "obs[1]": 0.31042668424007674,
+       "obs[2]": -0.18506377567905763,
+       "obs[3]": -1.3332926948062476,
+       "obs[4]": -2.195651969301226,
+       "obs[10]": -0.11295031176203912,
+       "obs[5]": -0.7183881924602142
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.42436765183421876
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "toe_pushoff",
+      "inputs": {
+       "cos(P)": 1.8933698313364467
+      },
+      "threshold": 0.1883865977072653,
+      "sharpness": 0.23150819164082115,
+      "to": {
+       "a2": -0.2156721700239075
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 77.89589520055921,
+    "sem_return": 0.19043069665887363,
+    "std_return": 1.8947615081504088,
+    "median_return": 78.29778443959088,
+    "min_return": 73.79223782847104,
+    "max_return": 82.76902026909806,
+    "mean_length": 49.57,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.23501053695095966,
+    "mean_distance_healthy": 0.2293692849241019,
+    "median_distance_healthy": 0.2297281531989755,
+    "min_distance_healthy": 0.21667650780767883,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 200,
+   "dev_mean_d": 0.3062,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "P",
+      "freq_hz": 1.9992831807858928,
+      "phase0": 2.9682796756576355
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.21227176525415895,
+     "a1": 0.865967827245815,
+     "a2": 0.8074245392093231
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_base",
+      "inputs": {
+       "obs[1]": 0.2150845792143569,
+       "obs[7]": -0.15440171137683403
+      },
+      "range": 2.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.5899843439630786
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_gated",
+      "inputs": {
+       "obs[5]": -0.09540036224896123,
+       "obs[2]": -3.6468549616187715,
+       "obs[8]": -0.6479796073475843,
+       "cos(P)": 1.2279791122070112,
+       "sin(P)": 2.07305136286464
+      },
+      "threshold": 12.881182565302666,
+      "sharpness": 0.06376530532308193,
+      "to": {
+       "a0": 0.7389963260505044
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_cancel",
+      "inputs": {
+       "cos(P)": 0.31560719266962767,
+       "sin(P)": 0.6826386656163936
+      },
+      "threshold": 0.6129913138000838,
+      "sharpness": 6.8888015761114225,
+      "to": {
+       "a0": -3.8477213579912033
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_gated",
+      "inputs": {
+       "obs[1]": 0.43631825792390333,
+       "obs[7]": 3.2601646011935954,
+       "cos(P)": -0.8627953351839226,
+       "sin(P)": -0.5557138754984936
+      },
+      "threshold": 0.9583842556708962,
+      "sharpness": 4.309255574443426,
+      "to": {
+       "a0": 0.7410323027680812
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_cancel",
+      "inputs": {
+       "cos(P)": -1.1589284407520575,
+       "sin(P)": -0.1358625700266845
+      },
+      "threshold": 2.400026343106925,
+      "sharpness": 1.3170358933010602,
+      "to": {
+       "a0": -1.9119517806534096
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": 0.2094362545007216,
+       "obs[9]": 0.07739105593920159
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.1445137507782845
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_speed",
+      "inputs": {
+       "obs[1]": 0.2796371257873064,
+       "obs[2]": 0.18351669777819563,
+       "obs[3]": -2.341674728605695,
+       "obs[4]": -3.135387618800455,
+       "obs[10]": -0.09932373895085317,
+       "obs[5]": -0.8307034653845733
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.47010677520728805
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "toe_pushoff",
+      "inputs": {
+       "cos(P)": 1.2429802579350433
+      },
+      "threshold": 0.2237430703823382,
+      "sharpness": 0.6195430064292576,
+      "to": {
+       "a2": -0.022018335157728233
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 95.28939736619208,
+    "sem_return": 1.2949667393476036,
+    "std_return": 12.884756371217884,
+    "median_return": 85.8567507426865,
+    "min_return": 78.32718946683467,
+    "max_return": 111.3358782554109,
+    "mean_length": 57.66,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.30983731157022243,
+    "mean_distance_healthy": 0.29971121678765794,
+    "median_distance_healthy": 0.2561706084713814,
+    "min_distance_healthy": 0.22270083200953286,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 500,
+   "dev_mean_d": 0.3062,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 11,
+    "act_dim": 3,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "P",
+      "freq_hz": 1.9992831807858928,
+      "phase0": 2.9682796756576355
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": 0.21227176525415895,
+     "a1": 0.865967827245815,
+     "a2": 0.8074245392093231
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "torso_base",
+      "inputs": {
+       "obs[1]": 0.2150845792143569,
+       "obs[7]": -0.15440171137683403
+      },
+      "range": 2.0,
+      "tol": 0.02,
+      "to": {
+       "a0": 0.5899843439630786
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_gated",
+      "inputs": {
+       "obs[5]": -0.09540036224896123,
+       "obs[2]": -3.6468549616187715,
+       "obs[8]": -0.6479796073475843,
+       "cos(P)": 1.2279791122070112,
+       "sin(P)": 2.07305136286464
+      },
+      "threshold": 12.881182565302666,
+      "sharpness": 0.06376530532308193,
+      "to": {
+       "a0": 0.7389963260505044
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "hip_flight_cancel",
+      "inputs": {
+       "cos(P)": 0.31560719266962767,
+       "sin(P)": 0.6826386656163936
+      },
+      "threshold": 0.6129913138000838,
+      "sharpness": 6.8888015761114225,
+      "to": {
+       "a0": -3.8477213579912033
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_gated",
+      "inputs": {
+       "obs[1]": 0.43631825792390333,
+       "obs[7]": 3.2601646011935954,
+       "cos(P)": -0.8627953351839226,
+       "sin(P)": -0.5557138754984936
+      },
+      "threshold": 0.9583842556708962,
+      "sharpness": 4.309255574443426,
+      "to": {
+       "a0": 0.7410323027680812
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "torso_stance_cancel",
+      "inputs": {
+       "cos(P)": -1.1589284407520575,
+       "sin(P)": -0.1358625700266845
+      },
+      "threshold": 2.400026343106925,
+      "sharpness": 1.3170358933010602,
+      "to": {
+       "a0": -1.9119517806534096
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd",
+      "inputs": {
+       "obs[3]": 0.2094362545007216,
+       "obs[9]": 0.07739105593920159
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a1": 1.1445137507782845
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_speed",
+      "inputs": {
+       "obs[1]": 0.2796371257873064,
+       "obs[2]": 0.18351669777819563,
+       "obs[3]": -2.341674728605695,
+       "obs[4]": -3.135387618800455,
+       "obs[10]": -0.09932373895085317,
+       "obs[5]": -0.8307034653845733
+      },
+      "range": 3.0,
+      "tol": 0.02,
+      "to": {
+       "a2": 0.47010677520728805
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "toe_pushoff",
+      "inputs": {
+       "cos(P)": 1.2429802579350433
+      },
+      "threshold": 0.2237430703823382,
+      "sharpness": 0.6195430064292576,
+      "to": {
+       "a2": -0.022018335157728233
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "hopper",
+    "variant": "stock",
+    "env_id": "Hopper-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": 95.28939736619208,
+    "sem_return": 1.2949667393476036,
+    "std_return": 12.884756371217884,
+    "median_return": 85.8567507426865,
+    "min_return": 78.32718946683467,
+    "max_return": 111.3358782554109,
+    "mean_length": 57.66,
+    "frac_full_length": 0.0,
+    "mean_distance": 0.30983731157022243,
+    "mean_distance_healthy": 0.29971121678765794,
+    "median_distance_healthy": 0.2561706084713814,
+    "min_distance_healthy": 0.22270083200953286,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  }
+ ],
+ "T": null,
+ "censored": true,
+ "dev_history": [
+  -0.078,
+  -0.1206,
+  0.0791,
+  -0.0694,
+  -0.1775,
+  0.182,
+  -0.0137,
+  -0.0372,
+  -0.0122,
+  0.1768,
+  0.0334,
+  -0.0754,
+  0.2187,
+  null,
+  0.0081,
+  0.1146,
+  0.1734,
+  -0.0101,
+  0.1617,
+  0.2223,
+  0.1463,
+  null,
+  0.1594,
+  0.1282,
+  0.0004,
+  0.171,
+  null,
+  0.2244,
+  null,
+  0.2241,
+  0.2251,
+  null,
+  0.2211,
+  -0.0149,
+  null,
+  0.0985,
+  0.2144,
+  null,
+  null,
+  -0.0107,
+  0.2256,
+  null,
+  -0.0092,
+  null,
+  0.2259,
+  null,
+  null,
+  -0.0096,
+  -0.0098,
+  null,
+  null,
+  null,
+  null,
+  -0.0084,
+  null,
+  -0.0085,
+  null,
+  null,
+  0.1572,
+  null,
+  0.2168,
+  0.2223,
+  null,
+  null,
+  null,
+  0.1776,
+  -0.0099,
+  -0.0104,
+  0.0257,
+  null,
+  0.0201,
+  -0.1203,
+  null,
+  null,
+  null,
+  0.0005,
+  null,
+  null,
+  null,
+  0.1048,
+  null,
+  null,
+  null,
+  -0.0087,
+  0.1565,
+  null,
+  -0.0088,
+  null,
+  0.2289,
+  null,
+  0.1402,
+  0.2264,
+  0.21,
+  null,
+  null,
+  -0.0092,
+  0.0059,
+  -0.0104,
+  null,
+  0.1559,
+  0.2233,
+  null,
+  -0.0175,
+  -0.0097,
+  null,
+  null,
+  -0.026,
+  -0.0096,
+  null,
+  -0.0095,
+  0.224,
+  -0.0075,
+  -0.0095,
+  -0.0126,
+  -0.005,
+  null,
+  0.1744,
+  null,
+  0.2218,
+  0.1289,
+  0.2241,
+  null,
+  -0.0136,
+  0.0058,
+  0.2266,
+  -0.0107,
+  -0.0067,
+  0.1723,
+  -0.0081,
+  0.2195,
+  -0.009,
+  null,
+  null,
+  0.2561,
+  0.0609,
+  0.1732,
+  0.1151,
+  0.1466,
+  0.0968,
+  null,
+  0.1276,
+  -0.0066,
+  -0.0318,
+  -0.0268,
+  0.2192,
+  -0.0691,
+  0.2218,
+  0.1108,
+  0.117,
+  null,
+  0.0816,
+  null,
+  0.259,
+  0.0389,
+  0.2064,
+  0.05,
+  0.2247,
+  0.2229,
+  0.0622,
+  0.3062,
+  0.1419,
+  0.1544,
+  null,
+  null,
+  0.134,
+  0.2048,
+  null,
+  null,
+  0.1322,
+  null,
+  -0.0243,
+  null,
+  null,
+  0.2257,
+  -0.0076,
+  0.1487,
+  null,
+  0.2254,
+  0.1542,
+  0.2288,
+  0.1375,
+  0.2364,
+  0.2358,
+  null,
+  null,
+  null,
+  0.137,
+  null,
+  0.2263,
+  0.2081,
+  0.1821,
+  0.1448,
+  0.1652,
+  0.1605,
+  null,
+  0.1472,
+  null,
+  null,
+  0.1575,
+  null,
+  0.2232,
+  0.222,
+  0.2288,
+  null,
+  null,
+  0.2224,
+  0.1366,
+  null,
+  0.2214,
+  null,
+  0.2092,
+  0.1332,
+  0.1326,
+  0.2238,
+  0.2185,
+  -0.0049,
+  0.2285,
+  0.1338,
+  0.1686,
+  0.2093,
+  null,
+  null,
+  0.1256,
+  0.1256,
+  0.2758,
+  0.171,
+  0.0582,
+  0.1326,
+  null,
+  0.2193,
+  null,
+  null,
+  0.2046,
+  0.1571,
+  0.1472,
+  0.2178,
+  -0.0084,
+  0.1323,
+  0.1493,
+  0.1274,
+  null,
+  null,
+  0.1949,
+  0.1388,
+  null,
+  0.1325,
+  null,
+  null,
+  0.128,
+  0.1197,
+  0.0134,
+  0.2215,
+  0.2665,
+  0.2186,
+  0.2212,
+  null,
+  0.1723,
+  0.1244,
+  0.172,
+  0.213,
+  null,
+  -0.0049,
+  0.1245,
+  0.1914,
+  -0.0069,
+  null,
+  null,
+  null,
+  0.2265,
+  0.1324,
+  0.1454,
+  0.1101,
+  0.1256,
+  0.0755,
+  -0.0084,
+  null,
+  0.1321,
+  0.1568,
+  0.1839,
+  null,
+  0.1789,
+  null,
+  0.219,
+  0.1424,
+  null,
+  null,
+  null,
+  null,
+  0.1001,
+  -0.003,
+  null,
+  null,
+  0.2291,
+  null,
+  0.1186,
+  null,
+  0.1311,
+  0.1391,
+  null,
+  null,
+  null,
+  0.2228,
+  0.1462,
+  null,
+  null,
+  null,
+  -0.0085,
+  0.0289,
+  null,
+  0.229,
+  0.1372,
+  0.1867,
+  0.136,
+  0.1567,
+  0.2426,
+  0.214,
+  -0.4806,
+  0.1256,
+  0.1752,
+  null,
+  null,
+  0.1433,
+  0.1566,
+  null,
+  0.1272,
+  0.1073,
+  0.1096,
+  0.224,
+  null,
+  null,
+  null,
+  null,
+  0.0375,
+  null,
+  0.1722,
+  0.0616,
+  0.2242,
+  -0.0098,
+  0.117,
+  null,
+  0.036,
+  null,
+  0.0565,
+  0.1925,
+  0.172,
+  0.2279,
+  null,
+  0.0799,
+  0.1959,
+  0.0436,
+  null,
+  null,
+  0.1401,
+  0.2295,
+  0.1911,
+  null,
+  0.0929,
+  -0.0081,
+  null,
+  null,
+  null,
+  0.2288,
+  null,
+  0.2167,
+  null,
+  null,
+  0.1392,
+  null,
+  0.23,
+  0.1343,
+  0.1253,
+  0.2043,
+  null,
+  0.1424,
+  0.2603,
+  0.2247,
+  null,
+  0.1319,
+  0.1483,
+  null,
+  -0.0084,
+  0.1272,
+  null,
+  0.2216,
+  0.1897,
+  0.1319,
+  0.136,
+  0.1327,
+  0.1059,
+  null,
+  null,
+  0.1008,
+  null,
+  null,
+  0.1534,
+  0.18,
+  0.1283,
+  -0.0074,
+  -0.0065,
+  0.1294,
+  0.1563,
+  0.2288,
+  0.1388,
+  null,
+  -0.071,
+  0.1451,
+  0.1303,
+  null,
+  0.13,
+  0.2231,
+  null,
+  0.1271,
+  0.2232,
+  0.2038,
+  0.1341,
+  0.1468,
+  0.1661,
+  null,
+  0.1629,
+  0.2085,
+  0.2187,
+  0.1189,
+  null,
+  null,
+  0.1391,
+  0.2158,
+  0.0372,
+  0.163,
+  null,
+  null,
+  null,
+  null,
+  0.1303,
+  null,
+  0.1663,
+  0.1307,
+  0.1103,
+  null,
+  0.19,
+  0.1207,
+  0.2085,
+  0.2227,
+  -0.0073,
+  null,
+  -0.0312,
+  null,
+  0.2227,
+  null,
+  0.2034,
+  null,
+  0.1841,
+  0.2283,
+  null,
+  0.0626,
+  -0.2182,
+  null,
+  null,
+  0.2669,
+  0.2236,
+  0.2104,
+  0.0125,
+  null,
+  null,
+  0.1348,
+  0.2032,
+  0.2249,
+  null,
+  null,
+  0.2249,
+  0.097,
+  null,
+  null,
+  null,
+  0.1254,
+  0.1901,
+  0.1876,
+  0.1937,
+  0.2605,
+  null,
+  0.2274,
+  0.1484,
+  null,
+  null,
+  null,
+  0.1766,
+  null,
+  -0.2117,
+  0.2154,
+  0.1256,
+  0.2202,
+  null,
+  null,
+  0.1412,
+  0.1902,
+  0.191,
+  0.2191,
+  0.1328,
+  0.1324,
+  -0.0071,
+  0.1392
+ ],
+ "accepted": [
+  true,
+  false,
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false
+ ],
+ "wall_s": 21.5,
+ "start_spec": {
+  "target": "cpg",
+  "obs_dim": 11,
+  "act_dim": 3,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "P",
+    "freq_hz": 2.0,
+    "phase0": 3.3
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -0.08,
+   "a1": -0.3,
+   "a2": -0.25
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "torso_base",
+    "inputs": {
+     "obs[1]": -2.0,
+     "obs[7]": -0.15
+    },
+    "range": 2.0,
+    "tol": 0.02,
+    "to": {
+     "a0": 1.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "hip_flight_gated",
+    "inputs": {
+     "obs[5]": 0.125,
+     "obs[2]": -0.625,
+     "obs[8]": -0.0375,
+     "cos(P)": 0.543,
+     "sin(P)": 1.398
+    },
+    "threshold": 1.63125,
+    "sharpness": 1.0,
+    "to": {
+     "a0": 4.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "hip_flight_cancel",
+    "inputs": {
+     "cos(P)": 0.543,
+     "sin(P)": 1.398
+    },
+    "threshold": 1.5,
+    "sharpness": 1.0,
+    "to": {
+     "a0": -4.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "torso_stance_gated",
+    "inputs": {
+     "obs[1]": -1.25,
+     "obs[7]": -0.0875,
+     "cos(P)": -0.726,
+     "sin(P)": -0.688
+    },
+    "threshold": 1.05,
+    "sharpness": 1.0,
+    "to": {
+     "a0": 4.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "torso_stance_cancel",
+    "inputs": {
+     "cos(P)": -0.726,
+     "sin(P)": -0.688
+    },
+    "threshold": 1.0,
+    "sharpness": 1.0,
+    "to": {
+     "a0": -4.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "knee_pd",
+    "inputs": {
+     "obs[3]": -2.0,
+     "obs[9]": -0.15
+    },
+    "range": 3.0,
+    "tol": 0.02,
+    "to": {
+     "a1": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "ankle_pd_speed",
+    "inputs": {
+     "obs[1]": 1.2,
+     "obs[2]": -1.2,
+     "obs[3]": -1.2,
+     "obs[4]": -1.8,
+     "obs[10]": -0.08,
+     "obs[5]": -0.15
+    },
+    "range": 3.0,
+    "tol": 0.02,
+    "to": {
+     "a2": 1.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "toe_pushoff",
+    "inputs": {
+     "cos(P)": 1.0
+    },
+    "threshold": 0.5,
+    "sharpness": 4.0,
+    "to": {
+     "a2": -0.4
+    }
+   }
+  ]
+ }
+}

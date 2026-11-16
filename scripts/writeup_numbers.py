@@ -154,5 +154,43 @@ hi = bisect(lambda q: binom_cdf(2, 10, q) > 0.025)
 check("Clopper-Pearson 2/10 lower", lo, 0.025, "computed", nd=3)
 check("Clopper-Pearson 2/10 upper", hi, 0.556, "computed", nd=3)
 
+# --- warm-start study (docs/prereg-followup-draft.md; results/warmstart/) ---
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
+import warmstart_report as wr  # noqa: E402
+
+W = os.path.join(R, "warmstart")
+
+
+def ws_runs(task, s):
+    return [json.load(open(p)) for p in sorted(glob.glob(os.path.join(W, task, s, "*.json")))]
+
+
+want = {("hopper", "L"): 39, ("hopper", "P"): 27, ("hopper", "R"): 2, ("hopper", "H"): 5,
+        ("walker2d", "L"): 2, ("walker2d", "P"): 1, ("walker2d", "R"): 0, ("walker2d", "H"): 0}
+runs = {k: ws_runs(*k) for k in want}
+for k, v in want.items():
+    src = f"warmstart/{k[0]}/{k[1]}/*.json"
+    check(f"warm-start {k[0]} {k[1]} n", len(runs[k]), 10 if k[1] == "H" else 80, src)
+    check(f"warm-start {k[0]} {k[1]} pass by 500", sum(r["T"] is not None for r in runs[k]), v, src)
+hl = [r for r in runs[("hopper", "L")] if not r["start_id"].startswith("fb-")]
+check("warm-start hopper L, no-feedback starts only, pass", sum(r["T"] is not None for r in hl), 23, "warmstart/hopper/L/cpg-claude-*.json")
+check("warm-start hopper L pass by 6", sum(r["T"] == 6 for r in runs[("hopper", "L")]), 1, "warmstart/hopper/L/*.json")
+check("warm-start hopper L vs R Fisher p < 0.001", wr.fisher_one_sided(39, 80, 2, 80) < 0.001, True, "computed")
+check("warm-start hopper L vs P Fisher p", wr.fisher_one_sided(39, 80, 27, 80), 0.038, "computed", nd=3)
+dl = [wr.d_at(r, 500) for r in runs[("walker2d", "L")]]
+dr = [wr.d_at(r, 500) for r in runs[("walker2d", "R")]]
+dp = [wr.d_at(r, 500) for r in runs[("walker2d", "P")]]
+check("warm-start walker2d L median d@500", statistics.median(dl), 0.92, "warmstart/walker2d/L/*.json")
+check("warm-start walker2d R median d@500", statistics.median(dr), 0.76, "warmstart/walker2d/R/*.json")
+check("warm-start walker2d P median d@500", statistics.median(dp), -0.05, "warmstart/walker2d/P/*.json")
+check("warm-start walker2d L vs R Mann-Whitney p", wr.mann_whitney_greater(dl, dr), 0.267, "computed", nd=3)
+check("warm-start walker2d L vs P Mann-Whitney p < 0.001", wr.mann_whitney_greater(dl, dp) < 0.001, True, "computed")
+for s, v, c in ((0, 1.29, 0), (1, 1.09, 0), (2, 5.06, 96)):
+    p = f"warmstart/walker2d/headroom/tuned_cpg_50k_seed{s}.score.json"
+    check(f"headroom seed {s} d", d(p), v, p)
+    check(f"headroom seed {s} clean", load(p)["n_clean_3m"], c, p)
+wall = sum(r["wall_s"] for rs in runs.values() for r in rs)
+print(f"info warm-start CPU time over all 500 runs: {wall / 3600:.1f} h")
+
 print(f"\n{len(fails)} mismatches" + (": " + ", ".join(fails) if fails else ""))
 sys.exit(1 if fails else 0)

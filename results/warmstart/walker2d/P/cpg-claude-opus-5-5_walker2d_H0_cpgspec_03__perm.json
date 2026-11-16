@@ -1,0 +1,2339 @@
+{
+ "task": "walker2d",
+ "set": "P",
+ "start_id": "cpg-claude-opus-5-5_walker2d_H0_cpgspec_03__perm",
+ "seed": 3526012762,
+ "designs": 500,
+ "checkpoints": [
+  {
+   "designs": 6,
+   "dev_mean_d": -0.0542,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "clk",
+      "freq_hz": 0.9,
+      "phase0": 0.0
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.4,
+     "a3": -0.42,
+     "a1": -0.15,
+     "a4": -0.42,
+     "a2": -0.15,
+     "a5": -0.4
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_scissor",
+      "inputs": {
+       "obs[2]": 0.15,
+       "obs[5]": 0.4,
+       "obs[11]": -0.15,
+       "obs[14]": 0.707,
+       "sin(clk)": 0.15
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.707,
+       "a3": 0.707
+      }
+     },
+     {
+      "type": "linear",
+      "name": "torso_balance",
+      "inputs": {
+       "obs[1]": 0.1,
+       "obs[10]": 0.03,
+       "obs[2]": -1.0,
+       "obs[5]": -1.0
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.878,
+       "a3": 1.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_R",
+      "inputs": {
+       "obs[3]": -0.479,
+       "obs[12]": 0.15
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -2.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_L",
+      "inputs": {
+       "obs[6]": 0.15,
+       "obs[15]": 0.6
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -1.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_R",
+      "inputs": {
+       "obs[4]": -1.2,
+       "obs[13]": -0.479
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.15
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_L",
+      "inputs": {
+       "obs[7]": -0.1,
+       "obs[16]": 0.4
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a5": 0.878
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_R",
+      "inputs": {
+       "cos(clk)": 1.0,
+       "sin(clk)": -0.15
+      },
+      "threshold": 0.2,
+      "sharpness": 6.0,
+      "to": {
+       "a1": 0.6,
+       "a2": 1.0
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_L",
+      "inputs": {
+       "cos(clk)": 0.3,
+       "sin(clk)": -0.1
+      },
+      "threshold": 0.7,
+      "sharpness": 5.0,
+      "to": {
+       "a4": 2.0,
+       "a5": 1.0
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_R",
+      "inputs": {
+       "cos(clk)": -1.0,
+       "sin(clk)": -1.0,
+       "obs[8]": 0.3
+      },
+      "threshold": 0.2,
+      "sharpness": 6.0,
+      "to": {
+       "a2": -0.03
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_L",
+      "inputs": {
+       "cos(clk)": -0.707,
+       "sin(clk)": 0.15,
+       "obs[8]": 2.0
+      },
+      "threshold": 0.7,
+      "sharpness": 5.0,
+      "to": {
+       "a5": -2.0
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.102793247810716,
+    "sem_return": 0.00564703638185577,
+    "std_return": 0.056187302568305134,
+    "median_return": -4.100856215295471,
+    "min_return": -4.267874811786422,
+    "max_return": -3.964523955602762,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.0726419646088344,
+    "mean_distance_healthy": -0.05432601404150763,
+    "median_distance_healthy": -0.0542930049446239,
+    "min_distance_healthy": -0.055834498941695954,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 25,
+   "dev_mean_d": -0.0542,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "clk",
+      "freq_hz": 0.9,
+      "phase0": 0.0
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.4,
+     "a3": -0.42,
+     "a1": -0.15,
+     "a4": -0.42,
+     "a2": -0.15,
+     "a5": -0.4
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_scissor",
+      "inputs": {
+       "obs[2]": 0.15,
+       "obs[5]": 0.4,
+       "obs[11]": -0.15,
+       "obs[14]": 0.707,
+       "sin(clk)": 0.15
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 0.707,
+       "a3": 0.707
+      }
+     },
+     {
+      "type": "linear",
+      "name": "torso_balance",
+      "inputs": {
+       "obs[1]": 0.1,
+       "obs[10]": 0.03,
+       "obs[2]": -1.0,
+       "obs[5]": -1.0
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.878,
+       "a3": 1.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_R",
+      "inputs": {
+       "obs[3]": -0.479,
+       "obs[12]": 0.15
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -2.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_L",
+      "inputs": {
+       "obs[6]": 0.15,
+       "obs[15]": 0.6
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -1.0
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_R",
+      "inputs": {
+       "obs[4]": -1.2,
+       "obs[13]": -0.479
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.15
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_L",
+      "inputs": {
+       "obs[7]": -0.1,
+       "obs[16]": 0.4
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a5": 0.878
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_R",
+      "inputs": {
+       "cos(clk)": 1.0,
+       "sin(clk)": -0.15
+      },
+      "threshold": 0.2,
+      "sharpness": 6.0,
+      "to": {
+       "a1": 0.6,
+       "a2": 1.0
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_L",
+      "inputs": {
+       "cos(clk)": 0.3,
+       "sin(clk)": -0.1
+      },
+      "threshold": 0.7,
+      "sharpness": 5.0,
+      "to": {
+       "a4": 2.0,
+       "a5": 1.0
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_R",
+      "inputs": {
+       "cos(clk)": -1.0,
+       "sin(clk)": -1.0,
+       "obs[8]": 0.3
+      },
+      "threshold": 0.2,
+      "sharpness": 6.0,
+      "to": {
+       "a2": -0.03
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_L",
+      "inputs": {
+       "cos(clk)": -0.707,
+       "sin(clk)": 0.15,
+       "obs[8]": 2.0
+      },
+      "threshold": 0.7,
+      "sharpness": 5.0,
+      "to": {
+       "a5": -2.0
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -4.102793247810716,
+    "sem_return": 0.00564703638185577,
+    "std_return": 0.056187302568305134,
+    "median_return": -4.100856215295471,
+    "min_return": -4.267874811786422,
+    "max_return": -3.964523955602762,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.0726419646088344,
+    "mean_distance_healthy": -0.05432601404150763,
+    "median_distance_healthy": -0.0542930049446239,
+    "min_distance_healthy": -0.055834498941695954,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 50,
+   "dev_mean_d": -0.0504,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "clk",
+      "freq_hz": 0.7098749599512568,
+      "phase0": -0.27331288991085967
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.4254840948118993,
+     "a3": 0.16147555109056524,
+     "a1": 0.018749196041424387,
+     "a4": -0.6072410641329044,
+     "a2": 0.0834979883715218,
+     "a5": -0.21053685175209355
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_scissor",
+      "inputs": {
+       "obs[2]": 0.29959363585969706,
+       "obs[5]": 0.7089542176905476,
+       "obs[11]": 0.012584783584853727,
+       "obs[14]": 2.023020281629443,
+       "sin(clk)": -0.24138589963197898
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 1.0952008788239278,
+       "a3": 0.8138831861458826
+      }
+     },
+     {
+      "type": "linear",
+      "name": "torso_balance",
+      "inputs": {
+       "obs[1]": -0.0028366830138552047,
+       "obs[10]": 0.452509118014368,
+       "obs[2]": -0.2632129169848212,
+       "obs[5]": -1.4138880463162833
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.813346987940532,
+       "a3": 0.45046518526097645
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_R",
+      "inputs": {
+       "obs[3]": -0.5677730804326513,
+       "obs[12]": 0.17843773279660258
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -1.0145758189126857
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_L",
+      "inputs": {
+       "obs[6]": 0.7380492004797785,
+       "obs[15]": 0.8144059017545656
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -0.7907064365270966
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_R",
+      "inputs": {
+       "obs[4]": -1.3642684812945884,
+       "obs[13]": -0.48912776120559726
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a2": -0.17698532113960744
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_L",
+      "inputs": {
+       "obs[7]": -0.2050530154110417,
+       "obs[16]": 0.5324847761092697
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a5": -0.00928483597682822
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_R",
+      "inputs": {
+       "cos(clk)": 1.9086209601601891,
+       "sin(clk)": 0.13113575377139347
+      },
+      "threshold": -0.05752311856442834,
+      "sharpness": 1.230899783021522,
+      "to": {
+       "a1": 0.13408482021415694,
+       "a2": 2.2047411075417296
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_L",
+      "inputs": {
+       "cos(clk)": 0.6861716852490876,
+       "sin(clk)": -0.2513053120436221
+      },
+      "threshold": 0.44808686173606294,
+      "sharpness": 3.1300488581738732,
+      "to": {
+       "a4": 1.5623708279737136,
+       "a5": 2.0540442108297854
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_R",
+      "inputs": {
+       "cos(clk)": -0.15605164557249057,
+       "sin(clk)": -0.3272621916926959,
+       "obs[8]": -0.2739484917205219
+      },
+      "threshold": -0.18058340502415463,
+      "sharpness": 20.988161720218876,
+      "to": {
+       "a2": -0.14450709985425841
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_L",
+      "inputs": {
+       "cos(clk)": -1.30252213315052,
+       "sin(clk)": -0.09997848031416459,
+       "obs[8]": 2.9221045656417575
+      },
+      "threshold": 0.2784856672239272,
+      "sharpness": 1.9102196520099974,
+      "to": {
+       "a5": -2.0620914063100044
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -3.560174229531425,
+    "sem_return": 0.005498096109506684,
+    "std_return": 0.05470536556963934,
+    "median_return": -3.560343701510199,
+    "min_return": -3.7016206999538674,
+    "max_return": -3.4435123978702835,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.06829825761025674,
+    "mean_distance_healthy": -0.050459671316533165,
+    "median_distance_healthy": -0.05046535915822149,
+    "min_distance_healthy": -0.05137633259925754,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 100,
+   "dev_mean_d": -0.05,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "clk",
+      "freq_hz": 0.6223149408548388,
+      "phase0": -0.26768757793736375
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.2830929161831368,
+     "a3": 0.0770319824780539,
+     "a1": 0.05249778850570301,
+     "a4": -0.7774451220994443,
+     "a2": 0.02974898806670978,
+     "a5": -0.25762421866962487
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_scissor",
+      "inputs": {
+       "obs[2]": 0.3865445661623536,
+       "obs[5]": 1.1342485252355134,
+       "obs[11]": -0.08441106735915374,
+       "obs[14]": 2.237222934864733,
+       "sin(clk)": -0.09002527075848579
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 1.7514144809256837,
+       "a3": 0.7935973775186792
+      }
+     },
+     {
+      "type": "linear",
+      "name": "torso_balance",
+      "inputs": {
+       "obs[1]": 0.0903693841719247,
+       "obs[10]": 0.31721399522470156,
+       "obs[2]": -0.24945514522012013,
+       "obs[5]": -2.9096338937865003
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.7095070538301741,
+       "a3": 0.717225697717204
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_R",
+      "inputs": {
+       "obs[3]": -0.9234405483992567,
+       "obs[12]": 0.17688100932607617
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -1.0189485449642937
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_L",
+      "inputs": {
+       "obs[6]": 0.886291349328141,
+       "obs[15]": 0.8599443251474128
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -1.17048984818479
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_R",
+      "inputs": {
+       "obs[4]": -0.39608356948384904,
+       "obs[13]": -0.14055226681678806
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a2": -0.4519221577547117
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_L",
+      "inputs": {
+       "obs[7]": -0.2954913979317805,
+       "obs[16]": 0.10285448580673728
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a5": 0.0482738310539091
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_R",
+      "inputs": {
+       "cos(clk)": 2.819410720633703,
+       "sin(clk)": 0.3486679247856821
+      },
+      "threshold": -0.2720725491730869,
+      "sharpness": 1.1038644100600778,
+      "to": {
+       "a1": 0.21622143887088902,
+       "a2": 2.2350837721164183
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_L",
+      "inputs": {
+       "cos(clk)": 0.5009926236677448,
+       "sin(clk)": -0.03340279673258062
+      },
+      "threshold": 0.050767393722516096,
+      "sharpness": 2.2902032221317814,
+      "to": {
+       "a4": 1.283467251951635,
+       "a5": 2.1008407573197596
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_R",
+      "inputs": {
+       "cos(clk)": 0.13244000347837948,
+       "sin(clk)": -0.17313561854822584,
+       "obs[8]": -0.3019684945559813
+      },
+      "threshold": -0.15952349705431532,
+      "sharpness": 29.075252239176564,
+      "to": {
+       "a2": -0.20817646648385274
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_L",
+      "inputs": {
+       "cos(clk)": -1.5050158573619794,
+       "sin(clk)": 0.1327318228291324,
+       "obs[8]": 4.121723529347617
+      },
+      "threshold": 0.5216238479233807,
+      "sharpness": 2.147451824897188,
+      "to": {
+       "a5": -2.3867951192233616
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -3.5253477669752438,
+    "sem_return": 0.006888113189518373,
+    "std_return": 0.06853586088939191,
+    "median_return": -3.5246040425226806,
+    "min_return": -3.7102131721876495,
+    "max_return": -3.377964893546915,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.06800313525593897,
+    "mean_distance_healthy": -0.05014689068076478,
+    "median_distance_healthy": -0.05013292606609559,
+    "min_distance_healthy": -0.05147396777403676,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 200,
+   "dev_mean_d": -0.05,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "clk",
+      "freq_hz": 0.6871123294604442,
+      "phase0": -0.426641722020484
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.4075743467326692,
+     "a3": -0.032094507047609036,
+     "a1": -0.08266063079798507,
+     "a4": -0.3486542334224184,
+     "a2": 0.002114368308302951,
+     "a5": -0.42341295826161685
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_scissor",
+      "inputs": {
+       "obs[2]": 0.26378189070782976,
+       "obs[5]": 1.2050880531894004,
+       "obs[11]": -0.07193507861165557,
+       "obs[14]": 2.451737691130729,
+       "sin(clk)": -0.26468636626916897
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 2.17416699767177,
+       "a3": 0.5399434044875597
+      }
+     },
+     {
+      "type": "linear",
+      "name": "torso_balance",
+      "inputs": {
+       "obs[1]": 0.18053303716094438,
+       "obs[10]": 0.49098819161201834,
+       "obs[2]": -0.125568251349105,
+       "obs[5]": -4.543003292815683
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.6452730325918388,
+       "a3": 0.6358181388941769
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_R",
+      "inputs": {
+       "obs[3]": -1.5402609214570304,
+       "obs[12]": 0.11391683473243505
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -1.1415997332667234
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_L",
+      "inputs": {
+       "obs[6]": 0.7106907426712206,
+       "obs[15]": 1.1821228234957513
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -0.234888368923869
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_R",
+      "inputs": {
+       "obs[4]": -0.1528867527742984,
+       "obs[13]": -0.13168998921729347
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.12068859667711351
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_L",
+      "inputs": {
+       "obs[7]": -0.5028203099594547,
+       "obs[16]": -0.21376209625971787
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a5": 0.013800608569905351
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_R",
+      "inputs": {
+       "cos(clk)": 4.1450037008826826,
+       "sin(clk)": 0.09314821753359542
+      },
+      "threshold": -0.286683389968468,
+      "sharpness": 1.4062735446830175,
+      "to": {
+       "a1": 0.19740961847525426,
+       "a2": 1.7157406698463766
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_L",
+      "inputs": {
+       "cos(clk)": 0.3764202778265213,
+       "sin(clk)": -0.22667727097773635
+      },
+      "threshold": 0.011173071319229323,
+      "sharpness": 2.6917085700299705,
+      "to": {
+       "a4": 1.5805628099478797,
+       "a5": 2.432705683588722
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_R",
+      "inputs": {
+       "cos(clk)": 0.08699329597953168,
+       "sin(clk)": -0.14481118257256467,
+       "obs[8]": -0.10071320154437768
+      },
+      "threshold": 0.015303562545850635,
+      "sharpness": 23.68172340260017,
+      "to": {
+       "a2": -0.21847818615370646
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_L",
+      "inputs": {
+       "cos(clk)": -0.14726127359807628,
+       "sin(clk)": 0.41480519842096375,
+       "obs[8]": 3.816023916211194
+      },
+      "threshold": 0.6124136244470189,
+      "sharpness": 1.5283644221007813,
+      "to": {
+       "a5": -0.9628780848430334
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -3.511366799286177,
+    "sem_return": 0.006256881066785134,
+    "std_return": 0.06225518056921474,
+    "median_return": -3.51595146587466,
+    "min_return": -3.6876741023721897,
+    "max_return": -3.387737095075457,
+    "mean_length": 6.0,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.06788154574072794,
+    "mean_distance_healthy": -0.05008586512848983,
+    "median_distance_healthy": -0.050113054270535785,
+    "min_distance_healthy": -0.05133702050613671,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  },
+  {
+   "designs": 500,
+   "dev_mean_d": -0.0499,
+   "spec": {
+    "target": "cpg",
+    "obs_dim": 17,
+    "act_dim": 6,
+    "hidden": 16,
+    "oscillators": [
+     {
+      "name": "clk",
+      "freq_hz": 0.5316659328998462,
+      "phase0": -0.2387800757332743
+     }
+    ],
+    "couplings": [],
+    "bias": {
+     "a0": -0.4030289003654731,
+     "a3": 0.12330085506736403,
+     "a1": 0.06937589898730444,
+     "a4": -0.26266142597471265,
+     "a2": 0.0966679366162094,
+     "a5": -0.2490155602013834
+    },
+    "units": [
+     {
+      "type": "linear",
+      "name": "hip_scissor",
+      "inputs": {
+       "obs[2]": 0.38224420632118455,
+       "obs[5]": 0.5018757835096144,
+       "obs[11]": -0.10852299137001623,
+       "obs[14]": 2.0548651108916642,
+       "sin(clk)": -0.200850571661316
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": 2.740401030999854,
+       "a3": 0.56088725137856
+      }
+     },
+     {
+      "type": "linear",
+      "name": "torso_balance",
+      "inputs": {
+       "obs[1]": 0.11462496475023283,
+       "obs[10]": 0.9468272098924072,
+       "obs[2]": -0.18868474245083072,
+       "obs[5]": -5.307575354407051
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a0": -0.6037803583267409,
+       "a3": 0.5297448547847929
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_R",
+      "inputs": {
+       "obs[3]": -2.0262551169422944,
+       "obs[12]": 0.16612581145809252
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a1": -1.56936848996103
+      }
+     },
+     {
+      "type": "linear",
+      "name": "knee_pd_L",
+      "inputs": {
+       "obs[6]": 1.0431120072283244,
+       "obs[15]": 1.3379925494315759
+      },
+      "range": 2.0,
+      "tol": 0.05,
+      "to": {
+       "a4": -0.2795812242943839
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_R",
+      "inputs": {
+       "obs[4]": -0.4710710626191075,
+       "obs[13]": -0.18168650663603367
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a2": 0.2723483798019782
+      }
+     },
+     {
+      "type": "linear",
+      "name": "ankle_pd_L",
+      "inputs": {
+       "obs[7]": -0.3069747439950967,
+       "obs[16]": -0.25274722401685434
+      },
+      "range": 1.0,
+      "tol": 0.05,
+      "to": {
+       "a5": 0.014215974284525647
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_R",
+      "inputs": {
+       "cos(clk)": 5.260161745568066,
+       "sin(clk)": 0.062487417123411555
+      },
+      "threshold": -0.3229177728592648,
+      "sharpness": 2.2620668683411034,
+      "to": {
+       "a1": 0.23371378302590345,
+       "a2": 1.8023949929498684
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "swing_flex_L",
+      "inputs": {
+       "cos(clk)": 0.21387539406910452,
+       "sin(clk)": -0.21610684269288605
+      },
+      "threshold": -0.018271260469563226,
+      "sharpness": 3.3911145167896404,
+      "to": {
+       "a4": 2.6654941646312276,
+       "a5": 2.6507542509673803
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_R",
+      "inputs": {
+       "cos(clk)": 0.10338348060584626,
+       "sin(clk)": -0.4064929643712615,
+       "obs[8]": -0.19549899321582662
+      },
+      "threshold": -0.05946067757277118,
+      "sharpness": 31.956192698897762,
+      "to": {
+       "a2": -0.11920548078605261
+      }
+     },
+     {
+      "type": "reflex",
+      "name": "pushoff_L",
+      "inputs": {
+       "cos(clk)": -0.2130478134365832,
+       "sin(clk)": 0.3141148184333088,
+       "obs[8]": 2.6315228833131843
+      },
+      "threshold": 0.14574494370997115,
+      "sharpness": 1.4148660241956774,
+      "to": {
+       "a5": -0.9793216993168675
+      }
+     }
+    ]
+   },
+   "heldout": {
+    "task": "walker2d",
+    "variant": "stock",
+    "env_id": "Walker2d-v5",
+    "gymnasium": "1.4.0",
+    "n_episodes": 100,
+    "seed0": 10000,
+    "mean_return": -3.506622265064564,
+    "sem_return": 0.005805522916640875,
+    "std_return": 0.05776422367892253,
+    "median_return": -3.510102127154406,
+    "min_return": -3.6606128829159275,
+    "max_return": -3.3858336096819928,
+    "mean_length": 6.02,
+    "frac_full_length": 0.0,
+    "mean_distance": -0.06798412099817348,
+    "mean_distance_healthy": -0.05037883393211983,
+    "median_distance_healthy": -0.05004809207150407,
+    "min_distance_healthy": -0.06818054898419082,
+    "n_clean_3m": 0,
+    "passes_3m": false,
+    "n_faults": 0,
+    "first_fault": null
+   }
+  }
+ ],
+ "T": null,
+ "censored": true,
+ "dev_history": [
+  -0.0542,
+  -0.0713,
+  -0.0654,
+  -0.0555,
+  -0.1205,
+  -0.0602,
+  -0.322,
+  -0.1636,
+  -0.2015,
+  -0.0597,
+  -0.0708,
+  -0.0547,
+  -0.1347,
+  -0.0664,
+  -0.0859,
+  -0.0586,
+  -0.0574,
+  -0.0651,
+  -0.0674,
+  -0.0729,
+  -0.0811,
+  -0.1142,
+  -0.06,
+  -0.0734,
+  -0.0638,
+  -0.0564,
+  -0.0683,
+  -0.0537,
+  -0.0558,
+  -0.1654,
+  -0.0557,
+  -0.0666,
+  -0.0544,
+  -0.0528,
+  -0.0667,
+  -0.0691,
+  -0.0873,
+  -0.1515,
+  -0.0509,
+  -0.0504,
+  -0.0531,
+  -0.1403,
+  -0.0743,
+  -0.0671,
+  -0.0622,
+  -0.051,
+  -0.0608,
+  -0.053,
+  -0.0596,
+  -0.0626,
+  -0.0504,
+  -0.058,
+  -0.0823,
+  -0.1402,
+  -0.061,
+  -0.0674,
+  -0.0679,
+  -0.0688,
+  -0.05,
+  -0.0661,
+  -0.0534,
+  null,
+  -0.0635,
+  -0.0657,
+  -0.0517,
+  -0.0627,
+  -0.0657,
+  -0.0672,
+  -0.0723,
+  -0.0602,
+  -0.0588,
+  -0.0593,
+  -0.0735,
+  -0.0774,
+  -0.0623,
+  -0.0543,
+  -0.0517,
+  -0.0673,
+  -0.0718,
+  -0.0537,
+  -0.0574,
+  -0.0655,
+  -0.0644,
+  -0.0556,
+  -0.0549,
+  -0.0621,
+  -0.064,
+  -0.0502,
+  -0.0518,
+  -0.0777,
+  -0.0626,
+  -0.0512,
+  -0.0634,
+  -0.0646,
+  -0.0574,
+  -0.058,
+  -0.0596,
+  -0.0695,
+  -0.0588,
+  -0.0518,
+  -0.057,
+  -0.0536,
+  -0.0688,
+  -0.0639,
+  -0.0532,
+  -0.06,
+  -0.0554,
+  -0.0598,
+  -0.0543,
+  -0.0632,
+  -0.0605,
+  -0.0551,
+  -0.051,
+  -0.0547,
+  -0.0602,
+  -0.0644,
+  -0.0624,
+  -0.0588,
+  -0.05,
+  -0.0686,
+  -0.0596,
+  -0.0539,
+  -0.0513,
+  -0.0605,
+  -0.0551,
+  -0.051,
+  -0.0627,
+  -0.0682,
+  -0.0919,
+  -0.0506,
+  -0.0612,
+  -0.0514,
+  -0.0643,
+  -0.0522,
+  -0.0627,
+  -0.0572,
+  -0.0683,
+  -0.0502,
+  -0.0503,
+  -0.0531,
+  -0.0757,
+  -0.053,
+  -0.0506,
+  -0.0536,
+  -0.0549,
+  -0.0528,
+  -0.0644,
+  -0.0623,
+  -0.0616,
+  -0.088,
+  -0.0551,
+  -0.0553,
+  -0.0565,
+  -0.0575,
+  -0.057,
+  -0.0519,
+  -0.065,
+  -0.0649,
+  -0.0663,
+  -0.0524,
+  -0.0669,
+  -0.0551,
+  -0.0639,
+  -0.0661,
+  -0.0589,
+  -0.0621,
+  -0.0651,
+  -0.0644,
+  -0.0557,
+  -0.0626,
+  -0.0656,
+  -0.0549,
+  -0.0542,
+  -0.0532,
+  -0.0635,
+  -0.0508,
+  -0.0643,
+  -0.0506,
+  -0.0659,
+  -0.0598,
+  -0.0606,
+  -0.0528,
+  -0.0518,
+  -0.0628,
+  -0.0657,
+  -0.0529,
+  -0.0598,
+  -0.0581,
+  -0.0669,
+  -0.0657,
+  -0.0633,
+  -0.0632,
+  -0.051,
+  -0.0525,
+  -0.0652,
+  -0.0638,
+  -0.066,
+  -0.0599,
+  -0.0552,
+  -0.0611,
+  -0.0516,
+  -0.057,
+  -0.0662,
+  -0.0551,
+  -0.0692,
+  -0.0658,
+  -0.0665,
+  -0.0511,
+  -0.0571,
+  -0.0651,
+  -0.0536,
+  -0.0665,
+  -0.0623,
+  -0.059,
+  -0.0535,
+  -0.06,
+  -0.0531,
+  -0.0506,
+  -0.0514,
+  -0.0631,
+  -0.0596,
+  -0.0544,
+  -0.0622,
+  -0.065,
+  -0.0642,
+  -0.0543,
+  -0.0637,
+  -0.0565,
+  -0.0536,
+  -0.0552,
+  -0.0526,
+  -0.0523,
+  -0.0562,
+  -0.0639,
+  -0.0509,
+  -0.0523,
+  -0.0543,
+  -0.0674,
+  -0.0621,
+  -0.0536,
+  -0.0499,
+  -0.0508,
+  -0.0562,
+  -0.0531,
+  -0.052,
+  -0.0615,
+  -0.0507,
+  -0.051,
+  -0.0579,
+  -0.0657,
+  -0.1298,
+  -0.051,
+  -0.0641,
+  -0.0507,
+  -0.0692,
+  -0.0557,
+  -0.0593,
+  -0.0511,
+  -0.0507,
+  -0.0663,
+  -0.0539,
+  -0.0676,
+  -0.0649,
+  -0.0571,
+  -0.0615,
+  -0.0522,
+  -0.0637,
+  -0.0586,
+  -0.065,
+  -0.0505,
+  -0.0518,
+  -0.0535,
+  -0.0526,
+  -0.0572,
+  -0.0513,
+  -0.0546,
+  -0.0546,
+  -0.0531,
+  -0.0781,
+  -0.0577,
+  -0.0659,
+  -0.0874,
+  -0.0536,
+  -0.0598,
+  -0.0551,
+  -0.0508,
+  -0.0753,
+  -0.051,
+  -0.0662,
+  -0.0652,
+  -0.0727,
+  -0.0614,
+  -0.0603,
+  -0.0536,
+  -0.052,
+  -0.0524,
+  -0.0538,
+  -0.056,
+  -0.0523,
+  -0.0528,
+  -0.0718,
+  -0.0606,
+  -0.0513,
+  -0.0521,
+  -0.0539,
+  -0.0646,
+  -0.0515,
+  -0.0556,
+  -0.0731,
+  -0.0637,
+  -0.0514,
+  -0.0502,
+  -0.0549,
+  -0.0646,
+  -0.061,
+  -0.0596,
+  -0.0533,
+  -0.0656,
+  -0.0519,
+  -0.0511,
+  -0.0595,
+  -0.0586,
+  -0.0571,
+  -0.0854,
+  -0.0639,
+  -0.0608,
+  -0.0649,
+  -0.0798,
+  -0.0564,
+  -0.0584,
+  -0.0626,
+  -0.0506,
+  -0.0622,
+  -0.0551,
+  -0.0552,
+  -0.0644,
+  -0.0515,
+  -0.0536,
+  -0.0513,
+  -0.0596,
+  -0.0516,
+  -0.0525,
+  -0.0522,
+  -0.0551,
+  -0.1544,
+  -0.0637,
+  -0.052,
+  -0.0695,
+  -0.0541,
+  -0.064,
+  -0.0541,
+  -0.0513,
+  -0.0542,
+  -0.0556,
+  -0.0553,
+  -0.0527,
+  -0.055,
+  -0.0524,
+  -0.0526,
+  -0.0515,
+  -0.0581,
+  -0.0615,
+  -0.0594,
+  -0.0511,
+  -0.0522,
+  -0.1607,
+  -0.0521,
+  -0.0529,
+  -0.0539,
+  -0.0576,
+  -0.0511,
+  -0.0567,
+  -0.0605,
+  -0.0863,
+  -0.062,
+  -0.0617,
+  -0.0533,
+  -0.05,
+  -0.0593,
+  -0.0531,
+  -0.0631,
+  -0.0537,
+  -0.0649,
+  null,
+  -0.0532,
+  -0.0537,
+  -0.0521,
+  -0.0663,
+  -0.0654,
+  -0.0559,
+  -0.0866,
+  -0.0659,
+  -0.0513,
+  -0.0529,
+  -0.0662,
+  -0.0596,
+  -0.0689,
+  -0.0547,
+  -0.0603,
+  -0.1515,
+  -0.0668,
+  -0.0557,
+  -0.0545,
+  -0.0917,
+  -0.0611,
+  -0.0628,
+  -0.0592,
+  -0.0526,
+  -0.0665,
+  -0.0619,
+  -0.054,
+  -0.0554,
+  -0.0541,
+  -0.0662,
+  -0.0636,
+  -0.0668,
+  -0.0697,
+  -0.0661,
+  -0.0671,
+  -0.0602,
+  -0.0624,
+  -0.0504,
+  -0.0533,
+  -0.098,
+  -0.052,
+  -0.0573,
+  -0.0654,
+  -0.0713,
+  -0.0512,
+  -0.0636,
+  -0.0528,
+  -0.0614,
+  -0.0535,
+  -0.0502,
+  -0.0558,
+  -0.0542,
+  -0.0534,
+  -0.0533,
+  -0.0614,
+  -0.064,
+  -0.0633,
+  -0.3047,
+  -0.055,
+  -0.0523,
+  -0.0522,
+  -0.0654,
+  -0.067,
+  -0.0547,
+  -0.0561,
+  -0.0518,
+  -0.0673,
+  -0.0551,
+  -0.0565,
+  -0.0696,
+  -0.0531,
+  -0.0614,
+  -0.067,
+  -0.0529,
+  -0.051,
+  -0.055,
+  -0.0501,
+  -0.0655,
+  -0.0542,
+  -0.0504,
+  -0.0499,
+  -0.0579,
+  -0.0524,
+  -0.0639,
+  -0.0663,
+  -0.0588,
+  -0.0561,
+  -0.0615,
+  -0.0597,
+  -0.0585,
+  -0.0569,
+  -0.0661,
+  -0.0645,
+  -0.0647,
+  null,
+  -0.066,
+  -0.0505,
+  -0.0571,
+  -0.0527,
+  -0.0604,
+  -0.0665,
+  -0.0509,
+  -0.0662,
+  -0.1025,
+  -0.0531,
+  -0.0672,
+  -0.053,
+  -0.0611,
+  -0.0652,
+  -0.052,
+  -0.0668,
+  -0.0517,
+  -0.0573,
+  -0.0504,
+  -0.2306,
+  -0.0558
+ ],
+ "accepted": [
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  true,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  true,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false,
+  false
+ ],
+ "wall_s": 5.0,
+ "start_spec": {
+  "target": "cpg",
+  "obs_dim": 17,
+  "act_dim": 6,
+  "hidden": 16,
+  "oscillators": [
+   {
+    "name": "clk",
+    "freq_hz": 0.9,
+    "phase0": 0.0
+   }
+  ],
+  "couplings": [],
+  "bias": {
+   "a0": -0.4,
+   "a3": -0.42,
+   "a1": -0.15,
+   "a4": -0.42,
+   "a2": -0.15,
+   "a5": -0.4
+  },
+  "units": [
+   {
+    "type": "linear",
+    "name": "hip_scissor",
+    "inputs": {
+     "obs[2]": 0.15,
+     "obs[5]": 0.4,
+     "obs[11]": -0.15,
+     "obs[14]": 0.707,
+     "sin(clk)": 0.15
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a0": 0.707,
+     "a3": 0.707
+    }
+   },
+   {
+    "type": "linear",
+    "name": "torso_balance",
+    "inputs": {
+     "obs[1]": 0.1,
+     "obs[10]": 0.03,
+     "obs[2]": -1.0,
+     "obs[5]": -1.0
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a0": -0.878,
+     "a3": 1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "knee_pd_R",
+    "inputs": {
+     "obs[3]": -0.479,
+     "obs[12]": 0.15
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a1": -2.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "knee_pd_L",
+    "inputs": {
+     "obs[6]": 0.15,
+     "obs[15]": 0.6
+    },
+    "range": 2.0,
+    "tol": 0.05,
+    "to": {
+     "a4": -1.0
+    }
+   },
+   {
+    "type": "linear",
+    "name": "ankle_pd_R",
+    "inputs": {
+     "obs[4]": -1.2,
+     "obs[13]": -0.479
+    },
+    "range": 1.0,
+    "tol": 0.05,
+    "to": {
+     "a2": 0.15
+    }
+   },
+   {
+    "type": "linear",
+    "name": "ankle_pd_L",
+    "inputs": {
+     "obs[7]": -0.1,
+     "obs[16]": 0.4
+    },
+    "range": 1.0,
+    "tol": 0.05,
+    "to": {
+     "a5": 0.878
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "swing_flex_R",
+    "inputs": {
+     "cos(clk)": 1.0,
+     "sin(clk)": -0.15
+    },
+    "threshold": 0.2,
+    "sharpness": 6.0,
+    "to": {
+     "a1": 0.6,
+     "a2": 1.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "swing_flex_L",
+    "inputs": {
+     "cos(clk)": 0.3,
+     "sin(clk)": -0.1
+    },
+    "threshold": 0.7,
+    "sharpness": 5.0,
+    "to": {
+     "a4": 2.0,
+     "a5": 1.0
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "pushoff_R",
+    "inputs": {
+     "cos(clk)": -1.0,
+     "sin(clk)": -1.0,
+     "obs[8]": 0.3
+    },
+    "threshold": 0.2,
+    "sharpness": 6.0,
+    "to": {
+     "a2": -0.03
+    }
+   },
+   {
+    "type": "reflex",
+    "name": "pushoff_L",
+    "inputs": {
+     "cos(clk)": -0.707,
+     "sin(clk)": 0.15,
+     "obs[8]": 2.0
+    },
+    "threshold": 0.7,
+    "sharpness": 5.0,
+    "to": {
+     "a5": -2.0
+    }
+   }
+  ]
+ }
+}
