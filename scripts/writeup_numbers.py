@@ -192,5 +192,45 @@ for s, v, c in ((0, 1.29, 0), (1, 1.09, 0), (2, 5.06, 96)):
 wall = sum(r["wall_s"] for rs in runs.values() for r in rs)
 print(f"info warm-start CPU time over all 500 runs: {wall / 3600:.1f} h")
 
+# --- robustness addendum: CEM replication and predictors (results/warmstart_cem/) ---
+import warmstart_cem_report as wcr  # noqa: E402
+
+
+def cem_runs(s):
+    return [json.load(open(p)) for p in sorted(glob.glob(os.path.join(R, "warmstart_cem", "hopper", s, "*.json")))]
+
+
+cr = {s: cem_runs(s) for s in "LPRH"}
+for s, v in (("L", 34), ("P", 8), ("R", 2), ("H", 7)):
+    src = f"warmstart_cem/hopper/{s}/*.json"
+    check(f"CEM hopper {s} n", len(cr[s]), 10 if s == "H" else 80, src)
+    check(f"CEM hopper {s} pass by 500", sum(r["T"] is not None for r in cr[s]), v, src)
+check("CEM L vs R Fisher p < 0.0001", wr.fisher_one_sided(34, 80, 2, 80) < 1e-4, True, "computed")
+check("CEM L vs P Fisher p < 0.0001", wr.fisher_one_sided(34, 80, 8, 80) < 1e-4, True, "computed")
+check("CEM L, one-reply starts only, pass", sum(r["T"] is not None for r in cr["L"] if not r["start_id"].startswith("fb-")),
+      20, "warmstart_cem/hopper/L/cpg-claude-*.json")
+from pathlib import Path as _P
+feats = [wcr.features(_P(R), r) for r in cr["L"]]
+for fid, ya, yn, na, nn in (("F1", 32, 50, 2, 30), ("F2", 11, 14, 23, 66), ("F3", 24, 40, 10, 40), ("F4", 20, 40, 14, 40),
+                            ("F5", 1, 2, 33, 78)):
+    y = [r for r, f in zip(cr["L"], feats) if f[fid]]
+    n = [r for r, f in zip(cr["L"], feats) if not f[fid]]
+    check(f"CEM predictor {fid} yes", (sum(r["T"] is not None for r in y), len(y)), (ya, yn), "warmstart_cem/hopper/L/")
+    check(f"CEM predictor {fid} no", (sum(r["T"] is not None for r in n), len(n)), (na, nn), "warmstart_cem/hopper/L/")
+ps = [wcr.fisher_two_sided(a, b - a, c, d - c) for a, b, c, d in ((32, 50, 2, 30), (11, 14, 23, 66), (24, 40, 10, 40),
+                                                                   (20, 40, 14, 40), (1, 2, 33, 78))]
+check("CEM predictors surviving Holm", wcr.holm(ps), [True, True, True, False, False], "computed")
+check("CEM F1 p < 0.0001", ps[0] < 1e-4, True, "computed")
+check("CEM F2 p", ps[1], 0.0057, "computed", nd=4)
+check("CEM F3 p", ps[2], 0.0030, "computed", nd=4)
+check("CEM F4 p", ps[3], 0.258, "computed", nd=3)
+lo = [(r, f) for r, f in zip(cr["L"], feats) if "_H2_" not in r["start_id"]]
+for sign, want in ((True, (9, 13)), (False, (1, 27))):
+    rr = [r for r, f in lo if f["F1"] == sign]
+    check(f"CEM H0/H1 sign {'correct' if sign else 'wrong'} (post hoc)", (sum(r["T"] is not None for r in rr), len(rr)), want,
+          "warmstart_cem/hopper/L/")
+cw = sum(r["wall_s"] for rs in cr.values() for r in rs)
+check("CEM CPU hours", cw / 3600, 2.9, "warmstart_cem/hopper/*/*.json", nd=1)
+
 print(f"\n{len(fails)} mismatches" + (": " + ", ".join(fails) if fails else ""))
 sys.exit(1 if fails else 0)

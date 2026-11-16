@@ -17,3 +17,6 @@ Outputs: `results/cpg/baselines/<task>/`, `results/cpg/ppo/<task>/`, `results/at
 |---|---|
 | `.claude/worktrees/first-stop-point/.venv` (used from `~/projects/wt/zero-step-robots-writing`) | mujoco==3.17.0, gymnasium==1.4.0 |
 Outputs: `results/warmstart/<task>/{L,P,R,H}/*.json` (500 runs), `results/warmstart/walker2d/headroom/` (Stage B), `results/warmstart_report.md`. No MuJoCo 4.0 anywhere.
+
+## Warm-start robustness (2026-11-16, addendum docs/addendum-2026-11-16-warmstart-robustness.md)
+Same venv: mujoco==3.17.0, gymnasium==1.4.0. Outputs: `results/warmstart_cem/hopper/{L,P,R,H}/*.json` (250 CEM runs), `results/warmstart_cem_report.md`.
