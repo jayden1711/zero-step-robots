@@ -307,8 +307,17 @@ same starts and the same budget of 500 designs, and tests 5 pre-registered featu
   hint mostly works by getting that one sign right.
 - **Cost:** [2.9 CPU-hours](../scripts/writeup_numbers.py) for the 250 CEM runs.
 
+**Is the sign causal?** A further [addendum](addendum-2026-11-16-signfix.md) was committed before any code or run.
+It took the 30 L designs with the wrong sign and flipped only that sign, then reran both optimisers.
+- **CEM (primary):** pass rate rises from [2 to 10 of 30](../results/warmstart_signfix_report.md#cem-primary). 9 designs pass only after the flip and 1
+  only before it ([exact McNemar p = 0.011](../scripts/writeup_numbers.py)).
+- **Hill climber (secondary):** [4 to 14 of 30](../results/warmstart_signfix_report.md#hc-secondary), [p = 0.0065](../scripts/writeup_numbers.py).
+
+The repaired designs still do not travel on their own, with at most [0.28 m with no search](../results/warmstart_signfix_report.md). The one sign makes a
+design *searchable*, not walking.
+
 So, on hopper, the zero-step designs fail the 3 m bar on their own. As search starts, though, they are about as good as a
-hand-designed structure under two different optimisers, and what carries most of that value is one physically
+hand-designed structure under two different optimisers, and what carries most of that value, causally, is one physically
 meaningful choice: the sign of the balance feedback.
 
 ## Reproduce
