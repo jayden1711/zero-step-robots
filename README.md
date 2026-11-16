@@ -30,6 +30,17 @@ episodes, seeds 10000-10099).
   [`results/`](results/) (see [`results/README.md`](results/README.md)). Earlier arms (raw-weight and Python-controller
   attempts on cartpole and hopper, several models) are in [`results/pilot_report.md`](results/pilot_report.md); their
   main finding is that the best-scoring hopper "controllers" stood still to collect the per-step survival reward.
+- **Follow-up (no LLM calls): the zero-step designs are good search starts on hopper.** A fixed random search of 500
+  designs started from the 80 zero-step LLM hopper designs reaches the 3 m pass in
+  [39 of 80 runs vs 2 of 80 from random CPGs](results/warmstart_report.md#hopper). It
+  [replicates with CEM](results/warmstart_cem_report.md#q1-cem-replication-hopper) (34 of 80 vs 2 of 80). The strongest
+  pre-registered predictor of a good start is the correct torso-pitch-to-hip feedback sign
+  ([32 of 50 vs 2 of 30](results/warmstart_cem_report.md#predictors-cem-runs-confirmatory-holm-over-5-at-005)). On Walker2d
+  there is [no measurable advantage over random starts](results/warmstart_report.md#walker2d), though a longer tuned search
+  [showed headroom (5.06 m)](results/warmstart/walker2d/headroom/tuned_cpg_50k_seed2.score.json).
+  Pre-registrations: [docs/prereg-followup-draft.md](docs/prereg-followup-draft.md) (accepted by the organizer's 6-hour
+  default, not an owner answer) and [docs/addendum-2026-11-16-warmstart-robustness.md](docs/addendum-2026-11-16-warmstart-robustness.md).
+  Write-up: [docs/writeup.md](docs/writeup.md).
 - Pre-registration, in order: [PLAN.md addendum 2026-11-09](PLAN.md) (distance target),
   [docs/prereg-2026-11-09-cpg.md](docs/prereg-2026-11-09-cpg.md) (CPG track),
   [docs/prereg-2026-11-10-cpg-feedback.md](docs/prereg-2026-11-10-cpg-feedback.md) (feedback arm),
