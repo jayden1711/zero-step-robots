@@ -1,9 +1,14 @@
-# Pre-registration DRAFT: warm-start value of zero-step designs (no LLM calls)
+# Pre-registration: warm-start value of zero-step designs (no LLM calls)
 
-*Draft written 2026-11-15 (CST; 2026-11-16 UTC) on branch `writing-1116`. It is not in force until it is committed on its own (docs only)
-and the owner or organizer accepts it. No code for it exists yet, and nothing below has been run. It extends, and does
-not change, [the CPG track pre-registration](prereg-2026-11-09-cpg.md) and [the feedback-arm pre-registration](prereg-2026-11-10-cpg-feedback.md).
-Their results stay reported exactly as they are.*
+**Status: accepted by the 6-hour default 2026-11-16 05:43 CST, not an owner answer.** The organizer applied the default
+(option (a), accept as written) to the QUESTIONS.md row of 2026-11-15 23:42 CST, which went 6 h unanswered. The text
+below is unchanged from the accepted draft (4dbae8b, plus the pre-run threshold/sharpness correction in section 3,
+e9f66b8). This acceptance is recorded in a docs-only commit before any run of this study.
+
+*Draft written 2026-11-15 (CST; 2026-11-16 UTC) on branch `writing-1116`. The study code (`scripts/warmstart.py`,
+`scripts/warmstart_report.py`, `tests/test_warmstart.py`) was committed after the draft and before this acceptance;
+nothing below had been run at acceptance. It extends, and does not change, [the CPG track pre-registration](prereg-2026-11-09-cpg.md)
+and [the feedback-arm pre-registration](prereg-2026-11-10-cpg-feedback.md). Their results stay reported exactly as they are.*
 
 Derived numbers below (set sizes, power, compute) are computed by [`scripts/followup_numbers.py`](../scripts/followup_numbers.py)
 from files in `results/`. Measured numbers link to their files.
