@@ -232,5 +232,27 @@ for sign, want in ((True, (9, 13)), (False, (1, 27))):
 cw = sum(r["wall_s"] for rs in cr.values() for r in rs)
 check("CEM CPU hours", cw / 3600, 2.9, "warmstart_cem/hopper/*/*.json", nd=1)
 
+# --- sign-repair addendum (results/warmstart_signfix/) ---
+import warmstart_signfix as wsf  # noqa: E402
+from pathlib import Path as _P2
+
+wsl = wsf.wrong_sign(_P2(R))
+check("sign-fix set size", len(wsl), 30, "attempts (pitch_gain >= 0)")
+for opt, orig, s_w, o_w, b_w, c_w, p_w in (("cem", "warmstart_cem", 10, 2, 9, 1, 0.0107), ("hc", "warmstart", 14, 4, 12, 2, 0.0065)):
+    sp_, op_, b_, c_ = 0, 0, 0, 0
+    d0 = []
+    for sid, _ in wsl:
+        r = json.load(open(os.path.join(R, "warmstart_signfix", "hopper", opt, f"{sid}__signfix.json")))
+        o = json.load(open(os.path.join(R, orig, "hopper", "L", f"{sid}.json")))
+        a, bb = r["T"] is not None and r.get("repairable", True), o["T"] is not None
+        sp_, op_, b_, c_ = sp_ + a, op_ + bb, b_ + (a and not bb), c_ + (bb and not a)
+        d0.append(r["start_heldout"]["mean_distance_healthy"])
+    src = f"warmstart_signfix/hopper/{opt}/"
+    check(f"sign-fix {opt} S passes", sp_, s_w, src)
+    check(f"sign-fix {opt} original passes", op_, o_w, f"{orig}/hopper/L/")
+    check(f"sign-fix {opt} discordant (only S, only original)", (b_, c_), (b_w, c_w), src)
+    check(f"sign-fix {opt} McNemar p", wsf.mcnemar_one_sided(b_, c_), p_w, "computed", nd=4)
+    check(f"sign-fix {opt} max no-search d of repaired designs", max(d0), 0.28, src)
+
 print(f"\n{len(fails)} mismatches" + (": " + ", ".join(fails) if fails else ""))
 sys.exit(1 if fails else 0)

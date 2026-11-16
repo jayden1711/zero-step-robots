@@ -20,3 +20,6 @@ Outputs: `results/warmstart/<task>/{L,P,R,H}/*.json` (500 runs), `results/warmst
 
 ## Warm-start robustness (2026-11-16, addendum docs/addendum-2026-11-16-warmstart-robustness.md)
 Same venv: mujoco==3.17.0, gymnasium==1.4.0. Outputs: `results/warmstart_cem/hopper/{L,P,R,H}/*.json` (250 CEM runs), `results/warmstart_cem_report.md`.
+
+## Sign-repair test (2026-11-16, addendum docs/addendum-2026-11-16-signfix.md, branch signfix-1116)
+Same venv: mujoco==3.17.0, gymnasium==1.4.0. Outputs: `results/warmstart_signfix/hopper/{cem,hc}/*.json` (60 runs), `results/warmstart_signfix_report.md`.
