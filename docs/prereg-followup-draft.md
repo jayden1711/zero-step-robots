@@ -1,6 +1,6 @@
 # Pre-registration DRAFT: warm-start value of zero-step designs (no LLM calls)
 
-*Draft written 2026-11-16 (CST) on branch `writing-1116`. It is not in force until it is committed on its own (docs only)
+*Draft written 2026-11-15 (CST; 2026-11-16 UTC) on branch `writing-1116`. It is not in force until it is committed on its own (docs only)
 and the owner or organizer accepts it. No code for it exists yet, and nothing below has been run. It extends, and does
 not change, [the CPG track pre-registration](prereg-2026-11-09-cpg.md) and [the feedback-arm pre-registration](prereg-2026-11-10-cpg-feedback.md).
 Their results stay reported exactly as they are.*

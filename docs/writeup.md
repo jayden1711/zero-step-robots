@@ -1,6 +1,6 @@
 # Can an LLM write a walking controller without training? A pre-registered negative / partial result
 
-*Draft write-up, 2026-11-16. Not published. Blog / workshop length. Simulation only: no real robot is involved anywhere.*
+*Draft write-up, 2026-11-15 (CST). Not published. Blog / workshop length. Simulation only: no real robot is involved anywhere.*
 
 Every measured number below links to the file it comes from: a report section in `results/`, an attempt's own
 `score.json`, or, for the few derived statistics (bounds, a p-value, episode-length medians), the script that computes
