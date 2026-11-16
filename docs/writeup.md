@@ -1,6 +1,6 @@
 # Can an LLM write a walking controller without training? A pre-registered negative / partial result
 
-*Draft write-up, 2026-11-15 (CST); section 7 added 2026-11-16 after the follow-up ran. Not published. Blog / workshop length. Simulation only: no real robot is involved anywhere.*
+*Draft write-up, 2026-11-15 (CST); section 7 added 2026-11-16 after the follow-up and its robustness addendum ran. Not published. Blog / workshop length. Simulation only: no real robot is involved anywhere.*
 
 Every measured number below links to the file it comes from: a report section in `results/`, an attempt's own
 `score.json`, or, for the few derived statistics (bounds, a p-value, episode-length medians), the script that computes
@@ -34,6 +34,9 @@ cell, the 5-of-10 rule) come from the pre-registrations linked in the Setup sect
   They also beat the same designs with their numbers permuted and signs flipped,
   [39 vs 27 of 80](../results/warmstart_report.md#hopper) ([p = 0.038](../scripts/writeup_numbers.py), secondary). On Walker2d there is no measurable
   advantage over random starts. A longer search there [did show headroom (5.06 m)](../results/warmstart/walker2d/headroom/tuned_cpg_50k_seed2.score.json).
+  The hopper result **replicates with a second optimiser** (CEM, same budget):
+  [34 of 80 vs 2 of 80](../results/warmstart_cem_report.md#q1-cem-replication-hopper). The best pre-registered predictor of a good start is
+  getting the torso-pitch-to-hip feedback sign right ([32 of 50 vs 2 of 30](../results/warmstart_cem_report.md#q2-predictors-of-a-good-start-l-runs-pass-by-500)).
   See section 7.
 
 ## 1. Why this question
@@ -266,13 +269,51 @@ time. The pre-registered worst case was 41 CPU-hours.
 
 **What this changes.** The one-reply result stays a clean negative against the 3 m bar. Measured as search starts, though,
 the zero-step hopper designs carry real, usable information: about as much as a hand-designed structure, and more than
-their own numbers shuffled. On Walker2d they carry none that this search can use. Limits: one search method and one
-budget. The P control flips signs as well as permuting values, so "assignment" here includes signs. Every run is in
-[`results/warmstart/`](../results/warmstart/), and the tables are in [`results/warmstart_report.md`](../results/warmstart_report.md).
+their own numbers shuffled. On Walker2d they carry none that this search can use. The P control flips signs as well as
+permuting values, so "assignment" here includes signs. Every run is in [`results/warmstart/`](../results/warmstart/),
+and the tables are in [`results/warmstart_report.md`](../results/warmstart_report.md).
+
+### Robustness: a second optimiser, and what makes a good start (hopper)
+
+A further [addendum](addendum-2026-11-16-warmstart-robustness.md) was committed on its own, before any code or run. It also discloses the subgroup counts I
+had already seen. It repeats the hopper comparison with the cross-entropy method instead of the hill climber, on the
+same starts and the same budget of 500 designs, and tests 5 pre-registered features of the start designs.
+
+| start set (CEM, 500 designs) | passes by 500 | median d at 500 |
+|---|---|---|
+| L, LLM zero-step designs | [**34 of 80**](../results/warmstart_cem_report.md#q1-cem-replication-hopper) | [1.95 m](../results/warmstart_cem_report.md#q1-cem-replication-hopper) |
+| P, permuted LLM numbers | [8 of 80](../results/warmstart_cem_report.md#q1-cem-replication-hopper) | [0.94 m](../results/warmstart_cem_report.md#q1-cem-replication-hopper) |
+| R, random CPGs | [2 of 80](../results/warmstart_cem_report.md#q1-cem-replication-hopper) | [0.59 m](../results/warmstart_cem_report.md#q1-cem-replication-hopper) |
+| H, hand structure | [7 of 10](../results/warmstart_cem_report.md#q1-cem-replication-hopper) | [3.39 m](../results/warmstart_cem_report.md#q1-cem-replication-hopper) |
+
+- **It replicates.** L vs R is 34 vs 2 of 80 ([one-sided Fisher p < 0.0001](../scripts/writeup_numbers.py)). The
+  one-reply designs alone give [20 passing runs](../results/warmstart_cem/hopper/L/). L vs P is 34 vs 8
+  ([p < 0.0001](../scripts/writeup_numbers.py)), a larger gap than under the hill climber. The warm-start value is not
+  specific to one optimiser.
+- **Predictors** (two-sided Fisher on the new CEM runs, Holm over 5; [table](../results/warmstart_cem_report.md#predictors-cem-runs-confirmatory-holm-over-5-at-005)):
+  - **Correct pitch-to-hip feedback sign: survives.** [32 of 50 vs 2 of 30](../results/warmstart_cem_report.md#predictors-cem-runs-confirmatory-holm-over-5-at-005),
+    [p < 0.0001](../scripts/writeup_numbers.py). Not looked at before the addendum.
+  - **Start already travels at least 0.5 m: survives.** [11 of 14 vs 23 of 66](../results/warmstart_cem_report.md#predictors-cem-runs-confirmatory-holm-over-5-at-005),
+    [p = 0.0057](../scripts/writeup_numbers.py). Not looked at before.
+  - **H2 hint: survives,** [24 of 40 vs 10 of 40](../results/warmstart_cem_report.md#predictors-cem-runs-confirmatory-holm-over-5-at-005),
+    [p = 0.0030](../scripts/writeup_numbers.py). This pattern had already been seen in the hill-climber runs, so this is
+    a test on new data of an observed pattern.
+  - **Model (Opus vs Sonnet): does not survive,** [20 of 40 vs 14 of 40](../results/warmstart_cem_report.md#predictors-cem-runs-confirmatory-holm-over-5-at-005),
+    [p = 0.258](../scripts/writeup_numbers.py).
+  - **Oscillator count: uninformative.** Only [2 of the 80 designs](../results/warmstart_cem_report.md#predictors-cem-runs-confirmatory-holm-over-5-at-005)
+    use two or more oscillators.
+- **The sign beyond the hint** (post hoc, descriptive, not pre-registered): among the H0/H1 designs, the CEM runs
+  pass 9 of 13 with the correct sign and 1 of 27 without it ([run files](../results/warmstart_cem/hopper/L/)). The H2
+  hint mostly works by getting that one sign right.
+- **Cost:** [2.9 CPU-hours](../scripts/writeup_numbers.py) for the 250 CEM runs.
+
+So, on hopper, the zero-step designs fail the 3 m bar on their own. As search starts, though, they are about as good as a
+hand-designed structure under two different optimisers, and what carries most of that value is one physically
+meaningful choice: the sign of the balance feedback.
 
 ## Reproduce
 
-- Tables: `scripts/cpg_report.py results`, `scripts/cpg_feedback_report.py results` and `scripts/warmstart_report.py results`. Numbers in this write-up:
+- Tables: `scripts/cpg_report.py results`, `scripts/cpg_feedback_report.py results`, `scripts/warmstart_report.py results` and `scripts/warmstart_cem_report.py results`. Numbers in this write-up:
   `python scripts/writeup_numbers.py results` (reads files only, runs nothing).
 - Every attempt, failures included (prompt, reply, compiled design, per-episode scores):
   [`results/attempts/`](../results/attempts/), layout in [`results/README.md`](../results/README.md).
